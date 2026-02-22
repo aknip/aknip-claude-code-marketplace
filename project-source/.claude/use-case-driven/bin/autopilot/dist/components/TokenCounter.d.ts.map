@@ -1,0 +1,1 @@
+{"version":3,"file":"TokenCounter.d.ts","sourceRoot":"","sources":["../../src/components/TokenCounter.tsx"],"names":[],"mappings":"AAIA,MAAM,WAAW,iBAAiB;IAChC,MAAM,EAAE,MAAM,CAAC;IACf,IAAI,CAAC,EAAE,MAAM,CAAC;IACd,QAAQ,CAAC,EAAE,OAAO,CAAC;CACpB;AAED;;GAEG;AACH,wBAAgB,YAAY,CAAC,EAAE,MAAM,EAAE,IAAI,EAAE,QAAgB,EAAE,EAAE,iBAAiB,kDAajF;AAED,eAAe,YAAY,CAAC"}

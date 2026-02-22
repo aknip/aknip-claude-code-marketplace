@@ -1,0 +1,1 @@
+{"version":3,"file":"StageProgress.d.ts","sourceRoot":"","sources":["../../src/components/StageProgress.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,oBAAoB,CAAC;AAEzD,MAAM,WAAW,kBAAkB;IACjC,eAAe,EAAE,cAAc,EAAE,CAAC;CACnC;AAED;;GAEG;AACH,wBAAgB,aAAa,CAAC,EAAE,eAAe,EAAE,EAAE,kBAAkB,kDAgBpE;AAED,eAAe,aAAa,CAAC"}

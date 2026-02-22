@@ -1,0 +1,21 @@
+{
+  "name": "aknip-claude-code-marketplace",
+  "owner": {
+    "name": "aknip"
+  },
+  "metadata": {
+    "description": "Use-case-driven development framework for Claude Code",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "esf-enterprise-software-factory",
+      "source": "./esf-enterprise-software-factory",
+      "description": "Complete use-case-driven development framework with RUP methodology, 8 specialized agents, 33 commands, autopilot system, and browser testing",
+      "version": "1.0.0",
+      "keywords": ["use-case", "rup", "methodology", "agents", "autopilot"],
+      "category": "development-methodology"
+    }
+  ]
+}
