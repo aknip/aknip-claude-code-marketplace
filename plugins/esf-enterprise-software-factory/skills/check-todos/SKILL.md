@@ -1,5 +1,4 @@
 ---
-name: check-todos
 description: List, filter, and manage TODO items
 ---
 

@@ -1,5 +1,4 @@
 ---
-name: renumber-phases
 description: Fix phase numbering gaps and inconsistencies
 ---
 

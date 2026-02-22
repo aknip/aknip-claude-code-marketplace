@@ -1,5 +1,4 @@
 ---
-name: debug
 description: Diagnostic command for troubleshooting UC framework issues
 ---
 

@@ -1,5 +1,4 @@
 ---
-name: analyze-requirements
 description: Extract use cases from existing requirements
 allowed-tools:
   - Read

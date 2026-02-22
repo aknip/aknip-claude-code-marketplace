@@ -1,5 +1,4 @@
 ---
-name: add-use-case
 description: Manually add a new use case
 argument-hint: "[summary|user-goal|subfunction]"
 allowed-tools:

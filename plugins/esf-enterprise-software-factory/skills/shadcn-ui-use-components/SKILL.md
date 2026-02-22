@@ -1,5 +1,4 @@
 ---
-name: shadcn-ui-use-components
 description: Smart ruleset for planning and building with shadcn UI - powered by the shadcn MCP server. Ensures clean UI architecture, consistent usage, and error-free implementation with full context.
 ---
 

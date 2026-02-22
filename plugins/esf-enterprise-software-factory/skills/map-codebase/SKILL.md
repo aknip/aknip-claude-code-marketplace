@@ -1,5 +1,4 @@
 ---
-name: map-codebase
 description: Analyze an existing codebase before UC-driven development
 ---
 

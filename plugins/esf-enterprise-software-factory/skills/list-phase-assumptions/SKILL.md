@@ -1,5 +1,4 @@
 ---
-name: list-phase-assumptions
 description: Display implementation decisions and assumptions from a phase
 ---
 

@@ -1,5 +1,4 @@
 ---
-name: verify-phase
 description: Verify use case scenarios for a phase (standalone)
 argument-hint: "[N]"
 allowed-tools:

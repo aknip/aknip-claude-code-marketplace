@@ -1,5 +1,4 @@
 ---
-name: checkpoints
 description: Review and approve pending checkpoints from autopilot execution
 allowed-tools:
   - Read

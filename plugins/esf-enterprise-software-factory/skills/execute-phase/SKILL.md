@@ -1,5 +1,4 @@
 ---
-name: execute-phase
 description: Execute phase plans with use case verification
 argument-hint: "[N]"
 allowed-tools:

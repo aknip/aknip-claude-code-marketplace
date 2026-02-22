@@ -1,5 +1,4 @@
 ---
-name: quick
 description: Execute small ad-hoc tasks with UC guarantees
 allowed-tools:
   - Read

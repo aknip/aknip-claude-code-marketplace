@@ -1,5 +1,4 @@
 ---
-name: diagramming
 description: Generate Excalidraw diagrams. Use when creating flowcharts, ER diagrams, sequence diagrams, block diagrams, or any .excalidraw files.
 ---
 

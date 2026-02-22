@@ -1,5 +1,4 @@
 ---
-name: remove-phase
 description: Remove a phase from the roadmap by archiving
 ---
 

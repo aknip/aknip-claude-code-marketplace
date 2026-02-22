@@ -1,5 +1,4 @@
 ---
-name: feature-exploration
 description: Explore implementation scenarios for Summary-Level use cases
 allowed-tools:
   - Read

@@ -1,5 +1,4 @@
 ---
-name: plan-phase
 description: Create execution plan from phase use cases
 argument-hint: "[N] [--skip-research] [--re-research] [--gaps]"
 allowed-tools:

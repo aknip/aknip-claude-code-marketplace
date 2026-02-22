@@ -1,5 +1,4 @@
 ---
-name: add-phase
 description: Add a new phase to the roadmap
 ---
 

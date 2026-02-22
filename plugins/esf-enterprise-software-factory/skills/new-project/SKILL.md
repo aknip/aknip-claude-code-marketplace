@@ -1,5 +1,4 @@
 ---
-name: new-project
 description: Initialize project with use case driven analysis
 allowed-tools:
   - Read
@@ -17,7 +16,7 @@ Initialize a new project using use case driven methodology. Gathers project cont
 - `.planning/PROJECT.md` — project context
 - `.planning/config.json` — workflow preferences (with use case settings)
 
-**After this command:** Run `/esf:use-case-analysis` to extract use cases and create the roadmap.
+**After this command:** Run `/esf:use-case-analysis` to extract use cases and create the roadmap, or `/esf:feature-exploration` to explore implementation scenarios first.
 
 </objective>
 
@@ -227,9 +226,16 @@ mkdir -p .planning/sessions
 
 ## ▶ Next Up
 
-**Use Case Analysis & Roadmap**
+**Option A: Use Case Analysis & Roadmap** (direct path)
 
 `/esf:use-case-analysis`
+
+**Option B: Feature Exploration** (explore scenarios first)
+
+`/esf:feature-exploration`
+
+Explore implementation scenarios with HTML clickdummies
+and Mermaid roadmaps before committing to a roadmap.
 
 <sub>`/clear` first → fresh context window</sub>
 
@@ -251,6 +257,6 @@ mkdir -p .planning/sessions
 - [ ] Deep questioning with actor identification
 - [ ] PROJECT.md with actors section → committed
 - [ ] config.json with use case settings → committed
-- [ ] User knows next step is `/esf:use-case-analysis`
+- [ ] User knows next step is `/esf:use-case-analysis` or `/esf:feature-exploration`
 
 </success_criteria>

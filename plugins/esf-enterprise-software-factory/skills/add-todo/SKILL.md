@@ -1,5 +1,4 @@
 ---
-name: add-todo
 description: Add persistent TODO items to track tasks across sessions
 ---
 

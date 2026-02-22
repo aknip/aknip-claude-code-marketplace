@@ -1,5 +1,4 @@
 ---
-name: help
 description: Show available use case commands
 allowed-tools:
   - Read

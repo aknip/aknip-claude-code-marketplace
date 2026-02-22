@@ -1,5 +1,4 @@
 ---
-name: autopilot
 description: Fully automated milestone execution from existing roadmap
 argument-hint: "[--from-phase N] [--dry-run] [--engine node|bash]"
 allowed-tools:

@@ -1,5 +1,4 @@
 ---
-name: create-roadmap
 description: Generate roadmap from use cases
 allowed-tools:
   - Read

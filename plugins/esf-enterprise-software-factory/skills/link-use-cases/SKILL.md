@@ -1,5 +1,4 @@
 ---
-name: link-use-cases
 description: Create include/extend relationships between use cases
 argument-hint: "[source-id] [target-id] [include|extend]"
 allowed-tools:

@@ -1,5 +1,4 @@
 ---
-name: update-history-based-on-code
 description: Sync UC documentation content with actual code (single point of truth)
 argument-hint: "[--milestone VERSION] [--execute] [--summary-only]"
 allowed-tools:

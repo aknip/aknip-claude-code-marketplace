@@ -1,5 +1,4 @@
 ---
-name: use-case-analysis
 description: Extract use cases and create roadmap from project context
 allowed-tools:
   - Read

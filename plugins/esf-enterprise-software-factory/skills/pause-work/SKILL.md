@@ -1,5 +1,4 @@
 ---
-name: pause-work
 description: Capture current work state for later resumption
 ---
 

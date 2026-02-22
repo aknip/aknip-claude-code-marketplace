@@ -1,5 +1,4 @@
 ---
-name: progress
 description: Show use case completion status
 allowed-tools:
   - Read
