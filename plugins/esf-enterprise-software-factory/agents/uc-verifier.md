@@ -190,6 +190,19 @@ fi
 
 **Rationale:** The executor should have fleshed out all test skeletons during TDD. If TODOs remain, the TDD process was skipped and the implementation is unverified.
 
+## Step 0b: Verify ROADMAP Phase Goals
+
+Before walking scenarios, check the phase goals from ROADMAP.md:
+
+1. **Read ROADMAP.md** and find the current phase section
+2. **Extract explicit success criteria** for this phase
+3. **Verify each criterion** against implementation:
+   - If criterion is testable: test it
+   - If criterion matches a use case: note the mapping
+   - If criterion has no matching use case: FLAG as potential gap
+
+**IMPORTANT:** Use ONLY the explicit criteria from ROADMAP.md. Do NOT invent additional criteria from phase descriptions. If no explicit criteria exist, note this in the report.
+
 ## Step 1: Check Subfunction Implementation
 
 Before walking scenarios, verify all subfunctions are implemented:
@@ -625,6 +638,16 @@ For features with real-time UI updates:
 ### UC-UG-002: View Task List
 
 {Same structure}
+
+---
+
+## ROADMAP Phase Goals Verification
+
+| # | ROADMAP Criterion | Status | Evidence |
+|---|-------------------|--------|----------|
+| 1 | {criterion from ROADMAP} | Pass/Fail | {reference} |
+
+**Source:** .planning/ROADMAP.md, Phase ${PHASE} section
 
 ---
 

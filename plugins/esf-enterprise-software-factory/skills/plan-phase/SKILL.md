@@ -123,6 +123,10 @@ Research implementation approaches for Phase ${PHASE_ARG}.
 Answer: What do I need to know to PLAN this phase well?
 </task>
 
+<project_rules>
+@./CLAUDE.md
+</project_rules>
+
 <phase_context>
 Phase: ${PHASE_NAME}
 Phase Directory: ${PHASE_DIR}
@@ -196,6 +200,10 @@ Read ./agents/uc-planner.md for your role and instructions.
 
 Create execution plans from User-Goal use cases for Phase ${PHASE_ARG}.
 </task>
+
+<project_rules>
+@./CLAUDE.md
+</project_rules>
 
 <phase_context>
 Phase: ${PHASE_NAME}
@@ -493,6 +501,10 @@ Read ./agents/uc-checker.md for your role and instructions.
 
 Validate plans will achieve use case scenarios.
 </task>
+
+<project_rules>
+@./CLAUDE.md
+</project_rules>
 
 <plans>
 @${PHASE_DIR}/${PADDED_PHASE}-*-PLAN.md

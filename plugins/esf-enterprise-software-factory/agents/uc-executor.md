@@ -578,6 +578,36 @@ Create SUMMARY.md with:
 6. Issues encountered
 </step>
 
+<step name="completion_self_check">
+## Self-Check: Plan Completion Verification
+
+Before finalizing, verify ALL tasks were actually completed:
+
+1. **Re-read PLAN.md** and extract all task names and subfunction references
+2. **For each task, verify:**
+   - Implementation files exist on disk
+   - Git commit was created with subfunction reference
+   - Subfunction status updated to "Implemented"
+   - E2E tests pass for this task
+3. **If any task was missed:**
+   - Do NOT report "EXECUTION COMPLETE"
+   - List incomplete tasks explicitly
+   - Attempt to complete them
+   - If unable: report partial completion
+
+```bash
+# Verify all subfunctions from plan are implemented
+for sf in ${PLAN_SUBFUNCTIONS}; do
+  STATUS=$(grep "Status" ".planning/use-cases/subfunction/${sf}-*.md" | grep -c "Implemented")
+  if [ "$STATUS" -eq 0 ]; then
+    echo "INCOMPLETE: ${sf} not implemented!"
+  fi
+done
+```
+
+**CRITICAL:** Never report success without this verification step. Hallucinated success is worse than reported failure.
+</step>
+
 <step name="final_commit">
 Commit SUMMARY.md:
 

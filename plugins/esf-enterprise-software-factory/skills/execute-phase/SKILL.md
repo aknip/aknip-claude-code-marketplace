@@ -152,6 +152,10 @@ Read ./agents/uc-executor.md for your role and instructions.
 Execute plan ${PLAN_NUM}.
 </task>
 
+<project_rules>
+@./CLAUDE.md
+</project_rules>
+
 <plan>
 @${PHASE_DIR}/${PADDED_PHASE}-${PLAN_NUM}-PLAN.md
 </plan>
@@ -164,6 +168,7 @@ Execute plan ${PLAN_NUM}.
 <context>
 @.planning/PROJECT.md
 @.planning/ROADMAP.md
+@${PHASE_DIR}/${PADDED_PHASE}-CONTEXT.md (if exists)
 </context>
 
 <output>
@@ -191,6 +196,10 @@ Execute plan ${PLAN_NUM}.
 12. Commit atomically per subfunction (include E2E test files!)
 13. **Run phase regression:** `npx playwright test tests/e2e/v{VERSION}/phase-{NN}/`
 14. Update subfunction status to Implemented
+14b. **COMPLETION SELF-CHECK (MANDATORY before SUMMARY):**
+    - Re-read PLAN.md task list
+    - Verify each task has: implementation files, git commit, E2E pass, status updated
+    - If ANY task incomplete: report partial completion, do NOT claim success
 15. Create ${PADDED_PHASE}-${PLAN_NUM}-SUMMARY.md with E2E test results and screenshot references
 16. Return EXECUTION COMPLETE
 </output>
@@ -386,6 +395,10 @@ Read ./agents/uc-verifier.md for your role and instructions.
 Verify User-Goal use case scenarios are achievable.
 </task>
 
+<project_rules>
+@./CLAUDE.md
+</project_rules>
+
 <phase_context>
 Phase: ${PHASE_NAME}
 Phase Directory: ${PHASE_DIR}
@@ -406,13 +419,24 @@ User-Goal use cases for this phase:
 @${PHASE_DIR}/${PADDED_PHASE}-*-SUMMARY.md
 </summaries>
 
+<context>
+@.planning/PROJECT.md
+@.planning/ROADMAP.md
+@${PHASE_DIR}/${PADDED_PHASE}-CONTEXT.md (if exists)
+</context>
+
 <e2e_context>
 Milestone version: ${MILESTONE_VERSION}
 E2E test directory: tests/e2e/v${MILESTONE_VERSION}/phase-${PADDED_PHASE}/
 All E2E tests: tests/e2e/regression/
 </e2e_context>
 
+<roadmap>
+@.planning/ROADMAP.md
+</roadmap>
+
 <output>
+0b. **Verify against ROADMAP Success Criteria** for this phase (before scenario walks)
 1. Walk each User-Goal scenario step by step
 2. Browser test UI scenarios with agent-browser
 3. Verify postconditions achievable

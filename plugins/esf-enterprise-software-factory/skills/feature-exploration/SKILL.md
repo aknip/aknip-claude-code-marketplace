@@ -274,7 +274,7 @@ After EVERY answer:
 After each answer, ask:
 
 Use AskUserQuestion:
-- header: "Visualization"
+- header: "Visual"
 - question: "Should I update the clickdummy and/or roadmap?"
 - options:
   - "Update both" — Regenerate clickdummy + roadmap diagram

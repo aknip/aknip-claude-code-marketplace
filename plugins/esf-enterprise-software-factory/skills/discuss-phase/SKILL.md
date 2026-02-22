@@ -78,7 +78,7 @@ fi
 **If CONTEXT.md exists:**
 
 Use AskUserQuestion:
-- header: "Context Exists"
+- header: "Context"
 - question: "A CONTEXT.md already exists for this phase. What would you like to do?"
 - options:
   - "Update" — Add to or revise existing decisions
@@ -156,7 +156,7 @@ where your preferences will shape the implementation:
 ```
 
 Use AskUserQuestion:
-- header: "Discussion Areas"
+- header: "Discussion"
 - question: "Which areas would you like to discuss? (Select all that apply)"
 - multiSelect: true
 - options: [List identified gray areas]
@@ -316,7 +316,7 @@ Some decisions may affect existing use case specifications:
 ```
 
 Use AskUserQuestion:
-- header: "Update Artifacts?"
+- header: "Update?"
 - question: "These decisions change documented behavior. Should I update the use cases and roadmap to match?"
 - options:
   - "Yes, update all" — Keep use cases as single source of truth (Recommended)

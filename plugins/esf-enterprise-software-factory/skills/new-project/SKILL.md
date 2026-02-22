@@ -61,7 +61,7 @@ Initialize a new project using use case driven methodology. Gathers project cont
 **If existing code detected and .planning/codebase/ doesn't exist:**
 
 Use AskUserQuestion:
-- header: "Existing Code"
+- header: "Code?"
 - question: "I detected existing code. Would you like to map the codebase first?"
 - options:
   - "Map codebase first" — Run /gsd:map-codebase to understand existing architecture (Recommended)
@@ -141,7 +141,7 @@ Same as /gsd:new-project but with use case specific options:
 ```
 questions: [
   {
-    header: "Specification",
+    header: "Spec",
     question: "How do you want to specify requirements?",
     multiSelect: false,
     options: [
