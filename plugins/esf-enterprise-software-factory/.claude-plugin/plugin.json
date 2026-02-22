@@ -6,6 +6,5 @@
     "name": "aknip"
   },
   "keywords": ["use-case", "rup", "methodology", "agents", "autopilot", "browser-testing"],
-  "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }
