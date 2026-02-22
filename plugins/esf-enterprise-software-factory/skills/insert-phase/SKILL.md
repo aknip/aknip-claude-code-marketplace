@@ -1,4 +1,7 @@
-# Command: /esf:insert-phase
+---
+name: insert-phase
+description: Insert a phase at a specific position in the roadmap
+---
 
 ## Purpose
 

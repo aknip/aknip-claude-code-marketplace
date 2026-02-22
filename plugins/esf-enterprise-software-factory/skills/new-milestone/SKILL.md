@@ -1,4 +1,7 @@
-# Command: /esf:new-milestone
+---
+name: new-milestone
+description: Start a new milestone cycle after completing the previous one
+---
 
 ## Purpose
 

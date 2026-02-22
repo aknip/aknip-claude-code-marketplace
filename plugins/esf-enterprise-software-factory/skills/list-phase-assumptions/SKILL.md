@@ -1,4 +1,7 @@
-# Command: /esf:list-phase-assumptions
+---
+name: list-phase-assumptions
+description: Display implementation decisions and assumptions from a phase
+---
 
 ## Purpose
 

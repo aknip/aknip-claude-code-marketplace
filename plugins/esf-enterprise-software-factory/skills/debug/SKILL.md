@@ -1,4 +1,7 @@
-# Command: /esf:debug
+---
+name: debug
+description: Diagnostic command for troubleshooting UC framework issues
+---
 
 ## Purpose
 
@@ -46,7 +49,7 @@ Environment and tools:
 Configuration and structure:
 - `.planning/config.json` valid JSON
 - All agents exist in `.claude/agents/`
-- All commands exist in `.claude/commands/`
+- All skills exist in `.claude/skills/`
 - ROADMAP.md format valid
 - Phase directory structure correct
 
@@ -471,7 +474,7 @@ Outputs diagnostic results as JSON (useful for tooling).
 - `.planning/phases/**/*`
 - `.planning/use-cases/**/*`
 - `.claude/agents/**/*`
-- `.claude/commands/**/*`
+- `.claude/skills/**/*`
 - Git log and status
 
 ## Files Modified

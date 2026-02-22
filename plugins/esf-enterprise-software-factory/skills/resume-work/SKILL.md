@@ -1,4 +1,7 @@
-# Command: /esf:resume-work
+---
+name: resume-work
+description: Resume work from a paused session
+---
 
 ## Purpose
 

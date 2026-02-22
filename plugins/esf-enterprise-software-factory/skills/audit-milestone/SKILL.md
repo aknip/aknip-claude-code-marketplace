@@ -1,4 +1,7 @@
-# Command: /esf:audit-milestone
+---
+name: audit-milestone
+description: Review milestone completeness before marking complete
+---
 
 ## Purpose
 

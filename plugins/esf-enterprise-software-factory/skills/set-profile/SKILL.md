@@ -1,4 +1,7 @@
-# Command: /esf:set-profile
+---
+name: set-profile
+description: Change the model profile for quality/cost trade-off
+---
 
 ## Purpose
 

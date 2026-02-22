@@ -1,4 +1,7 @@
-# Command: /esf:remove-phase
+---
+name: remove-phase
+description: Remove a phase from the roadmap by archiving
+---
 
 ## Purpose
 

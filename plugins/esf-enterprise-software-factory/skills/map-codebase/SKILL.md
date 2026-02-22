@@ -1,4 +1,7 @@
-# Command: /esf:map-codebase
+---
+name: map-codebase
+description: Analyze an existing codebase before UC-driven development
+---
 
 ## Purpose
 

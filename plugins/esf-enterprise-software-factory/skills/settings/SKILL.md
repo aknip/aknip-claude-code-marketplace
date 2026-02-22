@@ -1,4 +1,7 @@
-# Command: /esf:settings
+---
+name: settings
+description: Display and manage UC framework configuration
+---
 
 ## Purpose
 

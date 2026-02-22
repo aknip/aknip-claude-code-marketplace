@@ -1,4 +1,7 @@
-# Command: /esf:complete-milestone
+---
+name: complete-milestone
+description: Mark milestone as complete with git release tag
+---
 
 ## Purpose
 

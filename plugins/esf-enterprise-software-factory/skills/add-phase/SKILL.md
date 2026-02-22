@@ -1,4 +1,7 @@
-# Command: /esf:add-phase
+---
+name: add-phase
+description: Add a new phase to the roadmap
+---
 
 ## Purpose
 
