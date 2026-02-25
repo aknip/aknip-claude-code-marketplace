@@ -1,6 +1,10 @@
-# ESF-Konzept: Use-Case-getriebene Softwareentwicklung mit AI-Agenten
+# ESF:Enterprise Software Fabric
 
-> Enterprise Software Framework (ESF) -- ein Claude-Code-Plugin für strukturierte, Use-Case-getriebene Softwareentwicklung
+Usecase getriebene Softwareentwicklung mit AI-Agenten
+
+Von der Vision zur Software - in einem geleiteten Prozess: Strukturiert, Verifziert, Nachvollziehbar. Für frühe Projektphasen von Enterprise Fachanwendungen: Proof-of-Concepts, Prototypen, MVPs  - aber auch in existierendem Code einestzbar.
+
+Ein Claude-Code-Plugin für Produktmanager, Business Analysten, Architekten.
 
 ---
 
@@ -8,9 +12,17 @@
 
 Das **ESF (Enterprise Software Framework)** ist ein Plugin für Claude Code, das einen vollständigen Softwareentwicklungsprozess implementiert. Im Zentrum steht die **Use-Case-Methodik nach Alistair Cockburn** -- erweitert um AI-gestützte Agenten, die einzelne Prozessphasen autonom übernehmen.
 
+1. Klare Trennung von "Main Success Scenario" und "Extensions"
+2. Strukturierte natürliche Sprache (Semi-formal)
+3. Definition von Vorbedingungen und Erfolgsgarantien (Scope)
+4. Drei ineinandergreifende Ebenen der Granularität (Summary, User-Goal, Subfunction)
+5. Akteur-System-Interaktion (Der "Tennis-Schlagabtausch")
+  
+
+
 ### Kernidee
 
-Statt Code direkt zu schreiben, durchläuft jedes Feature einen strukturierten Prozess:
+Statt Code direkt zu schreiben, durchläuft die App als Ganzes und jedes Feature einen strukturierten Prozess:
 
 ```
 Vision → Use Cases → Szenarien → Roadmap → Phasenplanung → Implementierung → Verifikation
