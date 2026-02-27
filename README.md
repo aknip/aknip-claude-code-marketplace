@@ -6,6 +6,35 @@ First, register the marketplace:
 Then install the plugin:
 /plugin install esf@aknip-claude-code-marketplace
 
+
+# esf: Enterprise Software Fabric: Usecase-driven Software Development with AI Agents
+
+**Installation:**
+
+1.
+In Terminal:
+
+`npm install`
+
+2.
+
+Open Claude Code in the project directory:
+
+`/plugin marketplace add aknip/aknip-claude-code-marketplace`
+
+`/plugin install esf@aknip-claude-code-marketplace`
+
+- Select the option “Install for all collaborators on this repository (project scope)”.
+
+- Restart Claude Code to load new plugins. 
+
+3.
+
+For further information, see the documentation `_esf-claude-code-marketplace-local/plugins/esf-enterprise-software-factory/README.md`.
+
+
+
+
 # Prototype UI
 
 A multi-app React platform with runtime theming and a CLI tool for generating themed demo apps from shadcn/ui presets.
