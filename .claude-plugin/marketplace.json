@@ -13,6 +13,11 @@
       "name": "esf",
       "source": "./plugins/esf-enterprise-software-factory",
       "version": "1.0.3"
+    },
+    {
+      "name": "ba",
+      "source": "./plugins/ba-business-analysts",
+      "version": "1.0.0"
     }
   ]
 }
