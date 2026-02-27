@@ -1,7 +1,6 @@
 {
   "name": "esf",
   "description": "Enterprise Software Factory — Use-case-driven development framework with RUP methodology, specialized agents, phased execution, autopilot, and browser testing",
-  "version": "1.0.3",
   "author": {
     "name": "aknip"
   },

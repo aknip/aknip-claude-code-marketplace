@@ -12,10 +12,7 @@
     {
       "name": "esf",
       "source": "./plugins/esf-enterprise-software-factory",
-      "description": "Complete use-case-driven development framework with RUP methodology, 8 specialized agents, 33 commands, autopilot system, and browser testing",
-      "version": "1.0.3",
-      "keywords": ["use-case", "rup", "methodology", "agents", "autopilot"],
-      "category": "development-methodology"
+      "version": "1.0.3"
     }
   ]
 }
