@@ -6,6 +6,24 @@ Von der Vision zur Software - in einem geleiteten Prozess: Strukturiert, Verifzi
 
 Ein Claude-Code-Plugin für Produktmanager, Business Analysten, Architekten.
 
+**Quickstart:**
+
+In Claude-Code nacheinander abarbeiten:
+
+`/esf:new-project`
+
+`/esf:feature-exploration`
+
+`/esf:create-roadmap`
+
+`/esf:discuss-phase 1`
+
+`/esf:plan-phase 1`
+
+`/esf:execute-phase 1`
+
+usw. - siehe `plugins/esf-enterprise-software-factory/esf-lebenszyklus.excalidraw`
+
 ---
 
 ## 1. Überblick
