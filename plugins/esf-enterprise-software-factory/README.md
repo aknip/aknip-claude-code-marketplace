@@ -50,13 +50,16 @@ Jeder Schritt wird von spezialisierten AI-Agenten unterstützt oder vollständig
 
 ### Installation
 
-```
 # Marketplace registrieren
-/plugin marketplace add aknip/aknip-claude-code-marketplace
+
+- Lokal (im ausgecheckten Repository): `/plugin marketplace add ./`
+
+- Remote (github): `/plugin marketplace add aknip/aknip-claude-code-marketplace`
 
 # Plugin installieren
-/plugin install esf@aknip-claude-code-marketplace
-```
+
+- `/plugin install esf@aknip-claude-code-marketplace`
+
 
 Nach der Installation stehen alle `esf:`-Skills als Slash-Commands in Claude Code zur Verfügung.
 

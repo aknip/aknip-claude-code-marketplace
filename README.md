@@ -1,10 +1,14 @@
 # my-claude-code-marketplace
 
-First, register the marketplace:
-/plugin marketplace add aknip/aknip-claude-code-marketplace
+**Register marketplace:**
 
-Then install the plugin:
-/plugin install esf@aknip-claude-code-marketplace
+Open Claude Code in the project directory:
+
+- Local (within this repository): `/plugin marketplace add ./`
+
+- Remote: `/plugin marketplace add aknip/aknip-claude-code-marketplace`
+
+
 
 
 # esf: Enterprise Software Fabric: Usecase-driven Software Development with AI Agents
@@ -12,15 +16,13 @@ Then install the plugin:
 **Installation:**
 
 1.
-In Terminal:
+In terminal:
 
 `npm install`
 
 2.
 
 Open Claude Code in the project directory:
-
-`/plugin marketplace add aknip/aknip-claude-code-marketplace`
 
 `/plugin install esf@aknip-claude-code-marketplace`
 
