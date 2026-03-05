@@ -28,6 +28,11 @@
       "name": "sales-pitch-assistant",
       "source": "./plugins/sales-pitch-assistant",
       "version": "1.0.1"
+    },
+    {
+      "name": "summarizer",
+      "source": "./plugins/summarizer",
+      "version": "1.0.0"
     }
   ]
 }

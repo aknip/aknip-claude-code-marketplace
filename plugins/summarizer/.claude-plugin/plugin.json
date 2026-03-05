@@ -1,0 +1,8 @@
+{
+  "name": "summarizer",
+  "description": "Document Summarizer — Analyze and summarize PDFs and documents with OCR support",
+  "author": {
+    "name": "aknip"
+  },
+  "keywords": ["summarizer", "pdf", "ocr", "document-analysis"]
+}
