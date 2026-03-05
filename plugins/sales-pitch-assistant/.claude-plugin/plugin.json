@@ -1,0 +1,8 @@
+{
+  "name": "sales-pitch-assistant",
+  "description": "Sales Pitch Assistant — Interactive B2B sales pitch creation with High Probability Selling and Atkinson presentation techniques",
+  "author": {
+    "name": "aknip"
+  },
+  "keywords": ["sales", "pitch", "b2b", "presentations", "impress-js"]
+}

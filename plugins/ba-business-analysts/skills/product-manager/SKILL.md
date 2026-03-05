@@ -302,10 +302,10 @@ Welcome message showing:
 ### 3. Menu
 
 ```
-[C] Continue to Discovery
+[y] Continue to Discovery
 ```
 
-On [C]: Add `step-01-init` to `stepsCompleted`, proceed to Step C-2.
+On [y]: Add `step-01-init` to `stepsCompleted`, proceed to Step C-2.
 
 ---
 
@@ -355,7 +355,7 @@ Get last element from `stepsCompleted`. Map it to the next step in sequence:
 ### 5. Menu
 
 ```
-[C] Continue to {next step name}
+[y] Continue to {next step name}
 ```
 
 Only proceed when user selects 'C'.
@@ -406,10 +406,10 @@ classification:
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Product Vision (Step 2b of 12)
+[y] Continue to Product Vision (Step 2b of 12)
 ```
 
-On [C]: Save classification, add `step-02-discovery` to `stepsCompleted`, proceed to Step C-2b.
+On [y]: Save classification, add `step-02-discovery` to `stepsCompleted`, proceed to Step C-2b.
 
 ---
 
@@ -445,10 +445,10 @@ Reflect back: Vision, What Makes It Special, Core Insight. Let user confirm or r
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Executive Summary (Step 2c of 12)
+[y] Continue to Executive Summary (Step 2c of 12)
 ```
 
-On [C]: Add `step-02b-vision` to `stepsCompleted`, proceed to Step C-2c.
+On [y]: Add `step-02b-vision` to `stepsCompleted`, proceed to Step C-2c.
 
 ---
 
@@ -468,7 +468,7 @@ Apply PRD quality standards from Section 4A: high information density, zero fluf
 
 Show full drafted content. Allow user to request changes, add info, refine language, or approve as-is.
 
-### 4. Append to Document (on [C])
+### 4. Append to Document (on [y])
 
 ```markdown
 ## Executive Summary
@@ -494,10 +494,10 @@ Where:
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Success Criteria (Step 3 of 12)
+[y] Continue to Success Criteria (Step 3 of 12)
 ```
 
-On [C]: Save content, add `step-02c-executive-summary` to `stepsCompleted`, proceed to Step C-3.
+On [y]: Save content, add `step-02c-executive-summary` to `stepsCompleted`, proceed to Step C-3.
 
 ---
 
@@ -545,7 +545,7 @@ Guide through three scope levels:
 
 Challenge scope creep. For complex domains: ensure compliance minimums in MVP.
 
-### 7. Append to Document (on [C])
+### 7. Append to Document (on [y])
 
 ```markdown
 ## Success Criteria
@@ -579,10 +579,10 @@ Challenge scope creep. For complex domains: ensure compliance minimums in MVP.
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to User Journey Mapping (Step 4 of 12)
+[y] Continue to User Journey Mapping (Step 4 of 12)
 ```
 
-On [C]: Save content, add `step-03-success` to `stepsCompleted`, proceed to Step C-4.
+On [y]: Save content, add `step-03-success` to `stepsCompleted`, proceed to Step C-4.
 
 ---
 
@@ -629,7 +629,7 @@ Explicitly state what capabilities each journey reveals. This directly feeds Fun
 4. Support/Troubleshooting
 5. API/Integration (if applicable)
 
-### 6. Append to Document (on [C])
+### 6. Append to Document (on [y])
 
 ```markdown
 ## User Journeys
@@ -646,10 +646,10 @@ Explicitly state what capabilities each journey reveals. This directly feeds Fun
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Domain Requirements (Step 5 of 12)
+[y] Continue to Domain Requirements (Step 5 of 12)
 ```
 
-On [C]: Save content, add `step-04-journeys` to `stepsCompleted`, proceed to Step C-5.
+On [y]: Save content, add `step-04-journeys` to `stepsCompleted`, proceed to Step C-5.
 
 ---
 
@@ -663,7 +663,7 @@ On [C]: Save content, add `step-04-journeys` to `stepsCompleted`, proceed to Ste
 
 **If LOW:** Offer skip option:
 ```
-[C] Skip to Innovation
+[y] Skip to Innovation
 [D] Do domain exploration anyway
 ```
 
@@ -701,7 +701,7 @@ Look up matching row in Section 4C (Domain Complexity). Extract: domain, complex
 
 "Are there other domain-specific concerns we should address? What typically gets overlooked in {domain} projects?"
 
-### 6. Append to Document (on [C])
+### 6. Append to Document (on [y])
 
 ```markdown
 ## Domain-Specific Requirements
@@ -716,10 +716,10 @@ If step was skipped, append nothing.
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Innovation (Step 6 of 12)
+[y] Continue to Innovation (Step 6 of 12)
 ```
 
-On [C]: Add `step-05-domain` to `stepsCompleted`, proceed to Step C-6.
+On [y]: Add `step-05-domain` to `stepsCompleted`, proceed to Step C-6.
 
 ---
 
@@ -763,10 +763,10 @@ Targeted discovery questions:
 Acknowledge this is fine. Offer:
 ```
 [A] Advanced Elicitation — try finding innovative angles
-[C] Continue — Skip innovation section
+[y] Continue — Skip innovation section
 ```
 
-### 6. Append to Document (on [C], if innovation found)
+### 6. Append to Document (on [y], if innovation found)
 
 ```markdown
 ## Innovation & Novel Patterns
@@ -789,10 +789,10 @@ Acknowledge this is fine. Offer:
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Project Type Analysis (Step 7 of 12)
+[y] Continue to Project Type Analysis (Step 7 of 12)
 ```
 
-On [C]: Add `step-06-innovation` to `stepsCompleted`, proceed to Step C-7.
+On [y]: Add `step-06-innovation` to `stepsCompleted`, proceed to Step C-7.
 
 ---
 
@@ -827,7 +827,7 @@ Cover areas in `required_sections`. Skip areas in `skip_sections`.
 - `browser_matrix` → Browser support
 - `command_structure` → CLI command design
 
-### 4. Append to Document (on [C])
+### 4. Append to Document (on [y])
 
 ```markdown
 ## {Project Type} Specific Requirements
@@ -849,10 +849,10 @@ Cover areas in `required_sections`. Skip areas in `skip_sections`.
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Scoping (Step 8 of 12)
+[y] Continue to Scoping (Step 8 of 12)
 ```
 
-On [C]: Add `step-07-project-type` to `stepsCompleted`, proceed to Step C-8.
+On [y]: Add `step-07-project-type` to `stepsCompleted`, proceed to Step C-8.
 
 ---
 
@@ -900,7 +900,7 @@ Critical questions:
 - **Market Risks:** Biggest risk? How does MVP address it? What learning is needed?
 - **Resource Risks:** Fewer resources available? Minimum team size? Smaller feature set?
 
-### 6. Append to Document (on [C])
+### 6. Append to Document (on [y])
 
 ```markdown
 ## Project Scoping & Phased Development
@@ -939,10 +939,10 @@ Critical questions:
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Functional Requirements (Step 9 of 12)
+[y] Continue to Functional Requirements (Step 9 of 12)
 ```
 
-On [C]: Add `step-08-scoping` to `stepsCompleted`, proceed to Step C-9.
+On [y]: Add `step-08-scoping` to `stepsCompleted`, proceed to Step C-9.
 
 ---
 
@@ -1013,7 +1013,7 @@ Number sequentially (FR1, FR2...). Aim for 20-50 FRs.
 - Each FR independent?
 - Avoided vague terms ("good", "fast", "easy")?
 
-### 6. Append to Document (on [C])
+### 6. Append to Document (on [y])
 
 ```markdown
 ## Functional Requirements
@@ -1036,10 +1036,10 @@ Number sequentially (FR1, FR2...). Aim for 20-50 FRs.
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Non-Functional Requirements (Step 10 of 12)
+[y] Continue to Non-Functional Requirements (Step 10 of 12)
 ```
 
-On [C]: Add `step-09-functional` to `stepsCompleted`, proceed to Step C-10.
+On [y]: Add `step-09-functional` to `stepsCompleted`, proceed to Step C-10.
 
 ---
 
@@ -1090,7 +1090,7 @@ For each RELEVANT category:
 
 **Include Accessibility when:** Broad public audiences, accessibility regulations, targeting users with disabilities, B2B customers with accessibility requirements.
 
-### 6. Append to Document (on [C])
+### 6. Append to Document (on [y])
 
 ```markdown
 ## Non-Functional Requirements
@@ -1116,10 +1116,10 @@ For each RELEVANT category:
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Polish Document (Step 11 of 12)
+[y] Continue to Polish Document (Step 11 of 12)
 ```
 
-On [C]: Add `step-10-nonfunctional` to `stepsCompleted`, proceed to Step C-11.
+On [y]: Add `step-10-nonfunctional` to `stepsCompleted`, proceed to Step C-11.
 
 ---
 
@@ -1163,10 +1163,10 @@ Start with original. Apply all optimizations. Verify nothing essential lost. Pre
 ```
 [A] Advanced Elicitation (→ Section 12)
 [P] Party Mode (→ Section 11)
-[C] Continue to Complete PRD (Step 12 of 12)
+[y] Continue to Complete PRD (Step 12 of 12)
 ```
 
-**On [C]:** Replace entire document content with polished version (full replace, not append). Add `step-11-polish` to `stepsCompleted`.
+**On [y]:** Replace entire document content with polished version (full replace, not append). Add `step-11-polish` to `stepsCompleted`.
 
 ---
 
@@ -1251,10 +1251,10 @@ Brief overview of PRD (sections found, approximate size, initial impression).
 ### 5. Menu
 
 ```
-[C] Continue to Format Detection
+[y] Continue to Format Detection
 ```
 
-On [C]: Add `step-v-01-discovery` to `stepsCompleted`, proceed to Step V-2.
+On [y]: Add `step-v-01-discovery` to `stepsCompleted`, proceed to Step V-2.
 
 ---
 
@@ -1291,10 +1291,10 @@ Append findings to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Information Density
+[y] Continue to Information Density
 ```
 
-On [C]: Add `step-v-02-format-detection` to `stepsCompleted`, proceed to Step V-3.
+On [y]: Add `step-v-02-format-detection` to `stepsCompleted`, proceed to Step V-3.
 
 ---
 
@@ -1332,7 +1332,7 @@ Append findings with specific examples to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Brief Coverage
+[y] Continue to Brief Coverage
 ```
 
 ---
@@ -1366,7 +1366,7 @@ Append gap analysis to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Measurability
+[y] Continue to Measurability
 ```
 
 ---
@@ -1405,7 +1405,7 @@ Append specific unmeasurable items to validation report.
 ### 5. Menu
 
 ```
-[C] Continue to Traceability
+[y] Continue to Traceability
 ```
 
 ---
@@ -1440,7 +1440,7 @@ Append traceability matrix to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Implementation Leakage
+[y] Continue to Implementation Leakage
 ```
 
 ---
@@ -1478,7 +1478,7 @@ Append specific leaky items to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Domain Compliance
+[y] Continue to Domain Compliance
 ```
 
 ---
@@ -1515,7 +1515,7 @@ Append findings to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Project Type Validation
+[y] Continue to Project Type Validation
 ```
 
 ---
@@ -1553,7 +1553,7 @@ Append findings to validation report.
 ### 5. Menu
 
 ```
-[C] Continue to SMART Validation
+[y] Continue to SMART Validation
 ```
 
 ---
@@ -1592,7 +1592,7 @@ Append per-requirement assessment to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Holistic Quality
+[y] Continue to Holistic Quality
 ```
 
 ---
@@ -1627,7 +1627,7 @@ Append narrative assessment to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Completeness
+[y] Continue to Completeness
 ```
 
 ---
@@ -1666,7 +1666,7 @@ Append section coverage table to validation report.
 ### 4. Menu
 
 ```
-[C] Continue to Final Report
+[y] Continue to Final Report
 ```
 
 ---
@@ -1775,7 +1775,7 @@ Ask user:
 ### 6. Menu
 
 ```
-[C] Continue to Review
+[y] Continue to Review
 ```
 
 ---
@@ -1859,7 +1859,7 @@ Wait for user approval or adjustments to the plan.
 ```
 [A] Advanced Elicitation (→ Section 12) — additional perspectives
 [P] Party Mode (→ Section 11) — discuss with team
-[C] Continue to Edit — proceed with approved plan
+[y] Continue to Edit — proceed with approved plan
 ```
 
 ---
@@ -1908,7 +1908,7 @@ Load complete updated PRD. Verify all approved changes applied. No unintended mo
 ### 5. Menu
 
 ```
-[C] Continue to Complete
+[y] Continue to Complete
 ```
 
 ---
@@ -2012,10 +2012,10 @@ Display: FR count, NFR count, architectural constraints, UX screens (if any). Co
 ### 6. Menu
 
 ```
-[C] Continue to Design Epics
+[y] Continue to Design Epics
 ```
 
-On [C]: Add `step-01-validate` to `stepsCompleted`, proceed to Step ES-2.
+On [y]: Add `step-01-validate` to `stepsCompleted`, proceed to Step ES-2.
 
 ---
 
@@ -2057,10 +2057,10 @@ Display complete Epic breakdown for user review. Allow reordering, splitting, me
 ### 5. Menu
 
 ```
-[C] Continue to Create Stories
+[y] Continue to Create Stories
 ```
 
-On [C]: Append Epic structure to document, add `step-02-design-epics` to `stepsCompleted`, proceed to Step ES-3.
+On [y]: Append Epic structure to document, add `step-02-design-epics` to `stepsCompleted`, proceed to Step ES-3.
 
 ---
 
@@ -2114,10 +2114,10 @@ Map stories to UX screens/flows:
 ### 6. Menu
 
 ```
-[C] Continue to Validation
+[y] Continue to Validation
 ```
 
-On [C]: Append all stories to document, add `step-03-create-stories` to `stepsCompleted`, proceed to Step ES-4.
+On [y]: Append all stories to document, add `step-03-create-stories` to `stepsCompleted`, proceed to Step ES-4.
 
 ---
 
@@ -2192,7 +2192,7 @@ Create report at `{planning_artifacts}/implementation-readiness-report.md`.
 ### 4. Menu
 
 ```
-[C] Continue to PRD Analysis
+[y] Continue to PRD Analysis
 ```
 
 ---
@@ -2223,7 +2223,7 @@ Record in report.
 ### 4. Menu
 
 ```
-[C] Continue to Epic Coverage
+[y] Continue to Epic Coverage
 ```
 
 ---
@@ -2257,7 +2257,7 @@ Record coverage percentage and gaps in report.
 ### 5. Menu
 
 ```
-[C] Continue to UX Alignment
+[y] Continue to UX Alignment
 ```
 
 ---
@@ -2288,7 +2288,7 @@ Record in report.
 ### 4. Menu
 
 ```
-[C] Continue to Epic Quality
+[y] Continue to Epic Quality
 ```
 
 ---
@@ -2321,7 +2321,7 @@ Record in report.
 ### 4. Menu
 
 ```
-[C] Continue to Final Assessment
+[y] Continue to Final Assessment
 ```
 
 ---

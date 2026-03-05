@@ -1,0 +1,8 @@
+{
+  "name": "pptx-with-templates",
+  "description": "PPTX Skill — Create, edit, and analyze PowerPoint presentations with template support",
+  "author": {
+    "name": "aknip"
+  },
+  "keywords": ["pptx", "powerpoint", "presentations", "templates", "slides"]
+}

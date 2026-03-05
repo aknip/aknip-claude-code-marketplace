@@ -4,20 +4,30 @@
     "name": "aknip"
   },
   "metadata": {
-    "description": "Use-case-driven development framework for Claude Code",
-    "version": "1.0.3",
+    "description": "Marketplace for Claude Code plugins",
+    "version": "1.1.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
     {
       "name": "esf",
       "source": "./plugins/esf-enterprise-software-factory",
-      "version": "1.0.3"
+      "version": "1.0.4"
     },
     {
       "name": "ba",
       "source": "./plugins/ba-business-analysts",
-      "version": "1.0.0"
+      "version": "1.0.1"
+    },
+    {
+      "name": "pptx-with-templates",
+      "source": "./plugins/pptx-with-templates",
+      "version": "1.0.1"
+    },
+    {
+      "name": "sales-pitch-assistant",
+      "source": "./plugins/sales-pitch-assistant",
+      "version": "1.0.1"
     }
   ]
 }

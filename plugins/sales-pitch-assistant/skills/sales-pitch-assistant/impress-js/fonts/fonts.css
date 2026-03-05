@@ -1,0 +1,81 @@
+/* Open Sans - normal 400 & 600 (variable font) */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-stretch: 100%;
+  src: url(opensans-normal.woff2) format('woff2');
+}
+
+/* Open Sans - italic 400 & 600 (variable font) */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400 600;
+  font-stretch: 100%;
+  src: url(opensans-italic.woff2) format('woff2');
+}
+
+/* PT Sans - normal 400 */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url(ptsans-normal-400.woff2) format('woff2');
+}
+
+/* PT Sans - normal 700 */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url(ptsans-normal-700.woff2) format('woff2');
+}
+
+/* PT Sans - italic 400 */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url(ptsans-italic-400.woff2) format('woff2');
+}
+
+/* PT Sans - italic 700 */
+@font-face {
+  font-family: 'PT Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: url(ptsans-italic-700.woff2) format('woff2');
+}
+
+/* PT Serif - normal 400 */
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: url(ptserif-normal-400.woff2) format('woff2');
+}
+
+/* PT Serif - normal 700 */
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 700;
+  src: url(ptserif-normal-700.woff2) format('woff2');
+}
+
+/* PT Serif - italic 400 */
+@font-face {
+  font-family: 'PT Serif';
+  font-style: italic;
+  font-weight: 400;
+  src: url(ptserif-italic-400.woff2) format('woff2');
+}
+
+/* PT Serif - italic 700 */
+@font-face {
+  font-family: 'PT Serif';
+  font-style: italic;
+  font-weight: 700;
+  src: url(ptserif-italic-700.woff2) format('woff2');
+}

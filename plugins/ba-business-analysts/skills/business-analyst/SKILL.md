@@ -143,7 +143,7 @@ web_research_enabled: true
 ```
 
 **Document confirmed scope, then present:**
-[C] Continue to customer behavior analysis | [Modify] Adjust scope
+[y] Continue to customer behavior analysis | [Modify] Adjust scope
 
 On C: Update `stepsCompleted: [1]`, proceed to Step 2.
 
@@ -175,7 +175,7 @@ On C: Update `stepsCompleted: [1]`, proceed to Step 2.
 ### Customer Interaction Patterns
 - Research/discovery, purchase process, post-purchase, loyalty (with source URLs)
 
-**Present:** [C] Continue to pain points | Update `stepsCompleted: [1, 2]`
+**Present:** [y] Continue to pain points | Update `stepsCompleted: [1, 2]`
 
 ## Step 3: Customer Pain Points & Needs
 
@@ -197,7 +197,7 @@ On C: Update `stepsCompleted: [1]`, proceed to Step 2.
 
 Each with source citations.
 
-**Present:** [C] Continue to decisions | Update `stepsCompleted: [1, 2, 3]`
+**Present:** [y] Continue to decisions | Update `stepsCompleted: [1, 2, 3]`
 
 ## Step 4: Customer Decisions & Journey
 
@@ -220,7 +220,7 @@ Each with source citations.
 
 Each with source citations.
 
-**Present:** [C] Continue to competitive analysis | Update `stepsCompleted: [1, 2, 3, 4]`
+**Present:** [y] Continue to competitive analysis | Update `stepsCompleted: [1, 2, 3, 4]`
 
 ## Step 5: Competitive Analysis
 
@@ -238,7 +238,7 @@ Each with source citations.
 
 Each with source citations.
 
-**Present:** [C] Continue to synthesis | Update `stepsCompleted: [1, 2, 3, 4, 5]`
+**Present:** [y] Continue to synthesis | Update `stepsCompleted: [1, 2, 3, 4, 5]`
 
 ## Step 6: Research Synthesis & Completion
 
@@ -296,7 +296,7 @@ Market Research Completion Date: {date}
 Source Verification: All facts cited with current sources
 ```
 
-**Present:** [C] Complete research | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`
+**Present:** [y] Complete research | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`
 
 Congratulate user and return to main menu.
 
@@ -325,7 +325,7 @@ Same clarification flow as market research (Core Domain, Goals, Scope).
 
 **Create output:** `{planning_artifacts}/research/domain-{research_topic}-research-{date}.md`
 
-Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
+Document scope. [y] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 ## Step 2: Industry/Domain Analysis
 
@@ -337,7 +337,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Industry Overview, Market Structure, Key Players and Ecosystem, Industry Value Chain, Industry Trends and Developments.
 
-[C] Continue | Update `stepsCompleted: [1, 2]`
+[y] Continue | Update `stepsCompleted: [1, 2]`
 
 ## Step 3: Competitive Landscape
 
@@ -349,7 +349,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Competitive Landscape Overview, Market Leaders, Emerging Competitors, Competitive Strategies, Benchmarking Analysis, Market Positioning.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3]`
 
 ## Step 4: Regulatory & Compliance Focus
 
@@ -360,7 +360,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Regulatory Framework, Compliance Requirements, Industry Standards, Certification Requirements, Regulatory Trends, Impact Assessment, Compliance Strategies.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3, 4]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3, 4]`
 
 ## Step 5: Technical Trends & Innovation
 
@@ -371,7 +371,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Technology Landscape, Digital Transformation, Emerging Technologies, Innovation Patterns, Technology Adoption, R&D Trends, Future Technology Outlook, Technology Investment.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3, 4, 5]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3, 4, 5]`
 
 ## Step 6: Synthesis & Completion
 
@@ -380,7 +380,7 @@ Same synthesis pattern as market research but domain-focused:
 - Strategic Recommendations, Entry Strategies, Risk Assessment, Implementation Roadmap, Future Outlook, Methodology, Appendices appended
 - Complete source documentation
 
-[C] Complete | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`. Return to menu.
+[y] Complete | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`. Return to menu.
 
 ---
 
@@ -407,7 +407,7 @@ Same clarification flow (Core Technology, Goals, Scope).
 
 **Create output:** `{planning_artifacts}/research/technical-{research_topic}-research-{date}.md`
 
-Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
+Document scope. [y] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 ## Step 2: Technology Stack Overview
 
@@ -419,7 +419,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Technology Overview, Architecture Patterns, Performance Analysis, Developer Experience, Ecosystem and Community, Technology Maturity, Comparison Matrix.
 
-[C] Continue | Update `stepsCompleted: [1, 2]`
+[y] Continue | Update `stepsCompleted: [1, 2]`
 
 ## Step 3: Integration Patterns
 
@@ -431,7 +431,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Integration Architecture, API Design Patterns, Data Flow Patterns, Third-Party Integrations, Migration Strategies, Integration Testing.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3]`
 
 ## Step 4: Architectural Patterns
 
@@ -442,7 +442,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Architecture Best Practices, Scalability Patterns, Security Architecture, Reliability/Availability, Observability/Monitoring, Cost Optimization, Architecture Decision Framework.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3, 4]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3, 4]`
 
 ## Step 5: Implementation Research
 
@@ -453,7 +453,7 @@ Document scope. [C] Continue | [Modify]. Update `stepsCompleted: [1]`.
 
 **Write sections:** Implementation Approach, Development Workflow, Testing Strategy, Deployment Patterns, CI/CD Considerations, Production Readiness, Maintenance/Operations, Implementation Timeline.
 
-[C] Continue | Update `stepsCompleted: [1, 2, 3, 4, 5]`
+[y] Continue | Update `stepsCompleted: [1, 2, 3, 4, 5]`
 
 ## Step 6: Synthesis & Completion
 
@@ -462,7 +462,7 @@ Same synthesis pattern:
 - Strategic Technical Recommendations, Implementation Roadmap, Risk Assessment, Future Technology Outlook, Methodology, Appendices appended
 - Full 12-section document with source documentation
 
-[C] Complete | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`. Return to menu.
+[y] Complete | Update `stepsCompleted: [1, 2, 3, 4, 5, 6]`. Return to menu.
 
 ---
 
@@ -529,7 +529,7 @@ If existing document found:
 4. Determine next step based on `lastStep`:
    - lastStep=1 -> Step 2, lastStep=2 -> Step 3, etc.
    - lastStep=6 -> Already complete
-5. [C] Continue to resume
+5. [y] Continue to resume
 
 ## Step 2: Product Vision Discovery
 
@@ -560,7 +560,7 @@ If existing document found:
 ### Key Differentiators
 ```
 
-**Present:** [A] Advanced Elicitation | [P] Party Mode | [C] Continue
+**Present:** [A] Advanced Elicitation | [P] Party Mode | [y] Continue
 - A -> Go to SECTION 11 with current content, return here after
 - P -> Go to SECTION 10 for perspectives, return here after
 - C -> Save, update `stepsCompleted: [1, 2]`, proceed to Step 3
@@ -582,7 +582,7 @@ If existing document found:
 ### User Journey
 ```
 
-**Present:** [A] [P] [C] -> On C: `stepsCompleted: [1, 2, 3]`, proceed to Step 4
+**Present:** [A] [P] [y] -> On C: `stepsCompleted: [1, 2, 3]`, proceed to Step 4
 
 ## Step 4: Success Metrics Definition
 
@@ -600,7 +600,7 @@ If existing document found:
 ### Key Performance Indicators
 ```
 
-**Present:** [A] [P] [C] -> On C: `stepsCompleted: [1, 2, 3, 4]`, proceed to Step 5
+**Present:** [A] [P] [y] -> On C: `stepsCompleted: [1, 2, 3, 4]`, proceed to Step 5
 
 ## Step 5: MVP Scope Definition
 
@@ -622,7 +622,7 @@ If existing document found:
 ### Future Vision
 ```
 
-**Present:** [A] [P] [C] -> On C: `stepsCompleted: [1, 2, 3, 4, 5]`, proceed to Step 6
+**Present:** [A] [P] [y] -> On C: `stepsCompleted: [1, 2, 3, 4, 5]`, proceed to Step 6
 
 ## Step 6: Completion & Validation
 
@@ -755,7 +755,7 @@ Update `stepsCompleted: [1, 2]`
 - [T] Try different technique
 - [A] Go deeper on specific idea
 - [B] Take a break
-- [C] Move to organization (default: don't offer until 100+ ideas)
+- [y] Move to organization (default: don't offer until 100+ ideas)
 
 On "next technique": Immediate smooth transition.
 
