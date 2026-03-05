@@ -9,22 +9,22 @@ function isoTimestamp(date: Date = new Date()): string {
 }
 
 /**
- * Update autopilot state in STATE.md
+ * Update autopilot state in PROJECT-STATUS.md
  */
 export async function updateAutopilotState(
   paths: DerivedPaths,
   state: Partial<AutopilotState>
 ): Promise<void> {
-  const stateFile = paths.stateFile;
+  const projectStatusFile = paths.projectStatusFile;
 
-  // Read current STATE.md
+  // Read current PROJECT-STATUS.md
   let content = '';
   try {
-    content = await fs.readFile(stateFile, 'utf-8');
+    content = await fs.readFile(projectStatusFile, 'utf-8');
   } catch {
     // File doesn't exist, create it with the state section
     content = `# State\n\n${generateAutopilotSection(state)}`;
-    await fs.writeFile(stateFile, content, 'utf-8');
+    await fs.writeFile(projectStatusFile, content, 'utf-8');
     return;
   }
 
@@ -37,7 +37,7 @@ export async function updateAutopilotState(
     content += `\n${generateAutopilotSection(state)}`;
   }
 
-  await fs.writeFile(stateFile, content, 'utf-8');
+  await fs.writeFile(projectStatusFile, content, 'utf-8');
 }
 
 /**
@@ -50,9 +50,9 @@ function generateAutopilotSection(state: Partial<AutopilotState>): string {
 
 - **Mode:** ${state.mode || 'idle'}
 - **Started:** ${state.startedAt ? isoTimestamp(state.startedAt) : now}
-- **Current Phase:** ${state.currentPhase ?? 'none'}
-- **Phases Remaining:** ${state.phasesRemaining?.join(', ') || 'none'}
-- **Phases Completed:** ${state.phasesCompleted?.join(', ') || 'none'}
+- **Current Sprint:** ${state.currentSprint ?? 'none'}
+- **Sprints Remaining:** ${state.sprintsRemaining?.join(', ') || 'none'}
+- **Sprints Completed:** ${state.sprintsCompleted?.join(', ') || 'none'}
 - **Checkpoints Pending:** ${state.checkpointsPending ?? 0}
 - **Last Error:** ${state.lastError || 'none'}
 - **Total Tokens:** ${state.totalTokens ?? 0}
@@ -77,24 +77,24 @@ function updateExistingSection(
     updates.push([/^- \*\*Mode:\*\* .*/m, `- **Mode:** ${state.mode}`]);
   }
 
-  if (state.currentPhase !== undefined) {
+  if (state.currentSprint !== undefined) {
     updates.push([
-      /^- \*\*Current Phase:\*\* .*/m,
-      `- **Current Phase:** ${state.currentPhase ?? 'none'}`,
+      /^- \*\*Current Sprint:\*\* .*/m,
+      `- **Current Sprint:** ${state.currentSprint ?? 'none'}`,
     ]);
   }
 
-  if (state.phasesRemaining !== undefined) {
+  if (state.sprintsRemaining !== undefined) {
     updates.push([
-      /^- \*\*Phases Remaining:\*\* .*/m,
-      `- **Phases Remaining:** ${state.phasesRemaining.join(', ') || 'none'}`,
+      /^- \*\*Sprints Remaining:\*\* .*/m,
+      `- **Sprints Remaining:** ${state.sprintsRemaining.join(', ') || 'none'}`,
     ]);
   }
 
-  if (state.phasesCompleted !== undefined) {
+  if (state.sprintsCompleted !== undefined) {
     updates.push([
-      /^- \*\*Phases Completed:\*\* .*/m,
-      `- **Phases Completed:** ${state.phasesCompleted.join(', ') || 'none'}`,
+      /^- \*\*Sprints Completed:\*\* .*/m,
+      `- **Sprints Completed:** ${state.sprintsCompleted.join(', ') || 'none'}`,
     ]);
   }
 
@@ -138,13 +138,13 @@ function updateExistingSection(
 }
 
 /**
- * Read current autopilot state from STATE.md
+ * Read current autopilot state from PROJECT-STATUS.md
  */
 export async function readAutopilotState(
   paths: DerivedPaths
 ): Promise<Partial<AutopilotState> | null> {
   try {
-    const content = await fs.readFile(paths.stateFile, 'utf-8');
+    const content = await fs.readFile(paths.projectStatusFile, 'utf-8');
 
     if (!content.includes('## Autopilot')) {
       return null;
@@ -157,9 +157,9 @@ export async function readAutopilotState(
     };
 
     const mode = extract('Mode') as AutopilotState['mode'] | undefined;
-    const currentPhase = extract('Current Phase');
-    const phasesRemaining = extract('Phases Remaining');
-    const phasesCompleted = extract('Phases Completed');
+    const currentSprint = extract('Current Sprint');
+    const sprintsRemaining = extract('Sprints Remaining');
+    const sprintsCompleted = extract('Sprints Completed');
     const checkpointsPending = extract('Checkpoints Pending');
     const lastError = extract('Last Error');
     const totalTokens = extract('Total Tokens');
@@ -167,17 +167,17 @@ export async function readAutopilotState(
 
     return {
       mode: mode || 'idle',
-      currentPhase:
-        currentPhase && currentPhase !== 'none'
-          ? parseInt(currentPhase, 10)
+      currentSprint:
+        currentSprint && currentSprint !== 'none'
+          ? parseInt(currentSprint, 10)
           : undefined,
-      phasesRemaining:
-        phasesRemaining && phasesRemaining !== 'none'
-          ? phasesRemaining.split(', ').map((p) => parseInt(p, 10))
+      sprintsRemaining:
+        sprintsRemaining && sprintsRemaining !== 'none'
+          ? sprintsRemaining.split(', ').map((p) => parseInt(p, 10))
           : [],
-      phasesCompleted:
-        phasesCompleted && phasesCompleted !== 'none'
-          ? phasesCompleted.split(', ').map((p) => parseInt(p, 10))
+      sprintsCompleted:
+        sprintsCompleted && sprintsCompleted !== 'none'
+          ? sprintsCompleted.split(', ').map((p) => parseInt(p, 10))
           : [],
       checkpointsPending: checkpointsPending
         ? parseInt(checkpointsPending, 10)

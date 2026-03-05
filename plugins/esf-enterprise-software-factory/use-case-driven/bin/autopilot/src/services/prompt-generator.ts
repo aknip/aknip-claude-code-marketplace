@@ -6,11 +6,11 @@ import type { DerivedPaths } from '../types/config.js';
  * Template placeholders that can be substituted
  */
 export interface TemplatePlaceholders {
-  PHASE?: string;
+  SPRINT?: string;
   PROJECT_DIR?: string;
-  PADDED_PHASE?: string;
-  PHASE_DIR?: string;
-  PHASE_NAME?: string;
+  PADDED_SPRINT?: string;
+  SPRINT_DIR?: string;
+  SPRINT_NAME?: string;
   VERSION?: string;
 }
 
@@ -23,12 +23,12 @@ export async function generatePrompt(
   options: {
     paths: DerivedPaths;
     projectDir: string;
-    phase?: number;
+    sprint?: number;
     version?: string;
     additionalPlaceholders?: Record<string, string>;
   }
 ): Promise<void> {
-  const { paths, projectDir, phase, version, additionalPlaceholders } = options;
+  const { paths, projectDir, sprint, version, additionalPlaceholders } = options;
   const templateFile = path.join(paths.promptTemplatesDir, templateName);
 
   if (!await fs.pathExists(templateFile)) {
@@ -37,36 +37,36 @@ export async function generatePrompt(
 
   let template = await fs.readFile(templateFile, 'utf-8');
 
-  // Compute phase-specific values
-  let paddedPhase = '';
-  let phaseDir = '';
-  let phaseName = '';
+  // Compute sprint-specific values
+  let paddedSprint = '';
+  let sprintDir = '';
+  let sprintName = '';
 
-  if (phase !== undefined) {
-    paddedPhase = String(phase).padStart(2, '0');
+  if (sprint !== undefined) {
+    paddedSprint = String(sprint).padStart(2, '0');
 
-    // Find phase directory
+    // Find sprint directory
     try {
-      const phaseDirs = await fs.readdir(paths.phasesDir);
-      const matchingDir = phaseDirs.find((d) => d.startsWith(`${paddedPhase}-`));
+      const sprintDirs = await fs.readdir(paths.sprintsDir);
+      const matchingDir = sprintDirs.find((d) => d.startsWith(`${paddedSprint}-`));
       if (matchingDir) {
-        phaseDir = `.planning/phases/${matchingDir}`;
-        phaseName = matchingDir.replace(`${paddedPhase}-`, '');
+        sprintDir = `.planning/sprints/${matchingDir}`;
+        sprintName = matchingDir.replace(`${paddedSprint}-`, '');
       } else {
-        phaseDir = `.planning/phases/${paddedPhase}-unknown`;
+        sprintDir = `.planning/sprints/${paddedSprint}-unknown`;
       }
     } catch {
-      phaseDir = `.planning/phases/${paddedPhase}-unknown`;
+      sprintDir = `.planning/sprints/${paddedSprint}-unknown`;
     }
   }
 
   // Build placeholders object
   const placeholders: TemplatePlaceholders = {
-    PHASE: phase?.toString() ?? '',
+    SPRINT: sprint?.toString() ?? '',
     PROJECT_DIR: projectDir,
-    PADDED_PHASE: paddedPhase,
-    PHASE_DIR: phaseDir,
-    PHASE_NAME: phaseName,
+    PADDED_SPRINT: paddedSprint,
+    SPRINT_DIR: sprintDir,
+    SPRINT_NAME: sprintName,
     VERSION: version ?? '',
     ...additionalPlaceholders,
   };
@@ -88,14 +88,14 @@ export async function generatePrompt(
  */
 export async function appendGapClosureInstructions(
   promptFile: string,
-  phaseDir: string
+  sprintDir: string
 ): Promise<void> {
   const gapInstructions = `
 
 ## GAP CLOSURE MODE
 
 This is a gap closure run. Read the VERIFICATION.md file to find gaps:
-- ${phaseDir}/*-VERIFICATION.md
+- ${sprintDir}/*-VERIFICATION.md
 
 Create plans ONLY to close the identified gaps, not to re-implement existing work.
 `;
@@ -113,7 +113,7 @@ export async function appendExecutionGapInstructions(
 
 ## GAP CLOSURE MODE
 
-Execute ONLY the gap closure plans, not all plans in the phase.
+Execute ONLY the gap closure plans, not all plans in the sprint.
 Look for plans created after the initial execution (gap closure plans).
 `;
 

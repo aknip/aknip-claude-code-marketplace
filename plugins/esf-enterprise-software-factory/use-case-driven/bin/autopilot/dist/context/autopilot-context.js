@@ -6,10 +6,10 @@ import { createContext, useContext, useReducer, useCallback } from 'react';
 const initialState = {
     config: null,
     mode: 'idle',
-    currentPhase: null,
-    phaseInfo: null,
-    totalPhases: 0,
-    phasesCompleted: [],
+    currentSprint: null,
+    sprintInfo: null,
+    totalSprints: 0,
+    sprintsCompleted: [],
     currentStage: null,
     stageDescription: '',
     stageStartTime: null,
@@ -40,25 +40,25 @@ function autopilotReducer(state, action) {
             return {
                 ...initialState,
                 config: action.config,
-                totalPhases: action.totalPhases,
+                totalSprints: action.totalSprints,
                 mode: 'running',
                 startTime: new Date(),
             };
-        case 'START_PHASE':
+        case 'START_SPRINT':
             return {
                 ...state,
-                currentPhase: action.phase,
-                phaseInfo: action.phaseInfo,
+                currentSprint: action.sprint,
+                sprintInfo: action.sprintInfo,
                 currentStage: null,
                 stageDescription: '',
                 stageStartTime: null,
                 completedStages: [],
                 activities: [],
             };
-        case 'COMPLETE_PHASE':
+        case 'COMPLETE_SPRINT':
             return {
                 ...state,
-                phasesCompleted: [...state.phasesCompleted, action.phase],
+                sprintsCompleted: [...state.sprintsCompleted, action.sprint],
                 tokens: state.tokens + action.result.tokens,
                 cost: state.cost + action.result.cost,
             };
@@ -152,14 +152,14 @@ const AutopilotContext = createContext(null);
  */
 export function AutopilotProvider({ children }) {
     const [state, dispatch] = useReducer(autopilotReducer, initialState);
-    const init = useCallback((config, totalPhases) => {
-        dispatch({ type: 'INIT', config, totalPhases });
+    const init = useCallback((config, totalSprints) => {
+        dispatch({ type: 'INIT', config, totalSprints });
     }, []);
-    const startPhase = useCallback((phase, phaseInfo) => {
-        dispatch({ type: 'START_PHASE', phase, phaseInfo });
+    const startSprint = useCallback((sprint, sprintInfo) => {
+        dispatch({ type: 'START_SPRINT', sprint, sprintInfo });
     }, []);
-    const completePhase = useCallback((phase, result) => {
-        dispatch({ type: 'COMPLETE_PHASE', phase, result });
+    const completeSprint = useCallback((sprint, result) => {
+        dispatch({ type: 'COMPLETE_SPRINT', sprint, result });
     }, []);
     const setStage = useCallback((stage, description) => {
         dispatch({ type: 'SET_STAGE', stage, description });
@@ -189,8 +189,8 @@ export function AutopilotProvider({ children }) {
             state,
             dispatch,
             init,
-            startPhase,
-            completePhase,
+            startSprint,
+            completeSprint,
             setStage,
             completeStage,
             addActivity,

@@ -3,11 +3,11 @@ import type { DerivedPaths } from '../types/config.js';
  * Template placeholders that can be substituted
  */
 export interface TemplatePlaceholders {
-    PHASE?: string;
+    SPRINT?: string;
     PROJECT_DIR?: string;
-    PADDED_PHASE?: string;
-    PHASE_DIR?: string;
-    PHASE_NAME?: string;
+    PADDED_SPRINT?: string;
+    SPRINT_DIR?: string;
+    SPRINT_NAME?: string;
     VERSION?: string;
 }
 /**
@@ -16,14 +16,14 @@ export interface TemplatePlaceholders {
 export declare function generatePrompt(templateName: string, outputFile: string, options: {
     paths: DerivedPaths;
     projectDir: string;
-    phase?: number;
+    sprint?: number;
     version?: string;
     additionalPlaceholders?: Record<string, string>;
 }): Promise<void>;
 /**
  * Append gap closure instructions to a prompt file
  */
-export declare function appendGapClosureInstructions(promptFile: string, phaseDir: string): Promise<void>;
+export declare function appendGapClosureInstructions(promptFile: string, sprintDir: string): Promise<void>;
 /**
  * Append execution gap closure instructions
  */

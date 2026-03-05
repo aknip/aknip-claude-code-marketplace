@@ -1,35 +1,35 @@
 <purpose>
-Execute a phase plan (PLAN.md) implementing Subfunction use cases and create the outcome summary (SUMMARY.md).
+Execute a sprint plan (PLAN.md) implementing Task use cases and create the outcome summary (SUMMARY.md).
 </purpose>
 
 <core_principle>
-You implement SPECIFICATIONS, not requirements. Each task references a Subfunction use case that tells you exactly what to build, what inputs/outputs to expect, and how to verify it.
+You implement SPECIFICATIONS, not requirements. Each task references a Task use case that tells you exactly what to build, what inputs/outputs to expect, and how to verify it.
 </core_principle>
 
 <process>
 
-<step name="load_plan_and_subfunctions">
-Read the PLAN.md and all referenced Subfunction use cases:
+<step name="load_plan_and_tasks">
+Read the PLAN.md and all referenced Task use cases:
 
 ```bash
-cat .planning/phases/XX-name/{phase}-{plan}-PLAN.md
+cat .planning/sprints/XX-name/{sprint}-{plan}-PLAN.md
 
-# For each subfunction referenced
-cat .planning/use-cases/subfunction/UC-SF-XXX-*.md
+# For each task referenced
+cat .planning/use-cases/task/UC-TK-XXX-*.md
 ```
 
 The PLAN.md contains:
 - `<use-case>` reference in each task
-- Context references to subfunction documents
-- Verification criteria derived from subfunctions
+- Context references to task documents
+- Verification criteria derived from tasks
 </step>
 
 <step name="setup_e2e_tests">
-Before implementing tasks, set up E2E tests (TDD RED phase):
+Before implementing tasks, set up E2E tests (TDD RED sprint):
 
 1. **Load E2E test file** from PLAN.md `<e2e_tests>` section
 2. **Flesh out test skeletons** with concrete selectors, assertions, and navigation
-3. **Run tests (RED phase):** `npx playwright test <test-file>`
+3. **Run tests (RED sprint):** `npx playwright test <test-file>`
    - Tests SHOULD fail — the feature isn't implemented yet
    - This confirms the tests are actually testing something
    - If tests accidentally pass → investigate (tests may be too weak)
@@ -38,7 +38,7 @@ Before implementing tasks, set up E2E tests (TDD RED phase):
 <step name="execute_tasks">
 For each task in the plan:
 
-1. **Read the referenced Subfunction specification**
+1. **Read the referenced Task specification**
    - Input Specification
    - Output Specification
    - Algorithm/Logic
@@ -51,7 +51,7 @@ For each task in the plan:
    - Match input/output specifications
    - Use German UI text as specified
 
-3. **Run E2E tests (GREEN phase):** `npx playwright test <test-file>`
+3. **Run E2E tests (GREEN sprint):** `npx playwright test <test-file>`
 
 4. **If tests FAIL → TDD Fix Loop:**
    ```
@@ -66,7 +66,7 @@ For each task in the plan:
    f) Max 5 attempts (from config e2e.max_fix_attempts)
    ```
 
-5. **Verify against subfunction criteria**
+5. **Verify against task criteria**
    ```yaml
    verification:
      existence:
@@ -78,27 +78,27 @@ For each task in the plan:
        - imported_by: "src/App.jsx"
    ```
 
-6. **Commit atomically per subfunction (include E2E test file!)**
+6. **Commit atomically per task (include E2E test file!)**
    ```bash
    git add [implementation-files] [e2e-test-file]
-   git commit -m "feat({phase}-{plan}): implement UC-SF-XXX {Name}
+   git commit -m "feat({sprint}-{plan}): implement UC-TK-XXX {Name}
 
    - [Key implementation detail 1]
    - [Key implementation detail 2]
    - E2E tests: {N} passed
 
-   Implements: UC-SF-XXX
-   Part-of: UC-UG-YYY"
+   Implements: UC-TK-XXX
+   Part-of: UC-EP-YYY"
    ```
 
-7. **Update subfunction status**
-   Mark subfunction as "Implemented" in document
+7. **Update task status**
+   Mark task as "Implemented" in document
 </step>
 
 <step name="regression_check">
 After ALL tasks in the plan are complete:
 
-1. **Run phase regression:** `npx playwright test tests/e2e/v{VERSION}/phase-{NN}/`
+1. **Run sprint regression:** `npx playwright test tests/e2e/v{VERSION}/sprint-{NN}/`
 2. **If regression fails:**
    - Identify which test(s) failed
    - Fix the regression (preserve backward compatibility)
@@ -128,7 +128,7 @@ agent-browser snapshot
 ```
 
 Save screenshots with timestamp and use case reference:
-`2026-01-26_143000_UC-SF-001_validation.png`
+`2026-01-26_143000_UC-TK-001_validation.png`
 </step>
 
 <step name="create_summary">
@@ -136,17 +136,17 @@ Create SUMMARY.md using template from `./use-case-driven/templates/summary.md`.
 
 **Required sections for use case driven:**
 - Use Case Implementation Status table
-- User-Goal Progress calculation
-- Subfunction commits with traceability
+- Epic Progress calculation
+- Task commits with traceability
 - Screenshots (if browser tests run)
 
 **One-liner must reference use cases:**
-Good: "Task creation implementing UC-SF-001, UC-SF-002 per specification"
+Good: "Task creation implementing UC-TK-001, UC-TK-002 per specification"
 Bad: "Tasks completed"
 </step>
 
 <step name="update_state">
-Update STATE.md with:
+Update PROJECT-STATUS.md with:
 - Current position
 - Use case progress
 - Decisions made
@@ -170,15 +170,15 @@ When encountering `type="checkpoint:*"`:
 </checkpoint_handling>
 
 <success_criteria>
-- E2E tests set up and run in RED phase before implementation
-- All tasks executed per subfunction specifications
-- E2E tests pass for each subfunction (GREEN phase)
+- E2E tests set up and run in RED sprint before implementation
+- All tasks executed per task specifications
+- E2E tests pass for each task (GREEN sprint)
 - TDD fix loop used when tests fail (agent-browser first, then E2E)
-- Each subfunction committed atomically (including E2E test files)
-- Verification criteria pass for each subfunction
-- Phase regression tests pass after plan completion
+- Each task committed atomically (including E2E test files)
+- Verification criteria pass for each task
+- Sprint regression tests pass after plan completion
 - SUMMARY.md created with use case tracking and E2E test results
-- Subfunction statuses updated to "Implemented"
+- Task statuses updated to "Implemented"
 - Screenshots captured (if UI)
-- STATE.md updated
+- PROJECT-STATUS.md updated
 </success_criteria>

@@ -3,14 +3,14 @@ import { Box, Text } from 'ink';
 
 export interface HeaderProps {
   projectName?: string;
-  currentPhase: number;
-  totalPhases: number;
+  currentSprint: number;
+  totalSprints: number;
 }
 
 /**
- * Header component showing "UC AUTOPILOT" and phase counter
+ * Header component showing "UC AUTOPILOT" and sprint counter
  */
-export function Header({ projectName, currentPhase, totalPhases }: HeaderProps) {
+export function Header({ projectName, currentSprint, totalSprints }: HeaderProps) {
   return (
     <Box flexDirection="column">
       <Box>
@@ -19,7 +19,7 @@ export function Header({ projectName, currentPhase, totalPhases }: HeaderProps) 
         </Text>
         <Box flexGrow={1} />
         <Text>
-          Phase {currentPhase}/{totalPhases}
+          Sprint {currentSprint}/{totalSprints}
         </Text>
       </Box>
       {projectName && (

@@ -43,7 +43,7 @@ export function getStageIcon(stage) {
  */
 export function getAgentInfo(agent) {
     const agents = {
-        'uc-phase-researcher': { icon: '🔬', name: 'Phase Researcher' },
+        'uc-sprint-researcher': { icon: '🔬', name: 'Sprint Researcher' },
         'uc-planner': { icon: '📋', name: 'Planner' },
         'uc-checker': { icon: '✅', name: 'Checker' },
         'uc-executor': { icon: '🔨', name: 'Executor' },

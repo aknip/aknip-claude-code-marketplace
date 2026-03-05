@@ -3,7 +3,7 @@
  */
 
 export { Header } from './Header.js';
-export { PhaseInfo } from './PhaseInfo.js';
+export { SprintInfo } from './SprintInfo.js';
 export { StageProgress } from './StageProgress.js';
 export { CurrentStage } from './CurrentStage.js';
 export { ActivityFeed } from './ActivityFeed.js';

@@ -10,7 +10,7 @@ Start a new milestone cycle (e.g., v2.0.0) after completing the previous milesto
 
 - After completing a milestone with `/esf:complete-milestone`
 - Ready to start planning next version (v2.0.0, v3.0.0, etc.)
-- Want to begin a new development cycle with fresh phases
+- Want to begin a new development cycle with fresh sprints
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ Creates clean structure for new milestone:
 Creating new milestone structure...
 
 Creating:
-   .planning/phases/           # Fresh, empty phases directory
+   .planning/sprints/           # Fresh, empty sprints directory
 ```
 
 Preserving:
@@ -68,9 +68,9 @@ Preserving:
    .planning/config.json       # Configuration settings
 ```
 
-### 4. Reset STATE.md
+### 4. Reset PROJECT-STATUS.md
 
-Resets STATE.md for new milestone tracking:
+Resets PROJECT-STATUS.md for new milestone tracking:
 
 ```markdown
 # Project State
@@ -81,7 +81,7 @@ Resets STATE.md for new milestone tracking:
 
 ---
 
-## Current Phase
+## Current Sprint
 
 None (milestone planning in progress)
 
@@ -106,7 +106,7 @@ Planning new features for v2.0.0
 [Space for session notes]
 ```
 
-### 5. Update ROADMAP.md
+### 5. Update PROJECT-PLAN.md
 
 Updates roadmap for new milestone:
 
@@ -123,9 +123,9 @@ Updates roadmap for new milestone:
 **Status:** Planning
 **Target Date:** TBD
 
-### Phases
+### Sprints
 
-[No phases yet - add with /esf:add-phase]
+[No sprints yet - add with /esf:add-sprint]
 
 ---
 
@@ -137,10 +137,10 @@ Updates roadmap for new milestone:
 **Archive:** `.planning/milestones/v1.0.0/`
 **Git Tag:** v1.0.0
 
-#### Completed Phases
-1. Phase 01: Foundation ✅
-2. Phase 02: User Authentication ✅
-3. Phase 03: User Profile ✅
+#### Completed Sprints
+1. Sprint 01: Foundation ✅
+2. Sprint 02: User Authentication ✅
+3. Sprint 03: User Profile ✅
 
 ---
 ```
@@ -190,7 +190,7 @@ Any specific features or capabilities? (Enter to skip)
 ✅ Goals captured. These will be added to PROJECT.md.
 
 Next Steps:
-   1. Run /esf:add-phase to add phases for v2
+   1. Run /esf:add-sprint to add sprints for v2
    2. Or run /esf:new-project --milestone to do full use case analysis for v2
 ```
 
@@ -228,10 +228,10 @@ NEW MILESTONE: v2.0.0
 SETUP COMPLETE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Created fresh phases/ directory
+✅ Created fresh sprints/ directory
 ✅ Preserved PROJECT.md (actors and vision)
-✅ Reset STATE.md for v2
-✅ Updated ROADMAP.md
+✅ Reset PROJECT-STATUS.md for v2
+✅ Updated PROJECT-PLAN.md
 ✅ Reset use case tracking
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -240,16 +240,16 @@ NEXT STEPS
 
 Choose your approach:
 
-1️⃣  Add phases manually:
-   /esf:add-phase payment-integration
-   /esf:add-phase subscription-management
+1️⃣  Add sprints manually:
+   /esf:add-sprint payment-integration
+   /esf:add-sprint subscription-management
 
 2️⃣  Full use case analysis for v2:
    /esf:new-project --milestone
    (Runs questioning session for v2 features)
 
 3️⃣  Plan incrementally:
-   Start with one phase, plan more as you go
+   Start with one sprint, plan more as you go
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -267,13 +267,13 @@ Without `--interactive`:
 🚀 Starting Milestone v2.0.0
 
 ✅ Setup Complete:
-   - Created fresh phases/ directory
-   - Reset STATE.md for v2.0.0
-   - Updated ROADMAP.md
+   - Created fresh sprints/ directory
+   - Reset PROJECT-STATUS.md for v2.0.0
+   - Updated PROJECT-PLAN.md
    - Preserved PROJECT.md
 
 Next Steps:
-   1. Add phases: /esf:add-phase [name]
+   1. Add sprints: /esf:add-sprint [name]
    2. Or run: /esf:new-milestone --interactive
    3. View progress: /esf:progress
 
@@ -296,7 +296,7 @@ Recommendations:
    2. Or force new milestone: /esf:new-milestone --force
 
 Note: Using --force will start v2 without completing v1.
-      Previous work remains in phases/ directory (not archived).
+      Previous work remains in sprints/ directory (not archived).
 ```
 
 ## Version Numbering
@@ -319,13 +319,13 @@ Custom version:
 - Git repository and history
 
 **Reset for new milestone:**
-- phases/ directory (emptied, ready for v2 phases)
-- STATE.md (reset with v2 header)
-- ROADMAP.md (v2 section, v1 moved to history)
+- sprints/ directory (emptied, ready for v2 sprints)
+- PROJECT-STATUS.md (reset with v2 header)
+- PROJECT-PLAN.md (v2 section, v1 moved to history)
 - Use case completion tracking (structure preserved)
 
 **Archived from v1:**
-- All phase directories
+- All sprint directories
 - All use case documents
 - Verification results
 - State snapshots
@@ -333,16 +333,16 @@ Custom version:
 ## Related Commands
 
 - `/esf:complete-milestone` - Complete current milestone before starting new one
-- `/esf:add-phase` - Add phases to new milestone
+- `/esf:add-sprint` - Add sprints to new milestone
 - `/esf:audit-milestone` - Check v1 completeness before v2
 - `/esf:progress` - View milestone progress
 
 ## Files Modified
 
-- `.planning/STATE.md` - Reset for v2
-- `.planning/ROADMAP.md` - Add v2 section, archive v1
+- `.planning/PROJECT-STATUS.md` - Reset for v2
+- `.planning/PROJECT-PLAN.md` - Add v2 section, archive v1
 - `.planning/PROJECT.md` - Add milestone history section
-- `.planning/phases/` - Emptied for fresh start
+- `.planning/sprints/` - Emptied for fresh start
 
 ## Files Created
 
@@ -354,9 +354,9 @@ This command should:
 
 1. Check prerequisites (previous milestone complete, archive exists)
 2. Determine new version (auto-increment or from flag)
-3. Create clean phases/ directory (move old to archive if not already done)
-4. Reset STATE.md with v2 header and preserve milestone history
-5. Update ROADMAP.md with v2 section and move v1 to history
+3. Create clean sprints/ directory (move old to archive if not already done)
+4. Reset PROJECT-STATUS.md with v2 header and preserve milestone history
+5. Update PROJECT-PLAN.md with v2 section and move v1 to history
 6. Update PROJECT.md with milestone section
 7. Reset use case tracking (keep structure, clear completion)
 8. If `--interactive`, run goal definition prompts
@@ -366,4 +366,4 @@ The implementation should:
 - **Preserve continuity:** Keep PROJECT.md actors and vision
 - **Safe reset:** Don't delete v1 work (should be archived already)
 - **Clear state:** Make it obvious we're in v2 planning mode
-- **Flexible start:** Support both manual phase addition and full use case analysis
+- **Flexible start:** Support both manual sprint addition and full use case analysis

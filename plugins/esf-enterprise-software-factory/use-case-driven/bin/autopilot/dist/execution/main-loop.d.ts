@@ -1,18 +1,18 @@
-import type { AutopilotConfig, DerivedPaths, PhaseResult, PhaseInfo } from '../types/config.js';
+import type { AutopilotConfig, DerivedPaths, SprintResult, SprintInfo } from '../types/config.js';
 import type { ActivityEntry, StageName } from '../types/events.js';
 /**
  * Callback interface for main loop events
  */
 export interface MainLoopCallbacks {
-    onPhaseStart?: (phase: number, phaseInfo: PhaseInfo | null, index: number, total: number) => void;
-    onPhaseComplete?: (phase: number, result: PhaseResult) => void;
+    onSprintStart?: (sprint: number, sprintInfo: SprintInfo | null, index: number, total: number) => void;
+    onSprintComplete?: (sprint: number, result: SprintResult) => void;
     onActivity?: (activity: ActivityEntry) => void;
     onStageChange?: (stage: StageName, description: string) => void;
     onTokenUpdate?: (tokens: number) => void;
     onError?: (error: string) => void;
     onBudgetWarning?: (used: number, budget: number) => void;
     onBudgetExceeded?: (used: number, budget: number) => void;
-    onComplete?: (results: PhaseResult[]) => void;
+    onComplete?: (results: SprintResult[]) => void;
     log?: (level: string, message: string) => void;
 }
 /**
@@ -20,8 +20,8 @@ export interface MainLoopCallbacks {
  */
 export interface MainLoopResult {
     success: boolean;
-    phasesCompleted: number[];
-    phasesFailed: number[];
+    sprintsCompleted: number[];
+    sprintsFailed: number[];
     totalTokens: number;
     totalCost: number;
     duration: number;

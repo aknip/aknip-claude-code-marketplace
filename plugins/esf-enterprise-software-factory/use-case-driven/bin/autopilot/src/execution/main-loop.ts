@@ -1,24 +1,24 @@
-import { executePhase, ExecutionLogger } from './execute-phase.js';
+import { executeSprint, ExecutionLogger } from './execute-sprint.js';
 import { updateAutopilotState } from '../services/state-manager.js';
-import { loadPhaseInfo } from '../services/phase-loader.js';
+import { loadSprintInfo } from '../services/sprint-loader.js';
 import { getApprovedCheckpoints, markCheckpointProcessed } from '../services/checkpoint-handler.js';
 import { createCostTracker, trackPhase, isBudgetExceeded, isBudgetWarning, formatCost } from '../services/cost-tracker.js';
-import type { AutopilotConfig, DerivedPaths, PhaseResult, PhaseInfo } from '../types/config.js';
+import type { AutopilotConfig, DerivedPaths, SprintResult, SprintInfo } from '../types/config.js';
 import type { ActivityEntry, StageName } from '../types/events.js';
 
 /**
  * Callback interface for main loop events
  */
 export interface MainLoopCallbacks {
-  onPhaseStart?: (phase: number, phaseInfo: PhaseInfo | null, index: number, total: number) => void;
-  onPhaseComplete?: (phase: number, result: PhaseResult) => void;
+  onSprintStart?: (sprint: number, sprintInfo: SprintInfo | null, index: number, total: number) => void;
+  onSprintComplete?: (sprint: number, result: SprintResult) => void;
   onActivity?: (activity: ActivityEntry) => void;
   onStageChange?: (stage: StageName, description: string) => void;
   onTokenUpdate?: (tokens: number) => void;
   onError?: (error: string) => void;
   onBudgetWarning?: (used: number, budget: number) => void;
   onBudgetExceeded?: (used: number, budget: number) => void;
-  onComplete?: (results: PhaseResult[]) => void;
+  onComplete?: (results: SprintResult[]) => void;
   log?: (level: string, message: string) => void;
 }
 
@@ -27,8 +27,8 @@ export interface MainLoopCallbacks {
  */
 export interface MainLoopResult {
   success: boolean;
-  phasesCompleted: number[];
-  phasesFailed: number[];
+  sprintsCompleted: number[];
+  sprintsFailed: number[];
   totalTokens: number;
   totalCost: number;
   duration: number;
@@ -44,53 +44,53 @@ export async function runMainLoop(
   callbacks: MainLoopCallbacks = {}
 ): Promise<MainLoopResult> {
   const startTime = Date.now();
-  const phases = config.phases;
-  const totalPhases = phases.length;
-  const results: PhaseResult[] = [];
+  const sprints = config.sprints;
+  const totalSprints = sprints.length;
+  const results: SprintResult[] = [];
   const costTracker = createCostTracker();
 
   const log = callbacks.log || (() => {});
 
-  // Initialize remaining phases
-  let remainingPhases = [...phases];
-  const completedPhases: number[] = [];
-  const failedPhases: number[] = [];
+  // Initialize remaining sprints
+  let remainingSprints = [...sprints];
+  const completedSprints: number[] = [];
+  const failedSprints: number[] = [];
 
-  log('INFO', `Autopilot starting with ${totalPhases} phases: ${phases.join(', ')}`);
+  log('INFO', `Autopilot starting with ${totalSprints} sprints: ${sprints.join(', ')}`);
 
   // Update initial state
   await updateAutopilotState(paths, {
     mode: 'running',
     startedAt: new Date(),
-    currentPhase: phases[0],
-    phasesRemaining: remainingPhases,
-    phasesCompleted: [],
+    currentSprint: sprints[0],
+    sprintsRemaining: remainingSprints,
+    sprintsCompleted: [],
     totalTokens: 0,
     totalCost: 0,
   });
 
-  for (let i = 0; i < phases.length; i++) {
-    const phase = phases[i];
+  for (let i = 0; i < sprints.length; i++) {
+    const sprint = sprints[i];
 
     // Process any approved checkpoints first
     await processApprovedCheckpoints(config, paths, log);
 
     // Update state
-    remainingPhases = phases.slice(i + 1);
+    remainingSprints = sprints.slice(i + 1);
     await updateAutopilotState(paths, {
       mode: 'running',
-      currentPhase: phase,
-      phasesRemaining: remainingPhases,
-      phasesCompleted: completedPhases,
+      currentSprint: sprint,
+      sprintsRemaining: remainingSprints,
+      sprintsCompleted: completedSprints,
     });
 
-    // Load phase info
-    const phaseInfo = await loadPhaseInfo(paths, phase);
+    // Load sprint info
+    const sprintInfo = await loadSprintInfo(paths, sprint);
 
-    // Notify phase start
-    callbacks.onPhaseStart?.(phase, phaseInfo, i, totalPhases);
+    // Notify sprint start
+    callbacks.onSprintStart?.(sprint, sprintInfo, i, totalSprints);
 
-    // Create logger for this phase
+    // Create logger for this sprint
     const logger: ExecutionLogger = {
       log,
       onActivity: callbacks.onActivity,
@@ -98,45 +98,45 @@ export async function runMainLoop(
       onTokenUpdate: callbacks.onTokenUpdate,
     };
 
-    // Execute the phase
-    const result = await executePhase(phase, config, paths, logger);
+    // Execute the sprint
+    const result = await executeSprint(sprint, config, paths, logger);
     results.push(result);
 
     // Track costs
-    trackPhase(costTracker, phase, result.tokens, Math.round(result.cost * 100));
+    trackPhase(costTracker, sprint, result.tokens, Math.round(result.cost * 100));
 
-    // Notify phase complete
-    callbacks.onPhaseComplete?.(phase, result);
+    // Notify sprint complete
+    callbacks.onSprintComplete?.(sprint, result);
 
     // Handle result
     if (result.status === 'passed' || result.status === 'human_needed') {
-      completedPhases.push(phase);
-      log('SUCCESS', `Phase ${phase} completed: ${result.status}`);
+      completedSprints.push(sprint);
+      log('SUCCESS', `Sprint ${sprint} completed: ${result.status}`);
     } else {
-      failedPhases.push(phase);
-      log('ERROR', `Phase ${phase} failed: ${result.error || result.status}`);
+      failedSprints.push(sprint);
+      log('ERROR', `Sprint ${sprint} failed: ${result.error || result.status}`);
 
       // Update state with failure
       await updateAutopilotState(paths, {
         mode: 'failed',
-        currentPhase: phase,
-        phasesRemaining: remainingPhases,
-        phasesCompleted: completedPhases,
-        lastError: `phase_${phase}_failed`,
+        currentSprint: sprint,
+        sprintsRemaining: remainingSprints,
+        sprintsCompleted: completedSprints,
+        lastError: `phase_${sprint}_failed`,
         totalTokens: costTracker.totalTokens,
         totalCost: costTracker.totalCostCents / 100,
       });
 
-      callbacks.onError?.(`Phase ${phase} failed after ${result.attempts} attempts`);
+      callbacks.onError?.(`Sprint ${sprint} failed after ${result.attempts} attempts`);
 
       return {
         success: false,
-        phasesCompleted: completedPhases,
-        phasesFailed: failedPhases,
+        sprintsCompleted: completedSprints,
+        sprintsFailed: failedSprints,
         totalTokens: costTracker.totalTokens,
         totalCost: costTracker.totalCostCents / 100,
         duration: Math.floor((Date.now() - startTime) / 1000),
-        error: `Stopped at phase ${phase}`,
+        error: `Stopped at sprint ${sprint}`,
       };
     }
 
@@ -158,8 +158,8 @@ export async function runMainLoop(
 
         return {
           success: false,
-          phasesCompleted: completedPhases,
-          phasesFailed: [],
+          sprintsCompleted: completedSprints,
+          sprintsFailed: [],
           totalTokens: costTracker.totalTokens,
           totalCost: costTracker.totalCostCents / 100,
           duration: Math.floor((Date.now() - startTime) / 1000),
@@ -182,9 +182,9 @@ export async function runMainLoop(
   // Update final state
   await updateAutopilotState(paths, {
     mode: 'completed',
-    currentPhase: undefined,
-    phasesRemaining: [],
-    phasesCompleted: completedPhases,
+    currentSprint: undefined,
+    sprintsRemaining: [],
+    sprintsCompleted: completedSprints,
     totalTokens: costTracker.totalTokens,
     totalCost: costTracker.totalCostCents / 100,
   });
@@ -192,12 +192,12 @@ export async function runMainLoop(
   // Notify completion
   callbacks.onComplete?.(results);
 
-  log('SUCCESS', `Autopilot completed: ${completedPhases.length} phases, ${formatCost(costTracker.totalCostCents)}`);
+  log('SUCCESS', `Autopilot completed: ${completedSprints.length} sprints, ${formatCost(costTracker.totalCostCents)}`);
 
   return {
     success: true,
-    phasesCompleted: completedPhases,
-    phasesFailed: [],
+    sprintsCompleted: completedSprints,
+    sprintsFailed: [],
     totalTokens: costTracker.totalTokens,
     totalCost: costTracker.totalCostCents / 100,
     duration: Math.floor((Date.now() - startTime) / 1000),
@@ -231,6 +231,6 @@ export async function resumeMainLoop(
   callbacks: MainLoopCallbacks = {}
 ): Promise<MainLoopResult> {
   // This is essentially the same as runMainLoop since
-  // phase completion is already tracked via VERIFICATION.md files
+  // sprint completion is already tracked via VERIFICATION.md files
   return runMainLoop(config, paths, callbacks);
 }

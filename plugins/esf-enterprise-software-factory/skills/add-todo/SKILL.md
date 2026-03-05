@@ -4,15 +4,15 @@ description: Add persistent TODO items to track tasks across sessions
 
 ## Purpose
 
-Add persistent TODO items to track tasks, reminders, and follow-up work across sessions. Integrates with phase tracking for better organization.
+Add persistent TODO items to track tasks, reminders, and follow-up work across sessions. Integrates with sprint tracking for better organization.
 
 ## When to Use
 
 - Discovered tech debt during implementation
 - Remembered something to do later
 - Notes from code review
-- Follow-up tasks after phase completion
-- Questions to answer before next phase
+- Follow-up tasks after sprint completion
+- Questions to answer before next sprint
 - Refactoring ideas
 
 ## Prerequisites
@@ -22,7 +22,7 @@ None - can add TODOs anytime
 ## Usage
 
 ```bash
-/esf:add-todo [text] [--phase N] [--priority high|medium|low] [--tag "label"]
+/esf:add-todo [text] [--sprint N] [--priority high|medium|low] [--tag "label"]
 ```
 
 ### Arguments
@@ -31,7 +31,7 @@ None - can add TODOs anytime
 
 ### Flags
 
-- `--phase N`: Associate with specific phase
+- `--sprint N`: Associate with specific sprint
 - `--priority high|medium|low`: Priority level (default: medium)
 - `--tag "label"`: Tag for categorization (e.g., "refactor", "security", "testing")
 
@@ -49,7 +49,7 @@ TODO-20260127-001
 Records:
 - Text description
 - Priority (high/medium/low)
-- Phase assignment (if provided)
+- Sprint assignment (if provided)
 - Tag(s) for categorization
 - Creation timestamp
 - Creator (if multi-user project)
@@ -58,12 +58,12 @@ Records:
 
 Appends to `.planning/TODO.md`:
 ```markdown
-- [ ] #TODO-20260127-001 [HIGH] Review error handling patterns (Phase 02) #refactor
+- [ ] #TODO-20260127-001 [HIGH] Review error handling patterns (Sprint 02) #refactor
 ```
 
-### 4. Update STATE.md
+### 4. Update PROJECT-STATUS.md
 
-Increments TODO counter in STATE.md header:
+Increments TODO counter in PROJECT-STATUS.md header:
 ```markdown
 **TODOs:** 5 pending
 ```
@@ -71,7 +71,7 @@ Increments TODO counter in STATE.md header:
 ## Output Example
 
 ```bash
-/esf:add-todo "Review error handling patterns" --phase 2 --priority high --tag "refactor"
+/esf:add-todo "Review error handling patterns" --sprint 2 --priority high --tag "refactor"
 ```
 
 ```
@@ -83,7 +83,7 @@ TODO DETAILS
 
 ID: TODO-20260127-001
 Priority: high 🔴
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Tag: refactor
 Text: Review error handling patterns
 Created: 2026-01-27 16:45
@@ -95,14 +95,14 @@ Created: 2026-01-27 16:45
 View all TODOs:
    /esf:check-todos
 
-View phase TODOs:
-   /esf:check-todos --phase 2
+View sprint TODOs:
+   /esf:check-todos --sprint 2
 ```
 
 ## Multiple TODOs at Once
 
 ```bash
-/esf:add-todo "Add German translations for error messages" --phase 2 --priority medium
+/esf:add-todo "Add German translations for error messages" --sprint 2 --priority medium
 /esf:add-todo "Setup CI/CD pipeline" --priority high --tag "devops"
 /esf:add-todo "Write API documentation" --priority low --tag "docs"
 ```
@@ -110,7 +110,7 @@ View phase TODOs:
 ```
 ✅ 3 TODOs Added
 
-TODO-20260127-002 [MEDIUM] Add German translations (Phase 02)
+TODO-20260127-002 [MEDIUM] Add German translations (Sprint 02)
 TODO-20260127-003 [HIGH] Setup CI/CD pipeline
 TODO-20260127-004 [LOW] Write API documentation
 
@@ -128,7 +128,7 @@ View: /esf:check-todos
 
 ID: TODO-20260127-005
 Priority: medium (default)
-Phase: Unassigned
+Sprint: Unassigned
 Text: Fix typo in login form
 
 Added to: .planning/TODO.md
@@ -140,7 +140,7 @@ Added to: .planning/TODO.md
 /esf:add-todo "Refactor auth service:
 - Extract validation logic
 - Add unit tests
-- Improve error messages" --phase 2 --priority high
+- Improve error messages" --sprint 2 --priority high
 ```
 
 ```
@@ -148,7 +148,7 @@ Added to: .planning/TODO.md
 
 ID: TODO-20260127-006
 Priority: high 🔴
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Text: Refactor auth service:
       - Extract validation logic
       - Add unit tests
@@ -193,7 +193,7 @@ Enter TODO text (or Ctrl+C to cancel):
 Priority? [high/medium/low] (default: medium):
 > high
 
-Assign to phase? [1-3 or Enter to skip]:
+Assign to sprint? [1-3 or Enter to skip]:
 > 2
 
 Add tag? (Enter to skip):
@@ -203,7 +203,7 @@ Add tag? (Enter to skip):
 
 ID: TODO-20260127-008
 Priority: high 🔴
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Tag: performance
 Text: Review database indexes for performance
 
@@ -223,21 +223,21 @@ Using next available ID: TODO-20260127-002
 ✅ TODO Added with ID: TODO-20260127-002
 ```
 
-## Invalid Phase
+## Invalid Sprint
 
 ```bash
-/esf:add-todo "Task" --phase 99
+/esf:add-todo "Task" --sprint 99
 ```
 
 ```
-⚠️  Phase Not Found
+⚠️  Sprint Not Found
 
-Phase 99 does not exist.
-Current phases: 01-03
+Sprint 99 does not exist.
+Current sprints: 01-03
 
 Options:
    1. Add as unassigned: /esf:add-todo "Task"
-   2. Assign to existing phase: /esf:add-todo "Task" --phase [1-3]
+   2. Assign to existing sprint: /esf:add-todo "Task" --sprint [1-3]
    3. Cancel
 
 What would you like to do? [1/2/3]:
@@ -256,7 +256,7 @@ What would you like to do? [1/2/3]:
 
 ## Pending
 
-### Phase 02: user-authentication
+### Sprint 02: user-authentication
 
 #### High Priority 🔴
 
@@ -324,23 +324,23 @@ What would you like to do? [1/2/3]:
 ## Files Modified
 
 - `.planning/TODO.md` - TODO appended
-- `.planning/STATE.md` - TODO counter updated
+- `.planning/PROJECT-STATUS.md` - TODO counter updated
 
 ## Files Created
 
 - `.planning/TODO.md` - Created if doesn't exist (first TODO)
 
-## Integration with Phases
+## Integration with Sprints
 
-TODOs assigned to phases appear in phase context:
+TODOs assigned to sprints appear in sprint context:
 
 ```bash
-/esf:plan-phase 2
+/esf:plan-sprint 2
 ```
 
 Agent sees:
 ```
-Phase 02 has 3 pending TODOs:
+Sprint 02 has 3 pending TODOs:
 - TODO-20260127-001: Review error handling patterns
 - TODO-20260127-002: Add German translations
 - TODO-20260127-006: Refactor auth service
@@ -352,15 +352,15 @@ This command should:
 
 1. **Parse arguments** - Extract text, flags
 2. **Generate ID** - Timestamp-based, ensure unique
-3. **Validate phase** - Check phase exists if --phase provided
+3. **Validate sprint** - Check sprint exists if --sprint provided
 4. **Format TODO** - Create markdown checkbox entry
-5. **Update TODO.md** - Append in correct section (pending, by phase, by priority)
-6. **Update STATE.md** - Increment TODO counter
+5. **Update TODO.md** - Append in correct section (pending, by sprint, by priority)
+6. **Update PROJECT-STATUS.md** - Increment TODO counter
 7. **Display confirmation** - Show ID and details
 
 The implementation should:
 - **Be fast** - Complete in < 1 second
 - **Handle multi-line** - Support newlines in TODO text
 - **Sort intelligently** - High priority first, then medium, then low
-- **Group by phase** - Keep phase TODOs together
+- **Group by sprint** - Keep sprint TODOs together
 - **Preserve formatting** - Maintain TODO.md structure

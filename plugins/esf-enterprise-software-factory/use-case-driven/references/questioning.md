@@ -14,14 +14,14 @@ Don't interrogate. Collaborate. Don't follow a script. Follow the thread.
 
 <the_goal>
 
-By the end of questioning, you need enough clarity to write a PROJECT.md that downstream phases can act on:
+By the end of questioning, you need enough clarity to write a PROJECT.md that downstream sprints can act on:
 
 - **Use Case Analysis** needs: who the actors are, what they want to achieve, system boundaries
-- **Roadmap** needs: clear enough vision to decompose into phases by use case
-- **Plan-phase** needs: User-Goal use cases with scenarios to extract subfunctions from
-- **Execute-phase** needs: success criteria from postconditions, the "why" behind use cases
+- **Roadmap** needs: clear enough vision to decompose into sprints by use case
+- **Plan-sprint** needs: Epic use cases with scenarios to extract tasks from
+- **Execute-sprint** needs: success criteria from postconditions, the "why" behind use cases
 
-A vague PROJECT.md forces every downstream phase to guess. The cost compounds.
+A vague PROJECT.md forces every downstream sprint to guess. The cost compounds.
 
 </the_goal>
 

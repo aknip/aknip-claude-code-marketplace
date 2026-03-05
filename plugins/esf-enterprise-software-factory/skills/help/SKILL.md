@@ -27,24 +27,24 @@ RUP-based use case methodology for Claude Code projects.
                              and Mermaid roadmaps before use case analysis.
 /esf:use-case-analysis        Extract use cases and create roadmap
 /esf:analyze-requirements     Extract use cases from existing requirements
-/esf:create-roadmap           Generate roadmap from use case hierarchy
+/esf:create-project-plan           Generate roadmap from use case hierarchy
 /esf:map-codebase             Analyze existing codebase (brownfield projects)
                              --quick      Fast scan (2-3 min)
                              --detailed   Deep analysis (20+ min)
 
-## Phase Workflow
+## Sprint Workflow
 
-/esf:discuss-phase [N]        Gather context through adaptive questioning
+/esf:discuss-sprint [N]        Gather context through adaptive questioning
                              Run BEFORE planning to capture preferences
 
-/esf:plan-phase [N]           Create execution plan from use cases
-                             --skip-research    Skip phase research
+/esf:plan-sprint [N]           Create execution plan from use cases
+                             --skip-research    Skip sprint research
                              --re-research      Force new research
                              --gaps             Create gap closure plans
 
-/esf:execute-phase [N]        Execute plans with scenario verification
+/esf:execute-sprint [N]        Execute plans with scenario verification
 
-/esf:verify-phase [N]         Verify use case scenarios (standalone)
+/esf:verify-sprint [N]         Verify use case scenarios (standalone)
 
 /esf:quick                    Execute small ad-hoc tasks with UC guarantees
                              Bypasses research/verification for speed
@@ -52,11 +52,11 @@ RUP-based use case methodology for Claude Code projects.
 ## Automated Execution
 
 /esf:autopilot                Fully automated milestone execution
-                             --from-phase N     Start from specific phase
+                             --from-sprint N     Start from specific sprint
                              --dry-run          Generate script only
                              --background       Run detached with nohup
                              Generates shell script for external terminal.
-                             Executes: plan → execute → verify → next phase.
+                             Executes: plan → execute → verify → next sprint.
 
 /esf:checkpoints              Review and approve pending human input
                              Interactive guided flow for checkpoints
@@ -76,20 +76,20 @@ RUP-based use case methodology for Claude Code projects.
                              --detailed         Verbose output
                              --output FILE      Save report to file
 
-## Phase Management
+## Sprint Management
 
-/esf:add-phase [name]         Add new phase to roadmap
-                             --after N          Insert after phase N
+/esf:add-sprint [name]         Add new sprint to roadmap
+                             --after N          Insert after sprint N
                              --description "text"
 
-/esf:insert-phase [name]      Insert phase at specific position
+/esf:insert-sprint [name]      Insert sprint at specific position
                              --at N             Insert at position N (required)
 
-/esf:remove-phase [N]         Remove phase (archives, doesn't delete)
+/esf:remove-sprint [N]         Remove sprint (archives, doesn't delete)
                              --reason "text"    Explain why removed
                              --force            Skip safety checks
 
-/esf:renumber-phases          Fix phase numbering gaps
+/esf:renumber-sprints          Fix sprint numbering gaps
                              --dry-run          Show changes without applying
 
 ## Session Management
@@ -105,7 +105,7 @@ RUP-based use case methodology for Claude Code projects.
 ## Use Case Management
 
 /esf:add-use-case [level]     Add new use case manually
-                             summary | user-goal | subfunction
+                             summary | epic | task
 
 /esf:link-use-cases           Create include/extend relationships
                              [source] [target] [include|extend]
@@ -127,12 +127,12 @@ RUP-based use case methodology for Claude Code projects.
 ## TODO Management
 
 /esf:add-todo "text"          Add persistent TODO item
-                             --phase N          Assign to phase
+                             --sprint N          Assign to sprint
                              --priority high|medium|low
                              --tag "label"      Tag for categorization
 
 /esf:check-todos              List and manage TODOs
-                             --phase N          Filter by phase
+                             --sprint N          Filter by sprint
                              --priority X       Filter by priority
                              --done ID          Mark TODO complete
                              --all              Show completed TODOs
@@ -140,11 +140,11 @@ RUP-based use case methodology for Claude Code projects.
 ## Diagnostics & Utilities
 
 /esf:debug                    Run framework diagnostics
-                             --phase N          Debug specific phase
+                             --sprint N          Debug specific sprint
                              --verbose          Detailed output
                              --fix              Auto-fix common issues
 
-/esf:list-phase-assumptions   Display phase implementation decisions
+/esf:list-sprint-assumptions   Display sprint implementation decisions
 [N]                          From CONTEXT.md file
 
 ## Use Case Levels
@@ -171,16 +171,16 @@ RUP-based use case methodology for Claude Code projects.
 
 ## ID Format
 
-UC-S-XXX     Summary-Level
-UC-UG-XXX    User-Goal-Level
-UC-SF-XXX    Subfunction-Level
+UC-OBJ-XXX     Objectives
+UC-EP-XXX    Epic-Level
+UC-TK-XXX    Task-Level
 
 ## Agents
 
 uc-analyst   Extract use cases from requirements
 uc-modeler   Create roadmap from use case hierarchy
-uc-planner   Create plans from User-Goal scenarios
-uc-executor  Implement Subfunction specifications
+uc-planner   Create plans from Epic scenarios
+uc-executor  Implement Task specifications
 uc-verifier  Verify scenarios are achievable
 uc-checker   Validate plan coverage (pre-execution)
 
@@ -189,12 +189,12 @@ uc-checker   Validate plan coverage (pre-execution)
 1. /esf:new-project              — Initialize project context
 2. /esf:feature-exploration      — Explore scenarios with clickdummies (optional)
 3. /esf:use-case-analysis        — Extract use cases & create roadmap
-4. /esf:discuss-phase 1          — Capture preferences (optional)
-5. /esf:plan-phase 1             — Create execution plans
-6. /esf:execute-phase 1          — Implement and verify
+4. /esf:discuss-sprint 1          — Capture preferences (optional)
+5. /esf:plan-sprint 1             — Create execution plans
+6. /esf:execute-sprint 1          — Implement and verify
 7. /esf:complete-milestone       — Mark v1.0 complete
 8. /esf:new-milestone            — Start v2.0
-9. Repeat phases 4-6 for new features
+9. Repeat sprints 4-6 for new features
 
 ## Fully Automated Flow
 
@@ -213,11 +213,11 @@ uc-checker   Validate plan coverage (pre-execution)
 2. /esf:new-project              — Initialize UC framework
 3. /esf:feature-exploration      — Explore scenarios (optional)
 4. /esf:use-case-analysis        — Extract use cases & create roadmap
-5. /esf:add-phase [name]         — Add phases for new features
-6. /esf:discuss-phase N          — Capture decisions
-7. /esf:plan-phase N             — Plan integration
-8. /esf:execute-phase N          — Implement following patterns
-9. /esf:verify-phase N           — Verify scenarios
+5. /esf:add-sprint [name]         — Add sprints for new features
+6. /esf:discuss-sprint N          — Capture decisions
+7. /esf:plan-sprint N             — Plan integration
+8. /esf:execute-sprint N          — Implement following patterns
+9. /esf:verify-sprint N           — Verify scenarios
 
 ## Session Management Flow
 
@@ -228,14 +228,14 @@ uc-checker   Validate plan coverage (pre-execution)
 
 ## Ad-Hoc Tasks
 
-/esf:quick                       — Small tasks outside phase workflow
+/esf:quick                       — Small tasks outside sprint workflow
                                   (bug fixes, tweaks, one-offs)
 
 ## GSD Coexistence
 
 Both /gsd:* and /esf:* commands work together.
-Use /esf:* for use case driven phases.
-Use /gsd:* for feature-based phases.
+Use /esf:* for use case driven sprints.
+Use /gsd:* for feature-based sprints.
 
 Configuration in .planning/config.json:
   "specification_mode": "use-case" | "feature"

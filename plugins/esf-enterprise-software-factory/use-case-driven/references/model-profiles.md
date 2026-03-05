@@ -8,7 +8,7 @@ Model profiles control which Claude model each UC agent uses. This allows balanc
 |-------|-----------|------------|----------|
 | uc-analyst | opus | sonnet | sonnet |
 | uc-modeler | opus | opus | sonnet |
-| uc-phase-researcher | opus | sonnet | haiku |
+| uc-sprint-researcher | opus | sonnet | haiku |
 | uc-planner | opus | opus | sonnet |
 | uc-executor | opus | sonnet | sonnet |
 | uc-verifier | sonnet | sonnet | haiku |
@@ -30,7 +30,7 @@ Model profiles control which Claude model each UC agent uses. This allows balanc
 **budget** - Minimal Opus usage
 - Sonnet for anything that writes code or creates use cases
 - Haiku for verification
-- Use when: conserving quota, high-volume work, less critical phases
+- Use when: conserving quota, high-volume work, less critical sprints
 
 ## Resolution Logic
 
@@ -65,10 +65,10 @@ Per-project default: Set in `.planning/config.json`:
 ## Design Rationale
 
 **Why Opus for uc-modeler and uc-planner?**
-These agents make architectural decisions: how to decompose use cases, how to structure phases, how to extract subfunctions. This is where model quality has the highest impact.
+These agents make architectural decisions: how to decompose use cases, how to structure sprints, how to extract tasks. This is where model quality has the highest impact.
 
 **Why Sonnet for uc-executor?**
-Executors follow explicit Subfunction specifications. The spec already contains the reasoning; execution is implementation.
+Executors follow explicit Task specifications. The spec already contains the reasoning; execution is implementation.
 
 **Why Sonnet for uc-analyst?**
 Analysis follows established patterns (RUP methodology). Sonnet handles this well with good prompting.

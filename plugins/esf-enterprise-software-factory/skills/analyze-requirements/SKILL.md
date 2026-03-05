@@ -14,7 +14,7 @@ Extract use cases from existing REQUIREMENTS.md or other requirement sources. Us
 **Input:** Existing requirements (REQUIREMENTS.md, user stories, etc.)
 
 **Creates:**
-- Use case documents at Summary and User-Goal levels
+- Use case documents at Summary and Epic levels
 - Updated index.md
 
 </objective>
@@ -54,8 +54,8 @@ Extract use cases from existing requirements.
 </project_context>
 
 <output>
-1. Map requirement categories to Summary-Level use cases
-2. Map individual requirements to User-Goal use cases
+1. Map requirement categories to Objectives use cases
+2. Map individual requirements to Epic use cases
 3. Create use case documents
 4. Create index.md with requirement traceability
 5. Return ANALYSIS COMPLETE
@@ -70,9 +70,9 @@ Extract use cases from existing requirements.
 
 | Requirement | Use Case | Level |
 |-------------|----------|-------|
-| AUTH-01 | UC-UG-001: Create Account | User-Goal |
-| AUTH-02 | UC-UG-002: Login | User-Goal |
-| AUTH-01,02,03 | UC-S-001: Authenticate Users | Summary |
+| AUTH-01 | UC-EP-001: Create Account | Epic |
+| AUTH-02 | UC-EP-002: Login | Epic |
+| AUTH-01,02,03 | UC-OBJ-001: Authenticate Users | Summary |
 ```
 
 ## Commit

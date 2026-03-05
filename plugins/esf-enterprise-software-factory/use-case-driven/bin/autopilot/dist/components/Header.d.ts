@@ -1,11 +1,11 @@
 export interface HeaderProps {
     projectName?: string;
-    currentPhase: number;
-    totalPhases: number;
+    currentSprint: number;
+    totalSprints: number;
 }
 /**
- * Header component showing "UC AUTOPILOT" and phase counter
+ * Header component showing "UC AUTOPILOT" and sprint counter
  */
-export declare function Header({ projectName, currentPhase, totalPhases }: HeaderProps): import("react/jsx-runtime").JSX.Element;
+export declare function Header({ projectName, currentSprint, totalSprints }: HeaderProps): import("react/jsx-runtime").JSX.Element;
 export default Header;
 //# sourceMappingURL=Header.d.ts.map

@@ -17,7 +17,7 @@ Analyze the current codebase as "single point of truth" and compare it against a
 
 **Problem this solves:** After milestone completion, UC file statuses get updated (Draft -> Implemented) but the *content* of UC files often still reflects the pre-implementation planning state. This command detects and fixes that gap.
 
-**Input:** Milestone version (optional, auto-detected from config or STATE.md)
+**Input:** Milestone version (optional, auto-detected from config or PROJECT-STATUS.md)
 
 **Flags:**
 - `--milestone VERSION` — Target specific milestone (default: latest completed)
@@ -35,7 +35,7 @@ Analyze the current codebase as "single point of truth" and compare it against a
 
 <process>
 
-## Phase 1: Validate and Prepare
+## Sprint 1: Validate and Prepare
 
 **Parse arguments:**
 
@@ -61,9 +61,9 @@ if [ -z "$MILESTONE_ARG" ]; then
   # Try config.json first
   MILESTONE_VERSION=$(cat .planning/config.json 2>/dev/null | grep -o '"current_version"[[:space:]]*:[[:space:]]*"[^"]*"' | grep -o '"[^"]*"$' | tr -d '"')
 
-  # Fallback: extract from STATE.md
+  # Fallback: extract from PROJECT-STATUS.md
   if [ -z "$MILESTONE_VERSION" ]; then
-    MILESTONE_VERSION=$(grep "Current Milestone:" .planning/STATE.md 2>/dev/null | grep -o 'v[0-9.]*')
+    MILESTONE_VERSION=$(grep "Current Milestone:" .planning/PROJECT-STATUS.md 2>/dev/null | grep -o 'v[0-9.]*')
   fi
 
   # Fallback: latest git tag
@@ -88,12 +88,12 @@ mkdir -p "$OUTPUT_DIR"
 
 Read these files to understand current project state:
 - `.planning/PROJECT.md`
-- `.planning/ROADMAP.md`
-- `.planning/STATE.md`
+- `.planning/PROJECT-PLAN.md`
+- `.planning/PROJECT-STATUS.md`
 - `.planning/use-cases/index.md`
 - `.planning/codebase/ARCHITECTURE.md` (if exists)
 
-## Phase 2: Parallel Analysis
+## Sprint 2: Parallel Analysis
 
 Launch TWO parallel analysis agents to gather data:
 
@@ -112,11 +112,11 @@ Task(prompt="
 <task>
 Analyze ALL use case documentation files for content accuracy.
 
-For EACH UC file (Summary, User-Goal, Subfunction):
+For EACH UC file (Summary, Epic, Task):
 1. Read the file completely
 2. Extract key content claims:
    - Test data references (project names, team names, counts)
-   - Phase assignments
+   - Sprint assignments
    - Parent references (ID and label)
    - UI mockup descriptions
    - Code/API references (file paths, function names)
@@ -133,8 +133,8 @@ Save to: ${OUTPUT_DIR}/UC-Content-Analysis.md
 <files>
 @.planning/use-cases/index.md
 @.planning/use-cases/summary/
-@.planning/use-cases/user-goal/
-@.planning/use-cases/subfunction/
+@.planning/use-cases/epic/
+@.planning/use-cases/task/
 </files>
 ", subagent_type="Explore", description="Analyze UC documentation")
 ```
@@ -188,7 +188,7 @@ Analyze these directories:
 ", subagent_type="Explore", description="Analyze codebase features")
 ```
 
-## Phase 3: Cross-Reference and Discrepancy Detection
+## Sprint 3: Cross-Reference and Discrepancy Detection
 
 After both agents complete, perform systematic comparison:
 
@@ -208,7 +208,7 @@ For each UC file, verify:
 | Status match | index.md | UC file metadata |
 | Parent-ID valid | UC file | Parent UC file exists |
 | Parent label correct | UC file | Parent UC actual name |
-| Phase assignment | UC file | ROADMAP.md |
+| Sprint assignment | UC file | PROJECT-PLAN.md |
 | Field name format | UC file | Standard (`**Parent**` not `**Parent UC**`) |
 
 Save to: `${OUTPUT_DIR}/Documentation-Review-Report.md`
@@ -227,8 +227,8 @@ For each UC file, compare documented content against Code-Inventory:
 - Check for missing UI elements (dialogs, charts, filters, banners)
 - Check for removed UI elements still documented
 
-**Category C: Phase References**
-- Compare documented phase assignments against ROADMAP.md
+**Category C: Sprint References**
+- Compare documented sprint assignments against PROJECT-PLAN.md
 - Check milestone assignments
 
 **Category D: Cross-References**
@@ -260,11 +260,11 @@ Classify each discrepancy:
 
 | Priority | Criteria | Examples |
 |----------|----------|---------|
-| **Hoch** | Would cause incorrect planning decisions | Wrong test data, wrong phases, missing includes |
+| **Hoch** | Would cause incorrect planning decisions | Wrong test data, wrong sprints, missing includes |
 | **Mittel** | Misleading but not blocking | Outdated UI mockups, wrong code references |
 | **Niedrig** | Cosmetic or structural | Field name inconsistencies, missing dates |
 
-## Phase 4: Generate Update Plan
+## Sprint 4: Generate Update Plan
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -287,24 +287,24 @@ Create `${OUTPUT_DIR}/Update-Usecases_PLAN.md` with:
 
 ## 2. Detailanalyse pro UC-Datei
 
-### 2.1 Summary-Level Use Cases (UC-S-*)
+### 2.1 Objectives Use Cases (UC-OBJ-*)
 [Per-file discrepancy table with checkboxes]
 
-### 2.2 User-Goal-Level Use Cases (UC-UG-*)
+### 2.2 Epic-Level Use Cases (UC-EP-*)
 [Per-file discrepancy table with before/after comparison]
 
-### 2.3 Subfunction-Level Use Cases (UC-SF-*)
+### 2.3 Task-Level Use Cases (UC-TK-*)
 [Critical discrepancies only, systematic checks for rest]
 
 ## 3. Umsetzungsplan
 
-### Phase 1: Kritische Korrekturen (Hohe Prioritaet)
+### Sprint 1: Kritische Korrekturen (Hohe Prioritaet)
 [Files and changes for high-priority fixes]
 
-### Phase 2: UI/Szenario-Aktualisierungen (Mittlere Prioritaet)
+### Sprint 2: UI/Szenario-Aktualisierungen (Mittlere Prioritaet)
 [Files and changes for medium-priority fixes]
 
-### Phase 3: Code-Referenzen und Strukturbereinigung (Niedrige Prioritaet)
+### Sprint 3: Code-Referenzen und Strukturbereinigung (Niedrige Prioritaet)
 [Files and changes for low-priority fixes]
 
 ## 4. Zusammenfassung der Aenderungen
@@ -314,7 +314,7 @@ Create `${OUTPUT_DIR}/Update-Usecases_PLAN.md` with:
 [Recommended approach: batch vs manual, QA steps]
 ```
 
-## Phase 5: Generate Summary Report
+## Sprint 5: Generate Summary Report
 
 Create `${OUTPUT_DIR}/Update-Usecases_SUMMARY.md`:
 
@@ -343,7 +343,7 @@ Create `${OUTPUT_DIR}/Update-Usecases_SUMMARY.md`:
 |-----------|--------|-----------|
 | A) Veraltete Testdaten | [N] | [UC-IDs] |
 | B) Veraltete UI-Mockups | [N] | [UC-IDs] |
-| C) Falsche Phase-Referenzen | [N] | [UC-IDs] |
+| C) Falsche Sprint-Referenzen | [N] | [UC-IDs] |
 | D) Fehlende Cross-Referenzen | [N] | [UC-IDs] |
 | E) Veraltete Code-Referenzen | [N] | [UC-IDs] |
 | F) Falsche Formeln/Konstanten | [N] | [UC-IDs] |
@@ -379,7 +379,7 @@ Create `${OUTPUT_DIR}/Update-Usecases_SUMMARY.md`:
 3. Konsistenz pruefen: `/esf:audit-milestone`
 ```
 
-## Phase 6: Execute Updates (if --execute)
+## Sprint 6: Execute Updates (if --execute)
 
 **Only if `--execute` flag is set:**
 
@@ -391,21 +391,21 @@ Create `${OUTPUT_DIR}/Update-Usecases_SUMMARY.md`:
 
 Apply changes from the plan in priority order:
 
-1. **Phase 1 (Hoch):** Batch-replace test data, fix phase references, add missing includes, fix parent assignments
-2. **Phase 2 (Mittel):** Update UI mockups, scenarios, code references per file
-3. **Phase 3 (Niedrig):** Fix structural inconsistencies, update file paths, standardize field names
+1. **Sprint 1 (Hoch):** Batch-replace test data, fix sprint references, add missing includes, fix parent assignments
+2. **Sprint 2 (Mittel):** Update UI mockups, scenarios, code references per file
+3. **Sprint 3 (Niedrig):** Fix structural inconsistencies, update file paths, standardize field names
 
-After each phase:
+After each sprint:
 - Run consistency check (index.md vs files)
 - Verify no broken cross-references
 - Update `Documentation-Review-Report.md`
 
-After all phases:
+After all sprints:
 - Update version/date in modified UC files
 - Update index.md traceability matrix if needed
 - Generate final summary
 
-## Phase 7: Present Results
+## Sprint 7: Present Results
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -463,13 +463,13 @@ Diskrepanzen gefunden: [N]
 | Stores/State | `src/stores/*.ts` |
 | Routing | `src/routes/team-planner/**/*.tsx` |
 | DB-Schema | `src/server/db/schema.ts` |
-| Phase-Zuordnung | `.planning/ROADMAP.md` |
+| Sprint-Zuordnung | `.planning/PROJECT-PLAN.md` |
 | UC-Hierarchie | `.planning/use-cases/index.md` |
 
 **Common discrepancy patterns to detect:**
 
 1. **Old test data**: References to projects/teams/objectives that don't exist in demo-data.json
-2. **Wrong phase labels**: Phase names/numbers that don't match ROADMAP.md
+2. **Wrong sprint labels**: Sprint names/numbers that don't match PROJECT-PLAN.md
 3. **Missing v2.0 features**: UCs that don't mention Timewarp, centralized CCPM, or other v2.0 additions
 4. **Outdated rendering tech**: References to libraries (e.g., Recharts) that were replaced (e.g., by SVG)
 5. **Wrong file paths**: `src/apps/` instead of `src/features/`, or other renamed paths
@@ -483,7 +483,7 @@ Diskrepanzen gefunden: [N]
 
 <success_criteria>
 
-- [ ] Milestone version determined (from config, STATE.md, or git tag)
+- [ ] Milestone version determined (from config, PROJECT-STATUS.md, or git tag)
 - [ ] Output directory created: `.planning/updates/v{VERSION}/`
 - [ ] **UC Documentation Analyzer** completed — all UC files read and analyzed
 - [ ] **Codebase Feature Inventory** completed — all features, stores, routes documented
@@ -513,6 +513,6 @@ Diskrepanzen gefunden: [N]
 - `/esf:complete-milestone` — Mark milestone as complete
 - `/esf:map-codebase` — Create codebase feature map
 - `/esf:progress` — View UC completion status
-- `/esf:verify-phase N` — Verify phase scenarios with browser tests
+- `/esf:verify-sprint N` — Verify sprint scenarios with browser tests
 
 </related_commands>

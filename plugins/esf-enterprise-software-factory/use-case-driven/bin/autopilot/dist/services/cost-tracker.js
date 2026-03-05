@@ -18,15 +18,15 @@ export function estimateCostCents(tokens) {
     return Math.ceil((tokens * 9) / 10000);
 }
 /**
- * Track tokens and cost for a phase
+ * Track tokens and cost for a sprint
  */
-export function trackPhase(tracker, phase, tokens, costCents) {
+export function trackPhase(tracker, sprint, tokens, costCents) {
     const cost = costCents ?? estimateCostCents(tokens);
-    // Update phase-specific tracking
-    const prevTokens = tracker.phaseTokens.get(phase) ?? 0;
-    const prevCost = tracker.phaseCosts.get(phase) ?? 0;
-    tracker.phaseTokens.set(phase, prevTokens + tokens);
-    tracker.phaseCosts.set(phase, prevCost + cost);
+    // Update sprint-specific tracking
+    const prevTokens = tracker.phaseTokens.get(sprint) ?? 0;
+    const prevCost = tracker.phaseCosts.get(sprint) ?? 0;
+    tracker.phaseTokens.set(sprint, prevTokens + tokens);
+    tracker.phaseCosts.set(sprint, prevCost + cost);
     // Update totals
     tracker.totalTokens += tokens;
     tracker.totalCostCents += cost;
@@ -117,10 +117,10 @@ export function getCostSummary(tracker) {
     lines.push(`Total Cost: ${formatCost(tracker.totalCostCents)}`);
     if (tracker.phaseTokens.size > 0) {
         lines.push('');
-        lines.push('By Phase:');
-        for (const [phase, tokens] of tracker.phaseTokens) {
-            const cost = tracker.phaseCosts.get(phase) ?? 0;
-            lines.push(`  Phase ${phase}: ${tokens.toLocaleString()} tokens (${formatCost(cost)})`);
+        lines.push('By Sprint:');
+        for (const [sprint, tokens] of tracker.phaseTokens) {
+            const cost = tracker.phaseCosts.get(sprint) ?? 0;
+            lines.push(`  Sprint ${sprint}: ${tokens.toLocaleString()} tokens (${formatCost(cost)})`);
         }
     }
     return lines.join('\n');

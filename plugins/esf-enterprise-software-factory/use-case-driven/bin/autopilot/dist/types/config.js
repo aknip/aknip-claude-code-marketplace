@@ -6,13 +6,13 @@ export const AutopilotConfigSchema = z.object({
     // Project settings
     projectDir: z.string().describe('Root directory of the project'),
     projectName: z.string().default('Project').describe('Display name for the project'),
-    // Phases to execute
-    phases: z.array(z.number()).min(1).describe('Phase numbers to execute'),
+    // Sprints to execute
+    sprints: z.array(z.number()).min(1).describe('Sprint numbers to execute'),
     // Execution settings
     checkpointMode: z.enum(['queue', 'pause', 'skip']).default('queue')
         .describe('How to handle checkpoints: queue for later, pause execution, or skip'),
     maxRetries: z.number().min(1).max(10).default(3)
-        .describe('Maximum retry attempts per phase'),
+        .describe('Maximum retry attempts per sprint'),
     budgetLimit: z.number().min(0).default(0)
         .describe('Maximum budget in USD (0 = unlimited)'),
     // Optional settings
@@ -34,9 +34,9 @@ export function getDerivedPaths(projectDir) {
         logDir: `${projectDir}/.planning/logs`,
         promptTemplatesDir: `${projectDir}/.claude/use-case-driven/templates/prompts`,
         checkpointDir: `${projectDir}/.planning/checkpoints`,
-        stateFile: `${projectDir}/.planning/STATE.md`,
-        phasesDir: `${projectDir}/.planning/phases`,
-        roadmapFile: `${projectDir}/.planning/ROADMAP.md`,
+        projectStatusFile: `${projectDir}/.planning/PROJECT-STATUS.md`,
+        sprintsDir: `${projectDir}/.planning/sprints`,
+        projectPlanFile: `${projectDir}/.planning/PROJECT-PLAN.md`,
         displayStateDir: `${projectDir}/.planning/logs/.display`,
     };
 }

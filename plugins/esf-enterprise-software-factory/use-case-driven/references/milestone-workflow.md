@@ -15,7 +15,7 @@ Milestones represent completed versions (v1.0.0, v2.0.0, etc.) of your project. 
 ```
 ┌─────────────────────────────────────────┐
 │ Work on v1.0.0                          │
-│ - Multiple phases                       │
+│ - Multiple sprints                       │
 │ - Use cases implemented                 │
 │ - Scenarios verified                    │
 └─────────────────┬───────────────────────┘
@@ -55,17 +55,17 @@ Check if milestone is ready for completion.
 ### Checks Performed
 
 1. **Use Case Coverage**
-   - All Summary-level complete?
-   - All User-Goal-level implemented?
-   - All Subfunctions have commits?
+   - All Objectives complete?
+   - All Epic-level implemented?
+   - All Tasks have commits?
 
 2. **Scenario Verification**
    - All scenarios passed?
    - Verification reports exist?
    - No failed scenarios?
 
-3. **Phase Completion**
-   - All phases verified?
+3. **Sprint Completion**
+   - All sprints verified?
    - All plans executed?
    - Summaries generated?
 
@@ -76,14 +76,14 @@ Check if milestone is ready for completion.
 
 5. **Commit Traceability**
    - All commits reference use cases?
-   - Subfunction commits have "Implements:"?
-   - Atomic commits per subfunction?
+   - Task commits have "Implements:"?
+   - Atomic commits per task?
 
 6. **Documentation**
    - PROJECT.md current?
-   - ROADMAP.md complete?
-   - STATE.md up to date?
-   - Phase documentation present?
+   - PROJECT-PLAN.md complete?
+   - PROJECT-STATUS.md up to date?
+   - Sprint documentation present?
 
 ### Output
 
@@ -109,28 +109,28 @@ Check if milestone is ready for completion.
    - Annotated tag: `v1.0.0`
    - Tag message includes:
      - Completed use cases
-     - Phases completed
+     - Sprints completed
      - Statistics (commits, files, LOC)
 
 3. **Archive Creation**
    - Creates `.planning/milestones/v1.0.0/`
-   - Copies phases/ → milestones/v1.0.0/phases/
+   - Copies sprints/ → milestones/v1.0.0/sprints/
    - Copies use-cases/ → milestones/v1.0.0/use-cases/
-   - Snapshots: PROJECT.md, ROADMAP.md, STATE.md
+   - Snapshots: PROJECT.md, PROJECT-PLAN.md, PROJECT-STATUS.md
 
 4. **Summary Generation**
    - MILESTONE-SUMMARY.md created
    - Includes:
      - Completion date
      - All use cases completed
-     - Phase summary
+     - Sprint summary
      - Statistics
      - Git commit range
      - Known issues
 
 5. **Documentation Updates**
-   - ROADMAP.md: Mark phases complete
-   - STATE.md: Reset for v2
+   - PROJECT-PLAN.md: Mark sprints complete
+   - PROJECT-STATUS.md: Reset for v2
    - PROJECT.md: Add milestone history
 
 ### Archive Structure
@@ -139,17 +139,17 @@ Check if milestone is ready for completion.
 .planning/milestones/v1.0.0/
 ├── MILESTONE-SUMMARY.md       # Completion report
 ├── PROJECT.md                 # Snapshot of project definition
-├── ROADMAP.md                 # Snapshot of roadmap
-├── STATE.md                   # Snapshot of final state
-├── phases/
+├── PROJECT-PLAN.md                 # Snapshot of roadmap
+├── PROJECT-STATUS.md                   # Snapshot of final state
+├── sprints/
 │   ├── 01-foundation/
 │   ├── 02-user-authentication/
 │   └── 03-user-profile/
 └── use-cases/
     ├── index.md
     ├── summary/
-    ├── user-goal/
-    └── subfunction/
+    ├── epic/
+    └── task/
 ```
 
 ### Git Tag Format
@@ -160,14 +160,14 @@ Tag: v1.0.0
 Release v1.0.0 - User Management System
 
 Completed Use Cases:
-- UC-UG-001: User Registration
-- UC-UG-002: User Login
-- UC-UG-003: Profile Management
+- UC-EP-001: User Registration
+- UC-EP-002: User Login
+- UC-EP-003: Profile Management
 
-Phases:
-- Phase 01: Foundation
-- Phase 02: User Authentication
-- Phase 03: User Profile
+Sprints:
+- Sprint 01: Foundation
+- Sprint 02: User Authentication
+- Sprint 03: User Profile
 
 Statistics:
 - 47 commits
@@ -191,14 +191,14 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
    - Or manual: `--version 2.1.0`
 
 3. **Structure Reset**
-   - Create fresh `phases/` directory
-   - Reset STATE.md for v2
+   - Create fresh `sprints/` directory
+   - Reset PROJECT-STATUS.md for v2
    - Preserve PROJECT.md (actors, vision)
 
 4. **Documentation Updates**
-   - ROADMAP.md: Add v2 section, archive v1
+   - PROJECT-PLAN.md: Add v2 section, archive v1
    - PROJECT.md: Add milestone history
-   - STATE.md: New milestone header
+   - PROJECT-STATUS.md: New milestone header
 
 5. **Use Case Tracking**
    - Clear completion status
@@ -214,9 +214,9 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 - Git history
 
 **Reset:**
-- phases/ (empty for v2)
-- STATE.md (v2 header)
-- ROADMAP.md (v2 section)
+- sprints/ (empty for v2)
+- PROJECT-STATUS.md (v2 header)
+- PROJECT-PLAN.md (v2 section)
 - Use case completion tracking
 
 ## Version Numbering
@@ -297,12 +297,12 @@ Use minor/patch for:
 - Uncommitted work
 - Failed scenarios
 - Incomplete use cases
-- Mid-phase work
+- Mid-sprint work
 
 ### Milestone Scope
 
 Keep milestones:
-- **Focused:** 3-5 phases ideal
+- **Focused:** 3-5 sprints ideal
 - **Deliverable:** Shippable at completion
 - **Time-boxed:** 2-4 weeks work
 - **Meaningful:** Delivers value
@@ -359,5 +359,5 @@ In `.planning/config.json`:
 ## Related Documentation
 
 - [Session Management](session-management.md)
-- [Phase Management](../workflows/phase-management.md)
+- [Sprint Management](../workflows/sprint-management.md)
 - [Git Workflow](../workflows/git-workflow.md)

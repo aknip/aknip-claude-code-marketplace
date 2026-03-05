@@ -15,21 +15,21 @@ Execute small, ad-hoc tasks with use case driven guarantees (atomic commits, tra
 **Use when:**
 - Task is clear and well-understood
 - Work is small enough to skip research/verification
-- Task doesn't fit into a planned phase
+- Task doesn't fit into a planned sprint
 - Bug fixes, tweaks, or one-off changes
 
 **Flow:**
 1. Ask for task description
 2. Spawn uc-planner (quick mode) → creates focused plan
 3. Spawn uc-executor → implements plan
-4. Update STATE.md with completion
+4. Update PROJECT-STATUS.md with completion
 
 **Creates:**
 - `.planning/quick/NNN-slug/NNN-PLAN.md` — Focused plan (1-3 tasks)
 - `.planning/quick/NNN-slug/NNN-SUMMARY.md` — Execution summary
-- Updated STATE.md "Quick Tasks" table
+- Updated PROJECT-STATUS.md "Quick Tasks" table
 
-**Note:** Quick tasks are tracked separately from phase milestones. Use phase workflow for significant features.
+**Note:** Quick tasks are tracked separately from sprint milestones. Use sprint workflow for significant features.
 
 </objective>
 
@@ -43,7 +43,7 @@ Execute small, ad-hoc tasks with use case driven guarantees (atomic commits, tra
 
 <process>
 
-## Phase 1: Load Config
+## Sprint 1: Load Config
 
 ```bash
 MODEL_PROFILE=$(cat .planning/config.json 2>/dev/null | grep -o '"model_profile"[[:space:]]*:[[:space:]]*"[^"]*"' | grep -o '"[^"]*"$' | tr -d '"' || echo "balanced")
@@ -56,12 +56,12 @@ MODEL_PROFILE=$(cat .planning/config.json 2>/dev/null | grep -o '"model_profile"
 | uc-planner (quick) | opus | sonnet | sonnet |
 | uc-executor | opus | sonnet | sonnet |
 
-## Phase 2: Pre-flight Checks
+## Sprint 2: Pre-flight Checks
 
 **Verify project initialized:**
 
 ```bash
-if [ ! -f .planning/ROADMAP.md ]; then
+if [ ! -f .planning/PROJECT-PLAN.md ]; then
   echo "ERROR: Project not initialized. Run /esf:new-project first."
   exit 1
 fi
@@ -73,7 +73,7 @@ fi
 mkdir -p .planning/quick
 ```
 
-## Phase 3: Get Task Description
+## Sprint 3: Get Task Description
 
 **Display stage banner:**
 
@@ -84,7 +84,7 @@ mkdir -p .planning/quick
 
 Quick tasks bypass research and verification while maintaining:
 - Atomic commits with traceability
-- STATE.md tracking
+- PROJECT-STATUS.md tracking
 - Use case context awareness
 ```
 
@@ -99,16 +99,16 @@ Wait for response. The description should be:
 
 **If task seems too large:**
 
-Suggest: "This looks like it might need full phase planning. Would you prefer to use `/esf:plan-phase` instead?"
+Suggest: "This looks like it might need full sprint planning. Would you prefer to use `/esf:plan-sprint` instead?"
 
 Use AskUserQuestion:
 - header: "Task Scope"
 - question: "This task seems substantial. How would you like to proceed?"
 - options:
   - "Keep as quick task" — Proceed with streamlined workflow
-  - "Use phase planning" — Exit and suggest /esf:plan-phase
+  - "Use sprint planning" — Exit and suggest /esf:plan-sprint
 
-## Phase 4: Calculate Task Number
+## Sprint 4: Calculate Task Number
 
 ```bash
 # Find highest existing quick task number
@@ -128,7 +128,7 @@ mkdir -p "$TASK_DIR"
 echo "Created: $TASK_DIR"
 ```
 
-## Phase 5: Planning
+## Sprint 5: Planning
 
 **Display stage:**
 
@@ -149,9 +149,9 @@ Read ./agents/uc-planner.md for your role.
 
 Create a FOCUSED plan for this quick task. Quick mode means:
 - 1-3 tasks maximum
-- No subfunction use case creation (use existing or skip)
+- No task use case creation (use existing or skip)
 - Reference existing use cases where relevant
-- Skip research and verification phases
+- Skip research and verification sprints
 </task>
 
 <quick_task>
@@ -168,7 +168,7 @@ Output Directory: ${TASK_DIR}
 <constraints>
 - Maximum 3 tasks
 - Each task should be completable in minutes
-- Reference existing UC-SF-* if the work relates to them
+- Reference existing UC-TK-* if the work relates to them
 - No new use case documents needed
 - Commit message format: fix|feat|chore(quick-${TASK_NUM}): description
 </constraints>
@@ -178,7 +178,7 @@ Create ${TASK_DIR}/${TASK_NUM}-PLAN.md with:
 - objective: Brief description
 - tasks: 1-3 focused tasks
 - related_use_cases: Any existing UC-* this relates to (optional)
-- wave: 1 (always single wave for quick)
+- sub-sprint: 1 (always single sub-sprint for quick)
 - autonomous: true (no checkpoints for quick tasks)
 
 Return PLANNING COMPLETE.
@@ -186,7 +186,7 @@ Return PLANNING COMPLETE.
 ", subagent_type="uc-planner", model="${planner_model}", description="Quick task planning")
 ```
 
-## Phase 6: Execution
+## Sprint 6: Execution
 
 **Display stage:**
 
@@ -220,7 +220,7 @@ Execute this quick task plan.
 - Execute all tasks sequentially
 - Atomic commits per task
 - Commit format: fix|feat|chore(quick-${TASK_NUM}): description
-- No verification phase after
+- No verification sprint after
 - Create SUMMARY.md when done
 </quick_mode>
 
@@ -233,9 +233,9 @@ Execute this quick task plan.
 ", subagent_type="uc-executor", model="${executor_model}", description="Quick task execution")
 ```
 
-## Phase 7: Finalize
+## Sprint 7: Finalize
 
-**Update STATE.md:**
+**Update PROJECT-STATUS.md:**
 
 Add or update "Quick Tasks" section:
 
@@ -251,14 +251,14 @@ Add or update "Quick Tasks" section:
 
 ```bash
 git add .planning/quick/${TASK_NUM}-*/
-git add .planning/STATE.md
+git add .planning/PROJECT-STATUS.md
 git commit -m "docs(quick-${TASK_NUM}): track completion
 
 Task: ${TASK_DESCRIPTION}
 Commits: ${COMMIT_HASHES}"
 ```
 
-## Phase 8: Complete
+## Sprint 8: Complete
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -281,16 +281,16 @@ Commits: ${COMMIT_HASHES}"
 
 ───────────────────────────────────────────────────────
 
-Quick task completed and tracked in STATE.md.
+Quick task completed and tracked in PROJECT-STATUS.md.
 
-<sub>For larger features, use /esf:plan-phase</sub>
+<sub>For larger features, use /esf:plan-sprint</sub>
 ```
 
 </process>
 
 <success_criteria>
 
-- [ ] Project initialized (ROADMAP.md exists)
+- [ ] Project initialized (PROJECT-PLAN.md exists)
 - [ ] Task description captured
 - [ ] Task numbered sequentially (001, 002, ...)
 - [ ] Task directory created in .planning/quick/
@@ -299,7 +299,7 @@ Quick task completed and tracked in STATE.md.
 - [ ] uc-executor spawned
 - [ ] Tasks implemented with atomic commits
 - [ ] SUMMARY.md created with results
-- [ ] STATE.md "Quick Tasks" table updated
+- [ ] PROJECT-STATUS.md "Quick Tasks" table updated
 - [ ] All artifacts committed
 - [ ] Clear completion summary shown
 

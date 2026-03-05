@@ -1,5 +1,5 @@
 ---
-description: Explore implementation scenarios for Summary-Level use cases
+description: Explore implementation feature-scenarios for Objectives use cases
 allowed-tools:
   - Read
   - Write
@@ -13,21 +13,21 @@ allowed-tools:
 
 <objective>
 
-Interactive exploration of implementation scenarios based on Summary-Level Use Cases. Optional step between `/esf:new-project` and `/esf:use-case-analysis`.
+Interactive exploration of implementation feature-scenarios based on Objectives Use Cases. Optional step between `/esf:new-project` and `/esf:use-case-analysis`.
 
-Enables parallel exploration of 1-n implementation scenarios with HTML clickdummies and Mermaid roadmaps before selecting a final scenario as input for `/esf:use-case-analysis`.
+Enables parallel exploration of 1-n implementation feature-scenarios with HTML clickdummies and Mermaid roadmaps before selecting a final feature-scenario as input for `/esf:use-case-analysis`.
 
 **Requires:** `.planning/PROJECT.md` with `## Use Cases (Summary)` section (created by `/esf:new-project`)
 
 **Creates:**
-- `.planning/scenarios/SCENARIOS-STATE.md` — Index of all scenarios + status
-- `.planning/scenarios/scenario-NN-[slug]/SCENARIO.md` — Collected ideas, decisions, features
-- `.planning/scenarios/scenario-NN-[slug]/HISTORY.md` — Chronological protocol
-- `.planning/scenarios/scenario-NN-[slug]/YYYYMMDD_HHMMSS_wireframe.html` — HTML clickdummy
-- `.planning/scenarios/scenario-NN-[slug]/roadmap.md` — Mermaid roadmap
-- `.planning/scenarios/final/FINAL-SCENARIO.md` — The final, approved scenario
+- `.planning/feature-scenarios/FEATURE-SCENARIOS-PROJECT-STATUS.md` — Index of all feature-scenarios + status
+- `.planning/feature-scenarios/feature-scenario-NN-[slug]/FEATURE-SCENARIO.md` — Collected ideas, decisions, features
+- `.planning/feature-scenarios/feature-scenario-NN-[slug]/HISTORY.md` — Chronological protocol
+- `.planning/feature-scenarios/feature-scenario-NN-[slug]/YYYYMMDD_HHMMSS_wireframe.html` — HTML clickdummy
+- `.planning/feature-scenarios/feature-scenario-NN-[slug]/roadmap.md` — Mermaid roadmap
+- `.planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md` — The final, approved feature-scenario
 
-**After this command:** Run `/esf:use-case-analysis` to extract use cases (uses final scenario as context).
+**After this command:** Run `/esf:use-case-analysis` to extract use cases (uses final feature-scenario as context).
 
 </objective>
 
@@ -40,7 +40,7 @@ Enables parallel exploration of 1-n implementation scenarios with HTML clickdumm
 
 <process>
 
-## Phase 1: Check Prerequisites
+## Sprint 1: Check Prerequisites
 
 **MANDATORY FIRST STEP — Execute these checks before ANY user interaction:**
 
@@ -49,19 +49,19 @@ Enables parallel exploration of 1-n implementation scenarios with HTML clickdumm
    [ ! -f .planning/PROJECT.md ] && echo "ERROR: No project found. Run /esf:new-project first." && exit 1
    ```
 
-2. **Summary-Level Use Cases present?**
+2. **Objectives Use Cases present?**
    - Read `.planning/PROJECT.md`
-   - Verify that `## Use Cases (Summary)` section contains at least one UC-S-XXX
+   - Verify that `## Use Cases (Summary)` section contains at least one UC-OBJ-XXX
    - If not: error with hint to run `/esf:new-project`
 
-3. **Load existing scenarios:**
+3. **Load existing feature-scenarios:**
    ```bash
-   if [ -f .planning/scenarios/SCENARIOS-STATE.md ]; then
+   if [ -f .planning/feature-scenarios/FEATURE-SCENARIOS-PROJECT-STATUS.md ]; then
      echo "Existing exploration found"
    fi
    ```
 
-## Phase 2: Main Menu
+## Sprint 2: Main Menu
 
 **Display stage banner:**
 
@@ -71,63 +71,63 @@ Enables parallel exploration of 1-n implementation scenarios with HTML clickdumm
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**If no scenarios exist:** Go directly to Phase 3 (Create New Scenario).
+**If no feature-scenarios exist:** Go directly to Sprint 3 (Create New Feature-Scenario).
 
-**If scenarios exist:** Show overview and selection menu.
+**If feature-scenarios exist:** Show overview and selection menu.
 
 ```
-## Current Scenarios
+## Current Feature-Scenarios
 
 | # | Name | Status | Core Idea | Rounds |
 |---|------|--------|-----------|--------|
 | 1 | [Name] | Active / Paused | [Core Idea] | [N] |
 | 2 | [Name] | Active / Paused | [Core Idea] | [N] |
 
-Final Scenario: Not yet determined
+Final Feature-Scenario: Not yet determined
 ```
 
 Use AskUserQuestion:
 - header: "Action"
 - question: "What would you like to do?"
 - options:
-  - "Continue working on scenario" — Continue developing an existing scenario
-  - "Create new scenario" — Start a new implementation idea
-  - "Delete scenario" — Remove an existing scenario
-  - "Finalize scenario" — Complete exploration and define the final scenario
+  - "Continue working on feature-scenario" — Continue developing an existing feature-scenario
+  - "Create new feature-scenario" — Start a new implementation idea
+  - "Delete feature-scenario" — Remove an existing feature-scenario
+  - "Finalize feature-scenario" — Complete exploration and define the final feature-scenario
 
-## Phase 3: Create New Scenario
+## Sprint 3: Create New Feature-Scenario
 
 Use AskUserQuestion:
-- header: "Scenario"
-- question: "Give the new scenario a short name (e.g. 'Wizard-based', 'Dashboard-First', 'Kanban-Style')."
+- header: "Feature-Scenario"
+- question: "Give the new feature-scenario a short name (e.g. 'Wizard-based', 'Dashboard-First', 'Kanban-Style')."
 
 Then:
 - header: "Core Idea"
-- question: "Describe the core idea of this scenario in 1-2 sentences."
+- question: "Describe the core idea of this feature-scenario in 1-2 sentences."
 
 **Create directory:**
 ```bash
 SCENARIO_NUM=$(printf "%02d" [next available number])
 SCENARIO_SLUG=[slug from name, lowercase-with-hyphens]
-mkdir -p ".planning/scenarios/scenario-${SCENARIO_NUM}-${SCENARIO_SLUG}"
+mkdir -p ".planning/feature-scenarios/feature-scenario-${SCENARIO_NUM}-${SCENARIO_SLUG}"
 ```
 
 **Create initial files:**
 
-`SCENARIO.md` — Base structure:
+`FEATURE-SCENARIO.md` — Base structure:
 ```markdown
-# Scenario: [Name]
+# Feature-Scenario: [Name]
 
 > Core Idea: [1-2 sentences]
 > Created: [Date]
 > Last Updated: [Date]
 
-## Mapping to Summary-Level Use Cases
+## Mapping to Objectives Use Cases
 
-| UC | Name | Implementation Approach in this Scenario |
+| UC | Name | Implementation Approach in this Feature-Scenario |
 |----|------|------------------------------------------|
-| UC-S-001 | [Name] | [Not yet defined] |
-| UC-S-002 | [Name] | [Not yet defined] |
+| UC-OBJ-001 | [Name] | [Not yet defined] |
+| UC-OBJ-002 | [Name] | [Not yet defined] |
 
 ## Interaction Concept & User Workflows
 
@@ -142,17 +142,17 @@ mkdir -p ".planning/scenarios/scenario-${SCENARIO_NUM}-${SCENARIO_SLUG}"
 
 [No UI concept defined yet]
 
-## Proposed User-Goal Use Cases
+## Proposed Epic Use Cases
 
 | ID (Draft) | Name | Related UC-S | Description |
 |-------------|------|--------------|-------------|
 
 > Note: IDs with prefix "UG-E" (Exploration) — will be converted
-> to official UC-UG-XXX IDs upon finalization.
+> to official UC-EP-XXX IDs upon finalization.
 
-## Proposed Roadmap Phases
+## Proposed Roadmap Sprints
 
-| Phase | Goal | Use Cases | Rationale |
+| Sprint | Goal | Use Cases | Rationale |
 |-------|------|-----------|-----------|
 
 ## Open Questions & Notes
@@ -162,24 +162,24 @@ mkdir -p ".planning/scenarios/scenario-${SCENARIO_NUM}-${SCENARIO_SLUG}"
 
 `HISTORY.md` — Header:
 ```markdown
-# Scenario [Name] — History
+# Feature-Scenario [Name] — History
 ```
 
-**Update SCENARIOS-STATE.md** (create if not present):
+**Update FEATURE-SCENARIOS-PROJECT-STATUS.md** (create if not present):
 ```markdown
-# Feature Exploration — Scenarios
+# Feature Exploration — Feature-Scenarios
 
 > Project: [Project name from PROJECT.md]
 > Created: [Date]
 > Last Updated: [Date]
 
-## Scenarios
+## Feature-Scenarios
 
 | # | Name | Status | Core Idea | Last Modified |
 |---|------|--------|-----------|---------------|
 | 1 | [Name] | Active | [Core Idea] | [Date] |
 
-## Final Scenario
+## Final Feature-Scenario
 
 Status: Open
 Source: —
@@ -187,54 +187,54 @@ Source: —
 
 **Git commit:**
 ```bash
-git add ".planning/scenarios/"
-git commit -m "docs(exploration): new scenario created — [Name]"
+git add ".planning/feature-scenarios/"
+git commit -m "docs(exploration): new feature-scenario created — [Name]"
 ```
 
-**Continue with Phase 5 (Interactive Work on Scenario).**
+**Continue with Sprint 5 (Interactive Work on Feature-Scenario).**
 
-## Phase 4: Select Scenario (Continue Working)
+## Sprint 4: Select Feature-Scenario (Continue Working)
 
-**If only 1 scenario:** Select it directly.
+**If only 1 feature-scenario:** Select it directly.
 
-**If multiple scenarios:**
+**If multiple feature-scenarios:**
 
 Use AskUserQuestion:
-- header: "Scenario"
-- question: "Which scenario would you like to continue working on?"
-- options: [List of scenarios with Name + Core Idea]
+- header: "Feature-Scenario"
+- question: "Which feature-scenario would you like to continue working on?"
+- options: [List of feature-scenarios with Name + Core Idea]
 
 **Load:**
-- `SCENARIO.md` — current state
+- `FEATURE-SCENARIO.md` — current state
 - `HISTORY.md` — previous questions/answers (last 3 rounds as context)
 
 **Show summary:**
 ```
-## Scenario: [Name]
+## Feature-Scenario: [Name]
 Core Idea: [...]
 Previous Rounds: [N]
 Last Discussed: [Topic of last round]
 
-Not yet covered Summary Use Cases: UC-S-003, UC-S-005
+Not yet covered Summary Use Cases: UC-OBJ-003, UC-OBJ-005
 ```
 
-**Continue with Phase 5.**
+**Continue with Sprint 5.**
 
-## Phase 5: Interactive Work on Scenario (Core Process)
+## Sprint 5: Interactive Work on Feature-Scenario (Core Process)
 
 This is the central, iterative process. It repeats until the user switches or exits.
 
 ### 5.1 Topic Suggestion & Question
 
-**Analyze the current state of the scenario:**
-- Which Summary-Level UCs are not yet / weakly covered?
+**Analyze the current state of the feature-scenario:**
+- Which Objectives UCs are not yet / weakly covered?
 - Which areas are missing: interaction concept? Workflows? Features? UI concept?
 - What follows logically from previous answers?
 
 **Ask ONE targeted question** (following the questioning.md pattern):
 - Questions about interaction, user workflows, capabilities, UI approaches
 - Suggest options where appropriate (AskUserQuestion with concrete alternatives)
-- Show context: "Regarding UC-S-002 (Assess Risk)..."
+- Show context: "Regarding UC-OBJ-002 (Assess Risk)..."
 
 **Question areas (non-exhaustive):**
 
@@ -257,17 +257,17 @@ This is the central, iterative process. It repeats until the user switches or ex
 
 After EVERY answer:
 
-1. **Update SCENARIO.md** — add new information to the appropriate section
+1. **Update FEATURE-SCENARIO.md** — add new information to the appropriate section
 2. **Update HISTORY.md** — log question, answer, and result:
    ```markdown
    ## Round N — [Date, Time]
    **Topic:** [Area]
    **Question:** [Question asked]
    **Answer:** [Summary of user's answer]
-   **Result:** [What was updated in SCENARIO.md]
+   **Result:** [What was updated in FEATURE-SCENARIO.md]
    **Visualization:** [Clickdummy updated: yes/no] [Roadmap updated: yes/no]
    ```
-3. **Update SCENARIOS-STATE.md** — last modified timestamp
+3. **Update FEATURE-SCENARIOS-PROJECT-STATUS.md** — last modified timestamp
 
 ### 5.3 Offer Visualization
 
@@ -291,14 +291,14 @@ Use AskUserQuestion:
 - Directly openable in browser
 - Interactive elements: clickable navigation, sample data, tooltips
 - Visualizes the collected UI concepts, workflows, and features so far
-- Shows the most important screens/views of the scenario
+- Shows the most important screens/views of the feature-scenario
 - Uses placeholder `[TBD]` for areas not yet discussed
 - German labels (labels, buttons, error messages)
 - Desktop-optimized
 
 **Location:**
 ```
-.planning/scenarios/scenario-NN-[slug]/YYYYMMDD_HHMMSS_wireframe.html
+.planning/feature-scenarios/feature-scenario-NN-[slug]/YYYYMMDD_HHMMSS_wireframe.html
 ```
 
 ### 5.5 Generate Mermaid Roadmap
@@ -306,35 +306,35 @@ Use AskUserQuestion:
 **Format:** Markdown file with Mermaid code block.
 
 ```markdown
-# Roadmap — Scenario: [Name]
+# Roadmap — Feature-Scenario: [Name]
 
 > Generated: [Date]
 
-## Phase Overview
+## Sprint Overview
 
 ```mermaid
 gantt
-    title Roadmap — [Scenario Name]
+    title Roadmap — [Feature-Scenario Name]
     dateFormat YYYY-MM-DD
     axisFormat %B %Y
 
-    section Phase 1 — [Goal]
+    section Sprint 1 — [Goal]
     [Task 1]           :p1t1, 2026-03-01, 2w
     [Task 2]           :p1t2, after p1t1, 1w
 
-    section Phase 2 — [Goal]
+    section Sprint 2 — [Goal]
     [Task 3]           :p2t1, after p1t2, 2w
 ```
 
-## Phase Details
+## Sprint Details
 
-| Phase | Goal | User-Goal UCs (Draft) | Estimated Complexity |
+| Sprint | Goal | Epic UCs (Draft) | Estimated Complexity |
 |-------|------|-----------------------|----------------------|
 | 1 | [...] | UG-E-001, UG-E-002 | Medium |
 | 2 | [...] | UG-E-003, UG-E-004 | High |
 ```
 
-**Location:** `roadmap.md` in the scenario directory (overwritten on each update).
+**Location:** `roadmap.md` in the feature-scenario directory (overwritten on each update).
 
 ### 5.6 Choose Next Action
 
@@ -344,43 +344,43 @@ Use AskUserQuestion:
 - header: "Next"
 - question: "How would you like to continue?"
 - options:
-  - "Next question" — Continue working on current scenario
-  - "Back to main menu" — Switch scenario, create new, delete, or finalize
+  - "Next question" — Continue working on current feature-scenario
+  - "Back to main menu" — Switch feature-scenario, create new, delete, or finalize
 
 **On "Next question":** Return to 5.1.
-**On "Back to main menu":** Return to Phase 2.
+**On "Back to main menu":** Return to Sprint 2.
 
 ### 5.7 Git Commits
 
 **Automatic commits at defined points:**
 - After every 3rd interaction round (not after each individual one)
-- Commit format: `docs(exploration): scenario updated — [Name] (rounds N-M)`
+- Commit format: `docs(exploration): feature-scenario updated — [Name] (rounds N-M)`
 
-## Phase 6: Delete Scenario
+## Sprint 6: Delete Feature-Scenario
 
 Use AskUserQuestion:
 - header: "Delete"
-- question: "Which scenario would you like to delete?"
-- options: [List of scenarios]
+- question: "Which feature-scenario would you like to delete?"
+- options: [List of feature-scenarios]
 
 **Safety confirmation:**
 
 Use AskUserQuestion:
 - header: "Confirm"
-- question: "Really delete scenario '[Name]'? All files (including clickdummies) will be removed."
+- question: "Really delete feature-scenario '[Name]'? All files (including clickdummies) will be removed."
 - options:
   - "Yes, delete" — Permanently remove
   - "Cancel" — Back to main menu
 
 **On confirmation:**
 ```bash
-rm -rf ".planning/scenarios/scenario-NN-[slug]"
+rm -rf ".planning/feature-scenarios/feature-scenario-NN-[slug]"
 ```
-- Update `SCENARIOS-STATE.md` (remove scenario)
-- Git commit: `docs(exploration): scenario deleted — [Name]`
-- Return to Phase 2
+- Update `FEATURE-SCENARIOS-PROJECT-STATUS.md` (remove feature-scenario)
+- Git commit: `docs(exploration): feature-scenario deleted — [Name]`
+- Return to Sprint 2
 
-## Phase 7: Set Final Scenario
+## Sprint 7: Set Final Feature-Scenario
 
 **Display stage banner:**
 
@@ -390,74 +390,74 @@ rm -rf ".planning/scenarios/scenario-NN-[slug]"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**Show scenario comparison:**
+**Show feature-scenario comparison:**
 
 ```
-## Scenarios Compared
+## Feature-Scenarios Compared
 
-| Aspect | Scenario 1: [Name] | Scenario 2: [Name] |
+| Aspect | Feature-Scenario 1: [Name] | Feature-Scenario 2: [Name] |
 |--------|--------------------|-----------------------|
 | Core Idea | [...] | [...] |
-| UC-S-001 | [...] | [...] |
+| UC-OBJ-001 | [...] | [...] |
 | Features | [N] | [N] |
 | Draft UGs | [N] | [N] |
-| Phases | [N] | [N] |
+| Sprints | [N] | [N] |
 ```
 
 Use AskUserQuestion:
 - header: "Finalization"
-- question: "How would you like to determine the final scenario?"
+- question: "How would you like to determine the final feature-scenario?"
 - options:
-  - "Adopt scenario directly" — Use one of the scenarios 1:1 as the final scenario
-  - "Synthesis (dialog-guided)" — Combine elements from multiple scenarios through dialog
+  - "Adopt feature-scenario directly" — Use one of the feature-scenarios 1:1 as the final feature-scenario
+  - "Synthesis (dialog-guided)" — Combine elements from multiple feature-scenarios through dialog
   - "Automatic synthesis" — Let Claude generate the best combination automatically
 
 ### 7.1 Direct Adoption
 
 Use AskUserQuestion:
 - header: "Selection"
-- question: "Which scenario should be adopted as the final scenario?"
-- options: [List of scenarios]
+- question: "Which feature-scenario should be adopted as the final feature-scenario?"
+- options: [List of feature-scenarios]
 
 **Action:**
 ```bash
-mkdir -p ".planning/scenarios/final"
+mkdir -p ".planning/feature-scenarios/final"
 ```
-- Copy `SCENARIO.md` → `final/FINAL-SCENARIO.md`
+- Copy `FEATURE-SCENARIO.md` → `final/FINAL-FEATURE-SCENARIO.md`
 - Copy latest clickdummy → `final/`
 - Copy `roadmap.md` → `final/`
-- Update `SCENARIOS-STATE.md` (Status: Finalized, Source: Scenario X)
+- Update `FEATURE-SCENARIOS-PROJECT-STATUS.md` (Status: Finalized, Source: Feature-Scenario X)
 
 ### 7.2 Dialog-Guided Synthesis
 
-Interactive process comparing scenarios area by area:
+Interactive process comparing feature-scenarios area by area:
 
 **For each area (Workflows, Features, UI Concept, Roadmap):**
 
-1. Show approaches from different scenarios side by side
+1. Show approaches from different feature-scenarios side by side
 2. Use AskUserQuestion: "Which approach do you prefer for [area]?"
-   - Options: Scenario 1 / Scenario 2 / ... / Custom idea
-3. Add result to `FINAL-SCENARIO.md`
+   - Options: Feature-Scenario 1 / Feature-Scenario 2 / ... / Custom idea
+3. Add result to `FINAL-FEATURE-SCENARIO.md`
 
 **After completing all areas:**
 - Generate new clickdummy visualizing the synthesis
 - Generate new roadmap
-- Use AskUserQuestion: "Is the final scenario correct?"
+- Use AskUserQuestion: "Is the final feature-scenario correct?"
   - "Yes, finalize" — Complete
   - "Adjust" — Which area should be changed?
 
 ### 7.3 Automatic Synthesis
 
-Claude analyzes all scenarios and automatically generates an optimal final scenario:
+Claude analyzes all feature-scenarios and automatically generates an optimal final feature-scenario:
 
 **Criteria:**
-- Features with the highest coverage of Summary-Level UCs
+- Features with the highest coverage of Objectives UCs
 - Most consistent UI concept
 - Most pragmatic roadmap (must-have features first)
 - No conflicting approaches
 
 **Present result:**
-- Show `FINAL-SCENARIO.md` with annotations indicating where each element originated
+- Show `FINAL-FEATURE-SCENARIO.md` with annotations indicating where each element originated
 - Generate clickdummy + roadmap
 - Use AskUserQuestion: "Is the automatic synthesis acceptable?"
   - "Yes, finalize" — Complete
@@ -467,14 +467,14 @@ Claude analyzes all scenarios and automatically generates an optimal final scena
 ### 7.4 Complete Finalization
 
 ```bash
-mkdir -p ".planning/scenarios/final"
-git add ".planning/scenarios/"
-git commit -m "docs(exploration): final scenario set — [Name/Synthesis]"
+mkdir -p ".planning/feature-scenarios/final"
+git add ".planning/feature-scenarios/"
+git commit -m "docs(exploration): final feature-scenario set — [Name/Synthesis]"
 ```
 
-**Continue with Phase 8.**
+**Continue with Sprint 8.**
 
-## Phase 8: Completion
+## Sprint 8: Completion
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -485,18 +485,18 @@ git commit -m "docs(exploration): final scenario set — [Name/Synthesis]"
 
 | Artifact              | Location                                     |
 |-----------------------|----------------------------------------------|
-| Final Scenario        | `.planning/scenarios/final/FINAL-SCENARIO.md` |
-| Final Clickdummy      | `.planning/scenarios/final/[timestamp]_wireframe.html` |
-| Final Roadmap         | `.planning/scenarios/final/roadmap.md`        |
-| Scenarios Index       | `.planning/scenarios/SCENARIOS-STATE.md`      |
+| Final Feature-Scenario        | `.planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md` |
+| Final Clickdummy      | `.planning/feature-scenarios/final/[timestamp]_wireframe.html` |
+| Final Roadmap         | `.planning/feature-scenarios/final/roadmap.md`        |
+| Feature-Scenarios Index       | `.planning/feature-scenarios/FEATURE-SCENARIOS-PROJECT-STATUS.md`      |
 
-**[N] scenarios explored** | **Final Scenario: [Name/Synthesis]** ✓
+**[N] feature-scenarios explored** | **Final Feature-Scenario: [Name/Synthesis]** ✓
 
 ───────────────────────────────────────────────────────
 
 ## ▶ Next Up
 
-**Use Case Analysis & Roadmap** — uses final scenario as additional context
+**Use Case Analysis & Roadmap** — uses final feature-scenario as additional context
 
 `/esf:use-case-analysis`
 
@@ -505,7 +505,7 @@ git commit -m "docs(exploration): final scenario set — [Name/Synthesis]"
 ───────────────────────────────────────────────────────
 
 **Also available:**
-- `/esf:feature-exploration` — Reopen exploration (edit scenarios)
+- `/esf:feature-exploration` — Reopen exploration (edit feature-scenarios)
 - `/esf:progress` — View use case completion status
 - `/esf:help` — Show all available commands
 
@@ -516,18 +516,18 @@ git commit -m "docs(exploration): final scenario set — [Name/Synthesis]"
 
 <success_criteria>
 
-- [ ] Prerequisites checked (PROJECT.md with Summary-Level UCs present)
-- [ ] Existing scenarios detected and loaded (if present)
+- [ ] Prerequisites checked (PROJECT.md with Objectives UCs present)
+- [ ] Existing feature-scenarios detected and loaded (if present)
 - [ ] Main menu with all 4 actions functional
-- [ ] Create new scenario: name, core idea, directory, initial files
+- [ ] Create new feature-scenario: name, core idea, directory, initial files
 - [ ] Interactive core process: ask questions, process answers, persist
 - [ ] HTML clickdummy: standalone, shadcn styling, interactive, versioned
-- [ ] Mermaid roadmap: Gantt diagram with phases and tasks
+- [ ] Mermaid roadmap: Gantt diagram with sprints and tasks
 - [ ] Interruption possible at any time, no progress lost
-- [ ] Delete scenario with safety confirmation
+- [ ] Delete feature-scenario with safety confirmation
 - [ ] Finalization: direct adoption, dialog-guided synthesis OR automatic synthesis
-- [ ] Final scenario placed in `.planning/scenarios/final/`
-- [ ] SCENARIOS-STATE.md consistently updated
+- [ ] Final feature-scenario placed in `.planning/feature-scenarios/final/`
+- [ ] FEATURE-SCENARIOS-PROJECT-STATUS.md consistently updated
 - [ ] User knows next step is `/esf:use-case-analysis`
 
 </success_criteria>

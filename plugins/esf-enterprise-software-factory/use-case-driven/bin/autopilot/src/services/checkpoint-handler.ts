@@ -5,10 +5,10 @@ import type { Checkpoint, DerivedPaths } from '../types/config.js';
 /**
  * Create a unique checkpoint ID
  */
-function createCheckpointId(phase: number, plan?: number): string {
+function createCheckpointId(sprint: number, plan?: number): string {
   const timestamp = Date.now().toString(36);
   const planStr = plan !== undefined ? `-plan-${plan}` : '';
-  return `phase-${phase}${planStr}-${timestamp}`;
+  return `sprint-${sprint}${planStr}-${timestamp}`;
 }
 
 /**
@@ -18,7 +18,7 @@ export async function queueCheckpoint(
   paths: DerivedPaths,
   checkpoint: Omit<Checkpoint, 'id' | 'createdAt' | 'status'>
 ): Promise<Checkpoint> {
-  const id = createCheckpointId(checkpoint.phase, checkpoint.plan);
+  const id = createCheckpointId(checkpoint.sprint, checkpoint.plan);
   const fullCheckpoint: Checkpoint = {
     ...checkpoint,
     id,

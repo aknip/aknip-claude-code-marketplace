@@ -6,7 +6,7 @@ allowed-tools: Bash(agent-browser:*)
 # Browser Automation with agent-browser
 
 agent-browser is installed locally, you must always call it with the full path: `node_modules/agent-browser/bin/agent-browser`
-Always save screenshots and videos with a timestamp-prefix "YYYY-MM-DD_HHMMSS_" to the current phase directory ".planning/phases/{current phase}/screenshots/". The current phase can be retrieved from ".planning/STATE.md"
+Always save screenshots and videos with a timestamp-prefix "YYYY-MM-DD_HHMMSS_" to the current sprint directory ".planning/sprints/{current sprint}/screenshots/". The current sprint can be retrieved from ".planning/PROJECT-STATUS.md"
 
 ## Quick start
 

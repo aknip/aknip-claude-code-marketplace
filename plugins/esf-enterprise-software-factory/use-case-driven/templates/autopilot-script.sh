@@ -5,8 +5,8 @@
 # Project: {{project_name}}
 # ═══════════════════════════════════════════════════════════════════════════════
 #
-# Autonomous execution of all remaining phases in the milestone.
-# Each phase gets fresh 200k context via prompt file + stdin redirection.
+# Autonomous execution of all remaining sprints in the milestone.
+# Each sprint gets fresh 200k context via prompt file + stdin redirection.
 # State persists in .planning/ - safe to interrupt and resume.
 #
 # Architecture:
@@ -20,7 +20,7 @@
 #   - Real-time activity display via stream-json parsing
 #   - Stage tracking (research -> planning -> building -> verifying)
 #   - Git safety checks (no uncommitted files left behind)
-#   - Phase context display (what we're building and why)
+#   - Sprint context display (what we're building and why)
 #   - Accurate token/cost tracking from JSON output
 #
 # Dependencies:
@@ -43,7 +43,7 @@ export UC_AUTOPILOT=1
 
 PROJECT_DIR="{{project_dir}}"
 PROJECT_NAME="{{project_name}}"
-PHASES=({{phases}})
+PHASES=({{sprints}})
 CHECKPOINT_MODE="{{checkpoint_mode}}"
 MAX_RETRIES={{max_retries}}
 BUDGET_LIMIT={{budget_limit}}
@@ -57,7 +57,7 @@ MODEL_PROFILE="{{model_profile}}"
 LOG_DIR="$PROJECT_DIR/.planning/logs"
 PROMPT_TEMPLATES_DIR="$PROJECT_DIR/.claude/use-case-driven/templates/prompts"
 CHECKPOINT_DIR="$PROJECT_DIR/.planning/checkpoints"
-STATE_FILE="$PROJECT_DIR/.planning/STATE.md"
+STATE_FILE="$PROJECT_DIR/.planning/PROJECT-STATUS.md"
 
 # Track execution state for signal handling
 EXECUTING=0
@@ -131,16 +131,16 @@ elapsed_since() {
 # Generates prompt files from templates by substituting placeholders.
 # This replaces the slash command pattern which only works in interactive mode.
 #
-# Usage: generate_prompt <template_name> <output_file> <phase>
+# Usage: generate_prompt <template_name> <output_file> <sprint>
 #
 # Templates are in: .claude/use-case-driven/templates/prompts/
-# Placeholders: {{PHASE}}, {{PROJECT_DIR}}, {{PADDED_PHASE}}, {{PHASE_DIR}}, {{PHASE_NAME}}
+# Placeholders: {{SPRINT}}, {{PROJECT_DIR}}, {{PADDED_SPRINT}}, {{SPRINT_DIR}}, {{SPRINT_NAME}}
 #
 
 generate_prompt() {
   local template_name="$1"
   local output_file="$2"
-  local phase="${3:-}"
+  local sprint="${3:-}"
   local version="${4:-}"
 
   local template_file="$PROMPT_TEMPLATES_DIR/$template_name"
@@ -150,16 +150,16 @@ generate_prompt() {
     return 1
   fi
 
-  # Compute phase-specific values
+  # Compute sprint-specific values
   local padded_phase=""
   local phase_dir=""
   local phase_name=""
 
-  if [ -n "$phase" ]; then
-    padded_phase=$(printf "%02d" "$phase" 2>/dev/null || echo "$phase")
-    phase_dir=$(ls -d "$PROJECT_DIR/.planning/phases/${padded_phase}-"* 2>/dev/null | head -1)
+  if [ -n "$sprint" ]; then
+    padded_phase=$(printf "%02d" "$sprint" 2>/dev/null || echo "$sprint")
+    phase_dir=$(ls -d "$PROJECT_DIR/.planning/sprints/${padded_phase}-"* 2>/dev/null | head -1)
     if [ -z "$phase_dir" ]; then
-      phase_dir=".planning/phases/${padded_phase}-unknown"
+      phase_dir=".planning/sprints/${padded_phase}-unknown"
     fi
     # Extract just the relative path from PROJECT_DIR
     phase_dir="${phase_dir#$PROJECT_DIR/}"
@@ -167,11 +167,11 @@ generate_prompt() {
   fi
 
   # Substitute placeholders
-  sed -e "s|{{PHASE}}|${phase}|g" \
+  sed -e "s|{{SPRINT}}|${sprint}|g" \
       -e "s|{{PROJECT_DIR}}|${PROJECT_DIR}|g" \
-      -e "s|{{PADDED_PHASE}}|${padded_phase}|g" \
-      -e "s|{{PHASE_DIR}}|${phase_dir}|g" \
-      -e "s|{{PHASE_NAME}}|${phase_name}|g" \
+      -e "s|{{PADDED_SPRINT}}|${padded_phase}|g" \
+      -e "s|{{SPRINT_DIR}}|${phase_dir}|g" \
+      -e "s|{{SPRINT_NAME}}|${phase_name}|g" \
       -e "s|{{VERSION}}|${version}|g" \
       "$template_file" > "$output_file"
 
@@ -384,7 +384,7 @@ process_stream_output() {
 
                     # Map agent type to friendly name
                     case "$agent_type" in
-                      uc-phase-researcher) detail="Researching phase..." ;;
+                      uc-sprint-researcher) detail="Researching sprint..." ;;
                       uc-planner)           detail="Creating plans..." ;;
                       uc-checker)           detail="Checking plans..." ;;
                       uc-executor)          detail="Executing tasks..." ;;
@@ -610,7 +610,7 @@ MAX_ACTIVITY_LINES=10
 stage_display_name() {
   local subagent_type="$1"
   case "$subagent_type" in
-    uc-phase-researcher)  echo "RESEARCH" ;;
+    uc-sprint-researcher)  echo "RESEARCH" ;;
     uc-planner)           echo "PLANNING" ;;
     uc-checker)           echo "CHECKING" ;;
     uc-executor)          echo "BUILDING" ;;
@@ -703,7 +703,7 @@ add_activity() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase Context
+# Sprint Context
 # ─────────────────────────────────────────────────────────────────────────────
 
 CURRENT_PHASE=""
@@ -711,14 +711,14 @@ CURRENT_PHASE_NAME=""
 CURRENT_PHASE_CONTEXT=""
 
 load_phase_context() {
-  local phase="$1"
-  local roadmap=".planning/ROADMAP.md"
+  local sprint="$1"
+  local roadmap=".planning/PROJECT-PLAN.md"
 
   [ ! -f "$roadmap" ] && return
 
-  # Extract phase name
-  CURRENT_PHASE_NAME=$(grep -E "Phase $phase:" "$roadmap" 2>/dev/null | head -1 | sed 's/.*Phase [0-9]*: //' | sed 's/ *$//' | sed 's/\*//g')
-  [ -z "$CURRENT_PHASE_NAME" ] && CURRENT_PHASE_NAME="Phase $phase"
+  # Extract sprint name
+  CURRENT_PHASE_NAME=$(grep -E "Sprint $sprint:" "$roadmap" 2>/dev/null | head -1 | sed 's/.*Sprint [0-9]*: //' | sed 's/ *$//' | sed 's/\*//g')
+  [ -z "$CURRENT_PHASE_NAME" ] && CURRENT_PHASE_NAME="Sprint $sprint"
 
   # Extract goal and deliverables
   local in_phase=0
@@ -726,14 +726,14 @@ load_phase_context() {
   local line_count=0
 
   while IFS= read -r line; do
-    if echo "$line" | grep -qE "Phase $phase:"; then
+    if echo "$line" | grep -qE "Sprint $sprint:"; then
       in_phase=1
       continue
     fi
 
     if [ $in_phase -eq 1 ]; then
-      # Stop at next phase
-      if echo "$line" | grep -qE "^###.*Phase [0-9]"; then
+      # Stop at next sprint
+      if echo "$line" | grep -qE "^###.*Sprint [0-9]"; then
         break
       fi
 
@@ -776,14 +776,14 @@ render_display() {
   printf "${C_BOLD}${C_CYAN}"
   printf "# C AUTOPILOT"
   printf "%*s" $((50 - ${#PROJECT_NAME})) ""
-  printf "Phase %s/%s\n" "$((current_idx + 1))" "$total_phases"
+  printf "Sprint %s/%s\n" "$((current_idx + 1))" "$total_phases"
   printf "${C_RESET}\n"
 
-  # Phase info
-  printf "## ${C_BOLD}${C_WHITE}PHASE %s: %s${C_RESET}\n" "$CURRENT_PHASE" "$CURRENT_PHASE_NAME"
+  # Sprint info
+  printf "## ${C_BOLD}${C_WHITE}SPRINT %s: %s${C_RESET}\n" "$CURRENT_PHASE" "$CURRENT_PHASE_NAME"
   printf "\n"
 
-  # Phase context (if available)
+  # Sprint context (if available)
   if [ -n "$CURRENT_PHASE_CONTEXT" ]; then
     echo "$CURRENT_PHASE_CONTEXT" | head -4 | while IFS= read -r line; do
       printf "${C_DIM}%s${C_RESET}\n" "$line"
@@ -821,7 +821,7 @@ render_display() {
   if [ -n "$current_agent" ]; then
     local agent_display=""
     case "$current_agent" in
-      uc-phase-researcher) agent_display="🔬 Phase Researcher" ;;
+      uc-sprint-researcher) agent_display="🔬 Sprint Researcher" ;;
       uc-planner)          agent_display="📋 Planner" ;;
       uc-checker)          agent_display="✅ Checker" ;;
       uc-executor)         agent_display="🔨 Executor" ;;
@@ -917,7 +917,7 @@ render_display() {
   printf "${C_DIM}"
   for ((i=0; i<empty; i++)); do printf "─"; done
   printf "]${C_RESET}"
-  printf " %d/%d phases\n" "$completed" "$total_phases"
+  printf " %d/%d sprints\n" "$completed" "$total_phases"
 
   # Show token count if available
   if [ -f "$DISPLAY_STATE_DIR/tokens" ]; then
@@ -1068,16 +1068,16 @@ ensure_clean_working_tree() {
 
 update_autopilot_state() {
   local mode="$1"
-  local phase="$2"
+  local sprint="$2"
   local remaining="$3"
   local error="${4:-none}"
 
   if grep -q "## Autopilot" "$STATE_FILE" 2>/dev/null; then
-    awk -v mode="$mode" -v phase="$phase" -v remaining="$remaining" -v error="$error" -v ts="$(iso_timestamp)" '
+    awk -v mode="$mode" -v sprint="$sprint" -v remaining="$remaining" -v error="$error" -v ts="$(iso_timestamp)" '
       /^## Autopilot/,/^## / {
         if (/^- \*\*Mode:\*\*/) { print "- **Mode:** " mode; next }
-        if (/^- \*\*Current Phase:\*\*/) { print "- **Current Phase:** " phase; next }
-        if (/^- \*\*Phases Remaining:\*\*/) { print "- **Phases Remaining:** " remaining; next }
+        if (/^- \*\*Current Sprint:\*\*/) { print "- **Current Sprint:** " sprint; next }
+        if (/^- \*\*Sprints Remaining:\*\*/) { print "- **Sprints Remaining:** " remaining; next }
         if (/^- \*\*Last Error:\*\*/) { print "- **Last Error:** " error; next }
         if (/^- \*\*Updated:\*\*/) { print "- **Updated:** " ts; next }
       }
@@ -1090,8 +1090,8 @@ update_autopilot_state() {
 
 - **Mode:** $mode
 - **Started:** $(iso_timestamp)
-- **Current Phase:** $phase
-- **Phases Remaining:** $remaining
+- **Current Sprint:** $sprint
+- **Sprints Remaining:** $remaining
 - **Checkpoints Pending:** (none)
 - **Last Error:** $error
 - **Updated:** $(iso_timestamp)
@@ -1108,7 +1108,7 @@ TOTAL_COST_CENTS=0
 
 track_cost() {
   local log_file="$1"
-  local phase="$2"
+  local sprint="$2"
 
   local tokens=0
 
@@ -1137,12 +1137,12 @@ track_cost() {
     local total_remainder=$((TOTAL_COST_CENTS % 100))
     local total_cost=$(printf "%d.%02d" $total_dollars $total_remainder)
 
-    log "COST" "Phase $phase: ${tokens} tokens (~\$${total_cost} total)"
+    log "COST" "Sprint $sprint: ${tokens} tokens (~\$${total_cost} total)"
   else
-    log "WARN" "Could not extract token count for phase $phase"
+    log "WARN" "Could not extract token count for sprint $sprint"
   fi
 
-  # Clear tokens file for next phase
+  # Clear tokens file for next sprint
   rm -f "$DISPLAY_STATE_DIR/tokens" 2>/dev/null
 
   # Budget check
@@ -1153,7 +1153,7 @@ track_cost() {
       local total_remainder=$((TOTAL_COST_CENTS % 100))
       local total_cost=$(printf "%d.%02d" $total_dollars $total_remainder)
       notify "Budget exceeded: \$${total_cost} / \$${BUDGET_LIMIT}" "error"
-      update_autopilot_state "paused" "$phase" "${PHASES[*]}" "budget_exceeded"
+      update_autopilot_state "paused" "$sprint" "${PHASES[*]}" "budget_exceeded"
       exit 0
     fi
 
@@ -1169,15 +1169,15 @@ track_cost() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 queue_checkpoint() {
-  local phase="$1"
+  local sprint="$1"
   local plan="$2"
   local checkpoint_data="$3"
 
-  local checkpoint_file="$CHECKPOINT_DIR/pending/phase-${phase}-plan-${plan}.json"
+  local checkpoint_file="$CHECKPOINT_DIR/pending/sprint-${sprint}-plan-${plan}.json"
   echo "$checkpoint_data" > "$checkpoint_file"
 
   log "CHECKPOINT" "Queued: $checkpoint_file"
-  notify "Checkpoint queued: Phase $phase, Plan $plan" "checkpoint"
+  notify "Checkpoint queued: Sprint $sprint, Plan $plan" "checkpoint"
 }
 
 process_approved_checkpoints() {
@@ -1193,54 +1193,54 @@ process_approved_checkpoints() {
     fi
 
     local basename=$(basename "$approval" .json)
-    local phase=$(echo "$basename" | sed -n 's/phase-\([0-9]*\)-.*/\1/p')
+    local sprint=$(echo "$basename" | sed -n 's/sprint-\([0-9]*\)-.*/\1/p')
     local plan=$(echo "$basename" | sed -n 's/.*plan-\([0-9]*\)/\1/p')
 
-    if [ -z "$phase" ] || [ -z "$plan" ]; then
-      log "WARN" "Could not parse phase/plan from: $approval"
+    if [ -z "$sprint" ] || [ -z "$plan" ]; then
+      log "WARN" "Could not parse sprint/plan from: $approval"
       mv "$approval" "$CHECKPOINT_DIR/processed/"
       continue
     fi
 
-    log "INFO" "Processing approved checkpoint: Phase $phase, Plan $plan"
+    log "INFO" "Processing approved checkpoint: Sprint $sprint, Plan $plan"
 
     local user_response=$(grep -o '"response"[[:space:]]*:[[:space:]]*"[^"]*"' "$approval" | sed 's/.*: *"//' | sed 's/"$//' || echo "")
-    local continuation_log="$LOG_DIR/continuation-phase${phase}-plan${plan}-$(date +%Y%m%d-%H%M%S).log"
+    local continuation_log="$LOG_DIR/continuation-sprint${sprint}-plan${plan}-$(date +%Y%m%d-%H%M%S).log"
 
     add_activity "commit" "continuing from checkpoint"
 
-    # Continue phase execution after checkpoint approval
-    local checkpoint_prompt="$LOG_DIR/checkpoint-phase${phase}.prompt.md"
-    generate_prompt "execute-phase-prompt.md" "$checkpoint_prompt" "$phase"
+    # Continue sprint execution after checkpoint approval
+    local checkpoint_prompt="$LOG_DIR/checkpoint-sprint${sprint}.prompt.md"
+    generate_prompt "execute-sprint-prompt.md" "$checkpoint_prompt" "$sprint"
     run_claude_with_prompt "$checkpoint_prompt" "$continuation_log"
 
     if [ $? -ne 0 ]; then
       log "ERROR" "Continuation failed"
     else
       mv "$approval" "$CHECKPOINT_DIR/processed/"
-      track_cost "$continuation_log" "$phase"
+      track_cost "$continuation_log" "$sprint"
     fi
   done
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Phase Execution
+# Sprint Execution
 # ─────────────────────────────────────────────────────────────────────────────
 
 is_phase_complete() {
-  local phase="$1"
-  local padded=$(printf "%02d" "$phase" 2>/dev/null || echo "$phase")
-  local phase_dir=$(ls -d .planning/phases/${padded}-* 2>/dev/null | head -1)
+  local sprint="$1"
+  local padded=$(printf "%02d" "$sprint" 2>/dev/null || echo "$sprint")
+  local phase_dir=$(ls -d .planning/sprints/${padded}-* 2>/dev/null | head -1)
 
-  # Phase is complete if VERIFICATION.md exists with status: passed OR "PHASE COMPLETE"
+  # Sprint is complete if VERIFICATION.md exists with status: passed OR "SPRINT COMPLETE"
   if [ -n "$phase_dir" ]; then
     local verif_file=$(ls "$phase_dir"/*-VERIFICATION.md 2>/dev/null | head -1)
     if [ -f "$verif_file" ]; then
-      # Check both formats: "status: passed" and "PHASE COMPLETE"
+      # Check both formats: "status: passed" and "SPRINT COMPLETE"
       if grep -qE "^status:[[:space:]]*passed" "$verif_file" 2>/dev/null; then
         return 0
       fi
-      if grep -q "PHASE COMPLETE" "$verif_file" 2>/dev/null; then
+      if grep -q "SPRINT COMPLETE" "$verif_file" 2>/dev/null; then
         return 0
       fi
     fi
@@ -1249,7 +1249,7 @@ is_phase_complete() {
 }
 
 execute_phase() {
-  local phase="$1"
+  local sprint="$1"
   local phase_idx="$2"
   local total_phases="$3"
   local attempt=1
@@ -1258,17 +1258,17 @@ execute_phase() {
   EXECUTING=1
 
   # Safety check before starting
-  ensure_clean_working_tree "before phase $phase"
+  ensure_clean_working_tree "before sprint $sprint"
 
-  # Skip completed phases
-  if is_phase_complete "$phase"; then
-    log "INFO" "Phase $phase already complete, skipping"
+  # Skip completed sprints
+  if is_phase_complete "$sprint"; then
+    log "INFO" "Sprint $sprint already complete, skipping"
     return 0
   fi
 
-  # Load phase context
-  CURRENT_PHASE="$phase"
-  load_phase_context "$phase"
+  # Load sprint context
+  CURRENT_PHASE="$sprint"
+  load_phase_context "$sprint"
   reset_stages
 
   # Start activity reader and display
@@ -1282,10 +1282,10 @@ execute_phase() {
 
   while [ $attempt -le $MAX_RETRIES ]; do
     # Create fresh log file for each attempt
-    local phase_log="$LOG_DIR/phase-${phase}-attempt${attempt}-$(date +%Y%m%d-%H%M%S).log"
+    local phase_log="$LOG_DIR/sprint-${sprint}-attempt${attempt}-$(date +%Y%m%d-%H%M%S).log"
 
     if [ $attempt -gt 1 ]; then
-      log "INFO" "Retry $attempt/$MAX_RETRIES for phase $phase"
+      log "INFO" "Retry $attempt/$MAX_RETRIES for sprint $sprint"
       add_activity "retry" "attempt $attempt of $MAX_RETRIES"
 
       # Wait a bit before retry to avoid rate limiting
@@ -1293,41 +1293,41 @@ execute_phase() {
       sleep 5
     fi
 
-    # Check if phase needs planning
-    local phase_dir=$(ls -d .planning/phases/$(printf "%02d" "$phase" 2>/dev/null || echo "$phase")-* 2>/dev/null | head -1)
+    # Check if sprint needs planning
+    local phase_dir=$(ls -d .planning/sprints/$(printf "%02d" "$sprint" 2>/dev/null || echo "$sprint")-* 2>/dev/null | head -1)
 
     if [ -z "$phase_dir" ] || [ $(ls "$phase_dir"/*-PLAN.md 2>/dev/null | wc -l) -eq 0 ]; then
-      log "INFO" "Planning phase $phase"
+      log "INFO" "Planning sprint $sprint"
 
-      local plan_prompt="$LOG_DIR/plan-phase-${phase}.prompt.md"
-      generate_prompt "plan-phase-prompt.md" "$plan_prompt" "$phase"
+      local plan_prompt="$LOG_DIR/plan-sprint-${sprint}.prompt.md"
+      generate_prompt "plan-sprint-prompt.md" "$plan_prompt" "$sprint"
       run_claude_with_prompt "$plan_prompt" "$phase_log"
 
       if [ $? -ne 0 ]; then
-        log "ERROR" "Planning failed for phase $phase"
+        log "ERROR" "Planning failed for sprint $sprint"
         ((attempt++))
         sleep 5
         continue
       fi
 
-      phase_dir=$(ls -d .planning/phases/$(printf "%02d" "$phase" 2>/dev/null || echo "$phase")-* 2>/dev/null | head -1)
+      phase_dir=$(ls -d .planning/sprints/$(printf "%02d" "$sprint" 2>/dev/null || echo "$sprint")-* 2>/dev/null | head -1)
     fi
 
     # Execution
-    log "INFO" "Executing phase $phase"
+    log "INFO" "Executing sprint $sprint"
 
-    local exec_prompt="$LOG_DIR/execute-phase-${phase}.prompt.md"
-    generate_prompt "execute-phase-prompt.md" "$exec_prompt" "$phase"
+    local exec_prompt="$LOG_DIR/execute-sprint-${sprint}.prompt.md"
+    generate_prompt "execute-sprint-prompt.md" "$exec_prompt" "$sprint"
     run_claude_with_prompt "$exec_prompt" "$phase_log"
 
     if [ $? -ne 0 ]; then
-      log "ERROR" "Execution failed for phase $phase"
+      log "ERROR" "Execution failed for sprint $sprint"
       ((attempt++))
       sleep 5
       continue
     fi
 
-    track_cost "$phase_log" "$phase"
+    track_cost "$phase_log" "$sprint"
 
     # Check verification status
     local verification_file=$(ls "$phase_dir"/*-VERIFICATION.md 2>/dev/null | head -1)
@@ -1336,13 +1336,13 @@ execute_phase() {
     # First check: did Claude produce any output?
     local log_size=$(wc -c < "$phase_log" 2>/dev/null | tr -d ' ')
     if [ "$log_size" -eq 0 ]; then
-      log "WARN" "Phase $phase: Claude produced no output (log file empty)"
+      log "WARN" "Sprint $sprint: Claude produced no output (log file empty)"
       status="incomplete"
     elif [ -f "$verification_file" ]; then
       # Check for explicit status line first
       if grep -qE "^status:" "$verification_file" 2>/dev/null; then
         status=$(grep "^status:" "$verification_file" | head -1 | cut -d: -f2 | tr -d ' ')
-      elif grep -q "PHASE COMPLETE" "$verification_file" 2>/dev/null; then
+      elif grep -q "SPRINT COMPLETE" "$verification_file" 2>/dev/null; then
         status="passed"
       elif grep -q "GAPS FOUND" "$verification_file" 2>/dev/null; then
         status="gaps_found"
@@ -1351,32 +1351,32 @@ execute_phase() {
       # No verification file - check if any work was done
       local summary_count=$(ls "$phase_dir"/*-SUMMARY.md 2>/dev/null | wc -l | tr -d ' ')
       if [ "$summary_count" -gt 0 ]; then
-        log "INFO" "Phase $phase: Work done but no verification yet"
+        log "INFO" "Sprint $sprint: Work done but no verification yet"
         status="needs_verification"
       else
-        log "WARN" "Phase $phase: No VERIFICATION.md and no SUMMARY.md found"
+        log "WARN" "Sprint $sprint: No VERIFICATION.md and no SUMMARY.md found"
         status="incomplete"
       fi
     fi
 
-    log "INFO" "Phase $phase status: $status"
+    log "INFO" "Sprint $sprint status: $status"
 
     case "$status" in
       "passed")
         complete_current_stage
         EXECUTING=0
         stop_activity_reader
-        ensure_clean_working_tree "after phase $phase"
-        notify "Phase $phase complete" "success"
+        ensure_clean_working_tree "after sprint $sprint"
+        notify "Sprint $sprint complete" "success"
         return 0
         ;;
 
       "gaps_found")
-        log "INFO" "Gaps found in phase $phase, planning closure"
+        log "INFO" "Gaps found in sprint $sprint, planning closure"
 
         # Generate gap planning prompt (appends gaps mode instruction)
-        local gap_plan_prompt="$LOG_DIR/plan-phase-${phase}-gaps.prompt.md"
-        generate_prompt "plan-phase-prompt.md" "$gap_plan_prompt" "$phase"
+        local gap_plan_prompt="$LOG_DIR/plan-sprint-${sprint}-gaps.prompt.md"
+        generate_prompt "plan-sprint-prompt.md" "$gap_plan_prompt" "$sprint"
         echo "" >> "$gap_plan_prompt"
         echo "## GAP CLOSURE MODE" >> "$gap_plan_prompt"
         echo "" >> "$gap_plan_prompt"
@@ -1392,12 +1392,12 @@ execute_phase() {
         fi
 
         # Generate gap execution prompt
-        local gap_exec_prompt="$LOG_DIR/execute-phase-${phase}-gaps.prompt.md"
-        generate_prompt "execute-phase-prompt.md" "$gap_exec_prompt" "$phase"
+        local gap_exec_prompt="$LOG_DIR/execute-sprint-${sprint}-gaps.prompt.md"
+        generate_prompt "execute-sprint-prompt.md" "$gap_exec_prompt" "$sprint"
         echo "" >> "$gap_exec_prompt"
         echo "## GAP CLOSURE MODE" >> "$gap_exec_prompt"
         echo "" >> "$gap_exec_prompt"
-        echo "Execute ONLY the gap closure plans, not all plans in the phase." >> "$gap_exec_prompt"
+        echo "Execute ONLY the gap closure plans, not all plans in the sprint." >> "$gap_exec_prompt"
         echo "Look for plans created after the initial execution (gap closure plans)." >> "$gap_exec_prompt"
         run_claude_with_prompt "$gap_exec_prompt" "$phase_log"
 
@@ -1406,7 +1406,7 @@ execute_phase() {
           continue
         fi
 
-        track_cost "$phase_log" "$phase"
+        track_cost "$phase_log" "$sprint"
 
         status=$(grep "^status:" "$verification_file" 2>/dev/null | tail -1 | cut -d: -f2 | tr -d ' ')
 
@@ -1414,8 +1414,8 @@ execute_phase() {
           complete_current_stage
           EXECUTING=0
           stop_activity_reader
-          ensure_clean_working_tree "after phase $phase gap closure"
-          notify "Phase $phase complete (after gap closure)" "success"
+          ensure_clean_working_tree "after sprint $sprint gap closure"
+          notify "Sprint $sprint complete (after gap closure)" "success"
           return 0
         else
           ((attempt++))
@@ -1425,26 +1425,26 @@ execute_phase() {
 
       "human_needed")
         if [ "$CHECKPOINT_MODE" = "queue" ]; then
-          queue_checkpoint "$phase" "verification" "{\"type\": \"human_verification\", \"phase\": \"$phase\"}"
+          queue_checkpoint "$sprint" "verification" "{\"type\": \"human_verification\", \"sprint\": \"$sprint\"}"
         fi
         complete_current_stage
         EXECUTING=0
         stop_activity_reader
-        ensure_clean_working_tree "after phase $phase (human verification queued)"
+        ensure_clean_working_tree "after sprint $sprint (human verification queued)"
         return 0
         ;;
 
       "needs_verification")
         # Work was done but verification not run - trigger verification
-        log "INFO" "Running verification for phase $phase"
+        log "INFO" "Running verification for sprint $sprint"
         # Continue to next attempt which will re-run execution (which includes verification)
         ((attempt++))
         continue
         ;;
 
       "incomplete"|*)
-        # Phase not complete - retry
-        log "WARN" "Phase $phase incomplete (status: $status), will retry"
+        # Sprint not complete - retry
+        log "WARN" "Sprint $sprint incomplete (status: $status), will retry"
         ((attempt++))
         sleep 5
         continue
@@ -1455,8 +1455,8 @@ execute_phase() {
   # All retries exhausted
   EXECUTING=0
   stop_activity_reader
-  ensure_clean_working_tree "after phase $phase failure"
-  notify "Phase $phase FAILED after $MAX_RETRIES attempts" "error"
+  ensure_clean_working_tree "after sprint $sprint failure"
+  notify "Sprint $sprint FAILED after $MAX_RETRIES attempts" "error"
   return 1
 }
 
@@ -1483,8 +1483,8 @@ main() {
   printf "${C_BOLD}${C_WHITE}  AUTOPILOT${C_RESET}\n"
   printf "${C_DIM}  %s${C_RESET}\n" "$PROJECT_NAME"
   printf "\n"
-  printf "${C_DIM}  Phases:      %s${C_RESET}\n" "${PHASES[*]}"
-  printf "${C_DIM}  Retries:     %s per phase${C_RESET}\n" "$MAX_RETRIES"
+  printf "${C_DIM}  Sprints:      %s${C_RESET}\n" "${PHASES[*]}"
+  printf "${C_DIM}  Retries:     %s per sprint${C_RESET}\n" "$MAX_RETRIES"
   printf "${C_DIM}  Budget:      \$%s${C_RESET}\n" "$BUDGET_LIMIT"
   printf "${C_DIM}  Checkpoints: %s${C_RESET}\n" "$CHECKPOINT_MODE"
   printf "${C_DIM}  Profile:     %s${C_RESET}\n" "$MODEL_PROFILE"
@@ -1499,23 +1499,23 @@ main() {
   local remaining_phases=("${PHASES[@]}")
   local phase_idx=0
 
-  for phase in "${PHASES[@]}"; do
+  for sprint in "${PHASES[@]}"; do
     process_approved_checkpoints
 
     remaining_phases=("${remaining_phases[@]:1}")
     local remaining_str="${remaining_phases[*]:-none}"
 
-    update_autopilot_state "running" "$phase" "$remaining_str"
+    update_autopilot_state "running" "$sprint" "$remaining_str"
 
-    if ! execute_phase "$phase" "$phase_idx" "$total_phases"; then
-      update_autopilot_state "failed" "$phase" "$remaining_str" "phase_${phase}_failed"
+    if ! execute_phase "$sprint" "$phase_idx" "$total_phases"; then
+      update_autopilot_state "failed" "$sprint" "$remaining_str" "phase_${sprint}_failed"
 
       if [ -t 1 ]; then
         printf "${CURSOR_SHOW}"
-        printf "\n${C_RED}${C_BOLD}Autopilot stopped at phase $phase${C_RESET}\n"
+        printf "\n${C_RED}${C_BOLD}Autopilot stopped at sprint $sprint${C_RESET}\n"
       fi
 
-      notify "Autopilot STOPPED at phase $phase" "error"
+      notify "Autopilot STOPPED at sprint $sprint" "error"
       exit 1
     fi
 
@@ -1550,21 +1550,21 @@ main() {
     printf "  ╚═══════════════════════════════════════════════════╝\n"
     printf "${C_RESET}\n"
 
-    printf "${C_WHITE}  Phases:${C_RESET}    %d completed\n" "$total_phases"
+    printf "${C_WHITE}  Sprints:${C_RESET}    %d completed\n" "$total_phases"
     printf "${C_WHITE}  Time:${C_RESET}      %dm %ds\n" "$total_min" "$total_sec"
     printf "${C_WHITE}  Tokens:${C_RESET}    %s\n" "$TOTAL_TOKENS"
     printf "${C_WHITE}  Cost:${C_RESET}      \$%s\n" "$total_cost"
     printf "\n"
   fi
 
-  log "SUCCESS" "Milestone complete: $total_phases phases, ${total_min}m ${total_sec}s, \$$total_cost"
+  log "SUCCESS" "Milestone complete: $total_phases sprints, ${total_min}m ${total_sec}s, \$$total_cost"
 
   # Complete milestone
   local milestone_prompt="$LOG_DIR/complete-milestone.prompt.md"
   generate_prompt "complete-milestone-prompt.md" "$milestone_prompt" "" ""
   run_claude_with_prompt "$milestone_prompt" "$LOG_DIR/milestone-complete.log"
 
-  notify "Milestone COMPLETE! $total_phases phases, \$$total_cost" "success"
+  notify "Milestone COMPLETE! $total_phases sprints, \$$total_cost" "success"
 
   # Check for pending checkpoints
   local pending_count=$(ls "$CHECKPOINT_DIR/pending/"*.json 2>/dev/null | wc -l | tr -d ' ')

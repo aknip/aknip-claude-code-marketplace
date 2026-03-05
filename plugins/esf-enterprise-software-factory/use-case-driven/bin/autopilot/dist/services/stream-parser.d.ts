@@ -14,6 +14,8 @@ export declare function parseStream(stdout: Readable): AsyncGenerator<StreamEven
  * - "rate limit exceeded, resets at 10:30pm"
  * - "rate limit exceeded, resets in 5 minutes"
  * - "Rate limited. Try again at 2024-02-15T15:30:00Z"
+ * - "You're out of extra usage · resets 10pm"
+ * - "You've exceeded your usage limit"
  */
 export declare function parseRateLimitMessage(message: string): {
     resetTime: Date;

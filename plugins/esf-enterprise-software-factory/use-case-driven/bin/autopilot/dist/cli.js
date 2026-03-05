@@ -24,13 +24,13 @@ export function parseArgs() {
     const program = new Command();
     program
         .name('autopilot')
-        .description('UC Autopilot - Autonomous phase execution with flicker-free UI')
+        .description('UC Autopilot - Autonomous sprint execution with flicker-free UI')
         .version('1.0.0')
         .option('-d, --project-dir <path>', 'Project directory', process.cwd())
         .option('-n, --project-name <name>', 'Project display name', 'Project')
-        .option('-p, --phases <phases>', 'Comma-separated phase numbers (e.g., "1,2,3,4")', '1')
+        .option('-p, --sprints <sprints>', 'Comma-separated sprint numbers (e.g., "1,2,3,4")', '1')
         .option('-c, --checkpoint-mode <mode>', 'Checkpoint handling: queue, pause, skip', 'queue')
-        .option('-r, --max-retries <n>', 'Maximum retries per phase', '3')
+        .option('-r, --max-retries <n>', 'Maximum retries per sprint', '3')
         .option('-b, --budget <amount>', 'Budget limit in USD (0 = unlimited)', '0')
         .option('-w, --webhook <url>', 'Webhook URL for notifications')
         .option('-m, --model-profile <profile>', 'Model profile: fast, balanced, thorough', 'balanced')
@@ -38,8 +38,8 @@ export function parseArgs() {
         .option('-v, --verbose', 'Enable verbose logging')
         .parse();
     const opts = program.opts();
-    // Parse phases from comma-separated string
-    const phases = opts.phases
+    // Parse sprints from comma-separated string
+    const sprints = opts.sprints
         .split(',')
         .map((p) => parseInt(p.trim(), 10))
         .filter((p) => !isNaN(p));
@@ -47,7 +47,7 @@ export function parseArgs() {
     const rawConfig = {
         projectDir: path.resolve(opts.projectDir),
         projectName: opts.projectName,
-        phases,
+        sprints,
         checkpointMode: opts.checkpointMode,
         maxRetries: parseInt(opts.maxRetries, 10),
         budgetLimit: parseFloat(opts.budget),
@@ -91,10 +91,10 @@ export async function validateEnvironment(config) {
     await fs.ensureDir(paths.logDir);
     await fs.ensureDir(path.join(paths.checkpointDir, 'pending'));
     await fs.ensureDir(path.join(paths.checkpointDir, 'approved'));
-    // Check for ROADMAP.md (optional but recommended)
-    if (!await fs.pathExists(paths.roadmapFile)) {
-        console.warn(`${colors.yellow}Warning: ROADMAP.md not found at ${paths.roadmapFile}${colors.reset}`);
-        console.warn(`  Phase information will be limited.`);
+    // Check for PROJECT-PLAN.md (optional but recommended)
+    if (!await fs.pathExists(paths.projectPlanFile)) {
+        console.warn(`${colors.yellow}Warning: PROJECT-PLAN.md not found at ${paths.projectPlanFile}${colors.reset}`);
+        console.warn(`  Sprint information will be limited.`);
     }
     // Check for prompt templates
     if (!await fs.pathExists(paths.promptTemplatesDir)) {
@@ -119,8 +119,8 @@ export function showBanner(config) {
     console.log(`${bold}  AUTOPILOT${reset}`);
     console.log(`${dim}  ${config.projectName}${reset}`);
     console.log('');
-    console.log(`${dim}  Phases:      ${config.phases.join(', ')}${reset}`);
-    console.log(`${dim}  Retries:     ${config.maxRetries} per phase${reset}`);
+    console.log(`${dim}  Sprints:      ${config.sprints.join(', ')}${reset}`);
+    console.log(`${dim}  Retries:     ${config.maxRetries} per sprint${reset}`);
     console.log(`${dim}  Budget:      $${config.budgetLimit}${reset}`);
     console.log(`${dim}  Checkpoints: ${config.checkpointMode}${reset}`);
     console.log(`${dim}  Profile:     ${config.modelProfile}${reset}`);
@@ -133,7 +133,7 @@ export function showBanner(config) {
 /**
  * Display completion banner
  */
-export function showCompletionBanner(phasesCompleted, durationSeconds, totalTokens, totalCost) {
+export function showCompletionBanner(sprintsCompleted, durationSeconds, totalTokens, totalCost) {
     const { bold, green, white, reset } = colors;
     const minutes = Math.floor(durationSeconds / 60);
     const seconds = durationSeconds % 60;
@@ -142,7 +142,7 @@ export function showCompletionBanner(phasesCompleted, durationSeconds, totalToke
     console.log(`${bold}${green}  ║              MILESTONE COMPLETE                   ║${reset}`);
     console.log(`${bold}${green}  ╚═══════════════════════════════════════════════════╝${reset}`);
     console.log('');
-    console.log(`${white}  Phases:${reset}    ${phasesCompleted} completed`);
+    console.log(`${white}  Sprints:${reset}    ${sprintsCompleted} completed`);
     console.log(`${white}  Time:${reset}      ${minutes}m ${seconds}s`);
     console.log(`${white}  Tokens:${reset}    ${totalTokens.toLocaleString()}`);
     console.log(`${white}  Cost:${reset}      $${totalCost.toFixed(2)}`);
@@ -154,7 +154,7 @@ export function showCompletionBanner(phasesCompleted, durationSeconds, totalToke
 export function showFailureBanner(failedPhase, error) {
     const { bold, red, reset } = colors;
     console.log('');
-    console.log(`${red}${bold}Autopilot stopped at phase ${failedPhase}${reset}`);
+    console.log(`${red}${bold}Autopilot stopped at sprint ${failedPhase}${reset}`);
     if (error) {
         console.log(`${red}Error: ${error}${reset}`);
     }

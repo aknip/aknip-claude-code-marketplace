@@ -255,7 +255,7 @@ function extractToolDetail(
  */
 function getAgentDisplayName(agentType: string): string {
   const names: Record<string, string> = {
-    'uc-phase-researcher': 'Researching',
+    'uc-sprint-researcher': 'Researching',
     'uc-planner': 'Planning',
     'uc-checker': 'Checking',
     'uc-executor': 'Executing',
@@ -397,7 +397,7 @@ export function agentToStageName(
   agentType: string
 ): 'RESEARCH' | 'PLANNING' | 'CHECKING' | 'BUILDING' | 'VERIFYING' | 'WORKING' {
   switch (agentType) {
-    case 'uc-phase-researcher':
+    case 'uc-sprint-researcher':
       return 'RESEARCH';
     case 'uc-planner':
       return 'PLANNING';

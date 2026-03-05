@@ -17,7 +17,7 @@ export interface CurrentStageProps {
  */
 function getAgentDisplay(agent: string): { icon: string; name: string } {
   const agents: Record<string, { icon: string; name: string }> = {
-    'uc-phase-researcher': { icon: '🔬', name: 'Phase Researcher' },
+    'uc-sprint-researcher': { icon: '🔬', name: 'Sprint Researcher' },
     'uc-planner': { icon: '📋', name: 'Planner' },
     'uc-checker': { icon: '✅', name: 'Checker' },
     'uc-executor': { icon: '🔨', name: 'Executor' },

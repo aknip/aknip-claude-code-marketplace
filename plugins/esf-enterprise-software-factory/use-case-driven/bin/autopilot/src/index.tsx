@@ -7,7 +7,7 @@ import { App } from './App.js';
 import { getDerivedPaths } from './types/config.js';
 import { AutopilotProvider, useAutopilot } from './context/autopilot-context.js';
 import { runMainLoop } from './execution/main-loop.js';
-import { loadPhaseInfo } from './services/phase-loader.js';
+import { loadSprintInfo } from './services/sprint-loader.js';
 import {
   parseArgs,
   validateEnvironment,
@@ -16,7 +16,7 @@ import {
   sleep,
 } from './cli.js';
 import type { AutopilotConfig } from './types/config.js';
-import type { PhaseInfo, PhaseResult } from './types/config.js';
+import type { SprintInfo, SprintResult } from './types/config.js';
 import type { ActivityEntry, StageName } from './types/events.js';
 
 /**
@@ -26,8 +26,8 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
   const { exit } = useApp();
   const {
     init,
-    startPhase,
-    completePhase,
+    startSprint,
+    completeSprint,
     setStage,
     addActivity,
     setAgent,
@@ -46,7 +46,7 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
     hasStarted.current = true;
 
     // Initialize UI state
-    init(config, config.phases.length);
+    init(config, config.sprints.length);
 
     // Create log file
     const logFile = path.join(
@@ -68,22 +68,22 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
     const result = await runMainLoop(config, paths, {
       log,
 
-      onPhaseStart: (phase: number, phaseInfo: PhaseInfo | null, index: number, total: number) => {
+      onSprintStart: (sprint: number, sprintInfo: SprintInfo | null, index: number, total: number) => {
         resetStages();
-        startPhase(phase, phaseInfo || {
-          number: phase,
-          name: `Phase ${phase}`,
+        startSprint(sprint, sprintInfo || {
+          number: sprint,
+          name: `Sprint ${sprint}`,
           deliverables: [],
           useCases: [],
         });
-        setStage('WORKING', `Starting phase ${phase}`);
+        setStage('WORKING', `Starting sprint ${sprint}`);
       },
 
-      onPhaseComplete: (phase: number, phaseResult: PhaseResult) => {
-        completePhase(phase, phaseResult);
+      onSprintComplete: (sprint: number, phaseResult: SprintResult) => {
+        completeSprint(sprint, phaseResult);
         addActivity({
           type: phaseResult.status === 'passed' ? 'result' : 'error',
-          detail: `Phase ${phase}: ${phaseResult.status}`,
+          detail: `Sprint ${sprint}: ${phaseResult.status}`,
           timestamp: new Date(),
         });
       },
@@ -125,7 +125,7 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
         setMode('paused');
       },
 
-      onComplete: (results: PhaseResult[]) => {
+      onComplete: (results: SprintResult[]) => {
         setMode('completed');
       },
     });
@@ -140,7 +140,7 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
       // Show completion banner
       console.clear();
       showCompletionBanner(
-        result.phasesCompleted.length,
+        result.sprintsCompleted.length,
         result.duration,
         result.totalTokens,
         result.totalCost
@@ -158,14 +158,14 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
       // Show failure banner
       console.clear();
       showFailureBanner(
-        result.phasesFailed[0] || 0,
+        result.sprintsFailed[0] || 0,
         result.error || 'Unknown error'
       );
     }
 
     // Exit the app
     exit();
-  }, [config, paths, init, startPhase, completePhase, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
+  }, [config, paths, init, startSprint, completeSprint, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
 
   // Start on mount
   useEffect(() => {

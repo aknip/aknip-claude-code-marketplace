@@ -14,7 +14,7 @@ import { parseArgs, validateEnvironment, showCompletionBanner, showFailureBanner
  */
 function AutopilotRunner({ config }) {
     const { exit } = useApp();
-    const { init, startPhase, completePhase, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, } = useAutopilot();
+    const { init, startSprint, completeSprint, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, } = useAutopilot();
     const paths = getDerivedPaths(config.projectDir);
     const hasStarted = useRef(false);
     // Run the main loop
@@ -23,7 +23,7 @@ function AutopilotRunner({ config }) {
             return;
         hasStarted.current = true;
         // Initialize UI state
-        init(config, config.phases.length);
+        init(config, config.sprints.length);
         // Create log file
         const logFile = path.join(paths.logDir, `autopilot-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.log`);
         const log = (level, message) => {
@@ -37,21 +37,21 @@ function AutopilotRunner({ config }) {
         // Run main loop with UI callbacks
         const result = await runMainLoop(config, paths, {
             log,
-            onPhaseStart: (phase, phaseInfo, index, total) => {
+            onSprintStart: (sprint, sprintInfo, index, total) => {
                 resetStages();
-                startPhase(phase, phaseInfo || {
-                    number: phase,
-                    name: `Phase ${phase}`,
+                startSprint(sprint, sprintInfo || {
+                    number: sprint,
+                    name: `Sprint ${sprint}`,
                     deliverables: [],
                     useCases: [],
                 });
-                setStage('WORKING', `Starting phase ${phase}`);
+                setStage('WORKING', `Starting sprint ${sprint}`);
             },
-            onPhaseComplete: (phase, phaseResult) => {
-                completePhase(phase, phaseResult);
+            onSprintComplete: (sprint, phaseResult) => {
+                completeSprint(sprint, phaseResult);
                 addActivity({
                     type: phaseResult.status === 'passed' ? 'result' : 'error',
-                    detail: `Phase ${phase}: ${phaseResult.status}`,
+                    detail: `Sprint ${sprint}: ${phaseResult.status}`,
                     timestamp: new Date(),
                 });
             },
@@ -96,7 +96,7 @@ function AutopilotRunner({ config }) {
             await sleep(1000);
             // Show completion banner
             console.clear();
-            showCompletionBanner(result.phasesCompleted.length, result.duration, result.totalTokens, result.totalCost);
+            showCompletionBanner(result.sprintsCompleted.length, result.duration, result.totalTokens, result.totalCost);
             // Show log path
             console.log(`\x1b[2m  Logs: ${paths.logDir}/\x1b[0m`);
             console.log('');
@@ -107,11 +107,11 @@ function AutopilotRunner({ config }) {
             await sleep(1000);
             // Show failure banner
             console.clear();
-            showFailureBanner(result.phasesFailed[0] || 0, result.error || 'Unknown error');
+            showFailureBanner(result.sprintsFailed[0] || 0, result.error || 'Unknown error');
         }
         // Exit the app
         exit();
-    }, [config, paths, init, startPhase, completePhase, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
+    }, [config, paths, init, startSprint, completeSprint, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
     // Start on mount
     useEffect(() => {
         if (!config.dryRun) {

@@ -16,10 +16,10 @@ Use for major workflow transitions.
 - `QUESTIONING`
 - `ANALYZING USE CASES`
 - `CREATING ROADMAP`
-- `PLANNING PHASE {N}`
+- `PLANNING SPRINT {N}`
 - `EXECUTING WAVE {N}`
 - `VERIFYING SCENARIOS`
-- `PHASE {N} COMPLETE ✓`
+- `SPRINT {N} COMPLETE ✓`
 - `USE CASES EXTRACTED ✓`
 - `PROJECT INITIALIZED ✓`
 
@@ -63,7 +63,7 @@ User action required. 62-character width.
 
 ## Progress Display
 
-**Phase/milestone level:**
+**Sprint/milestone level:**
 ```
 Progress: ████████░░ 80%
 ```
@@ -73,9 +73,9 @@ Progress: ████████░░ 80%
 Use Cases: 4/6 verified
 ```
 
-**Subfunction level:**
+**Task level:**
 ```
-Subfunctions: 8/12 implemented
+Tasks: 8/12 implemented
 ```
 
 ---
@@ -89,7 +89,7 @@ Subfunctions: 8/12 implemented
   → uc-executor (plan 01)
   → uc-executor (plan 02)
 
-✓ uc-analyst complete: 3 Summary, 8 User-Goal use cases extracted
+✓ uc-analyst complete: 3 Summary, 8 Epic use cases extracted
 ```
 
 ---
@@ -99,14 +99,14 @@ Subfunctions: 8/12 implemented
 ```
 ## Use Case Hierarchy
 
-**UC-S-001: [Summary Name]**
-├── UC-UG-001: [User-Goal] [Must]
-├── UC-UG-002: [User-Goal] [Should]
-└── UC-UG-003: [User-Goal] [Could]
+**UC-OBJ-001: [Summary Name]**
+├── UC-EP-001: [Epic] [Must]
+├── UC-EP-002: [Epic] [Should]
+└── UC-EP-003: [Epic] [Could]
 
-**UC-S-002: [Summary Name]**
-├── UC-UG-004: [User-Goal] [Must]
-└── UC-UG-005: [User-Goal] [Should]
+**UC-OBJ-002: [Summary Name]**
+├── UC-EP-004: [Epic] [Must]
+└── UC-EP-005: [Epic] [Should]
 ```
 
 ---
@@ -156,9 +156,9 @@ Always at end of major completions.
 ```
 | Use Case | Status | Scenarios | Verified |
 |----------|--------|-----------|----------|
-| UC-UG-001 | ✓ | 4/4 | Yes |
-| UC-UG-002 | ◆ | 2/3 | No |
-| UC-UG-003 | ○ | 0/2 | No |
+| UC-EP-001 | ✓ | 4/4 | Yes |
+| UC-EP-002 | ◆ | 2/3 | No |
+| UC-EP-003 | ○ | 0/2 | No |
 ```
 
 ---

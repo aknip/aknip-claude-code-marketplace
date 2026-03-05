@@ -84,8 +84,8 @@ Creates comprehensive documentation:
 ### 7. Auto-Loads During Planning
 
 Map is automatically loaded by:
-- `uc-planner` during `/esf:plan-phase`
-- `uc-executor` during `/esf:execute-phase`
+- `uc-planner` during `/esf:plan-sprint`
+- `uc-executor` during `/esf:execute-sprint`
 - Ensures consistency with existing code
 
 ## Output Example
@@ -184,7 +184,7 @@ NEXT STEPS
    /esf:new-project
 
 3️⃣  Plan features:
-   /esf:plan-phase [N]
+   /esf:plan-sprint [N]
 
 Note: The codebase map will be automatically loaded during planning.
       Execution agents will follow discovered patterns.
@@ -405,8 +405,8 @@ or
 ## Related Commands
 
 - `/esf:new-project` - Start UC-driven development (run after mapping)
-- `/esf:plan-phase N` - Planning automatically loads map
-- `/esf:execute-phase N` - Execution follows discovered patterns
+- `/esf:plan-sprint N` - Planning automatically loads map
+- `/esf:execute-sprint N` - Execution follows discovered patterns
 - `/esf:debug` - Diagnose codebase structure issues
 
 ## Files Created

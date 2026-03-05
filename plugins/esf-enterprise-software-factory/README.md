@@ -14,13 +14,13 @@ In Claude-Code nacheinander abarbeiten:
 
 `/esf:feature-exploration`
 
-`/esf:create-roadmap`
+`/esf:create-project-plan`
 
-`/esf:discuss-phase 1`
+`/esf:discuss-sprint 1`
 
-`/esf:plan-phase 1`
+`/esf:plan-sprint 1`
 
-`/esf:execute-phase 1`
+`/esf:execute-sprint 1`
 
 usw. - siehe `plugins/esf-enterprise-software-factory/esf-lebenszyklus.excalidraw`
 
@@ -33,7 +33,7 @@ Das **ESF (Enterprise Software Framework)** ist ein Plugin für Claude Code, das
 1. Klare Trennung von "Main Success Scenario" und "Extensions"
 2. Strukturierte natürliche Sprache (Semi-formal)
 3. Definition von Vorbedingungen und Erfolgsgarantien (Scope)
-4. Drei ineinandergreifende Ebenen der Granularität (Summary, User-Goal, Subfunction)
+4. Drei ineinandergreifende Ebenen der Granularität (Summary, Epic, Task)
 5. Akteur-System-Interaktion (Der "Tennis-Schlagabtausch")
   
 
@@ -76,13 +76,13 @@ Das ESF definiert sechs spezialisierte Agenten, die als Team zusammenarbeiten. J
 | **Modell** | Sonnet |
 | **Aufgabe** | Use Cases aus Projektvision und Anforderungen extrahieren |
 | **Input** | Projektvision, Anforderungsdokumente, Benutzerinterviews |
-| **Output** | Strukturierte Use Cases (Summary-Level + User-Goal-Level) |
+| **Output** | Strukturierte Use Cases (Objectives + Epic-Level) |
 | **Ausgelöst durch** | `/esf:new-project`, `/esf:analyze-requirements` |
 
 Der UC-Analyst ist der erste Agent im Prozess. Er analysiert die Projektvision und identifiziert Akteure, Geschäftsziele und daraus abgeleitete Use Cases. Er erstellt:
 - Die **Akteurstabelle** (End User, AI-Agenten, externe Systeme)
-- **Summary-Level Use Cases** (Geschäftsprozesse auf hoher Ebene)
-- **User-Goal Use Cases** (konkrete Benutzeraktionen)
+- **Objectives Use Cases** (Geschäftsprozesse auf hoher Ebene)
+- **Epic Use Cases** (konkrete Benutzeraktionen)
 - Den **Use Case Index** mit Traceability-Matrix
 
 ### 2.2 UC-Modeler (`uc-modeler`)
@@ -92,38 +92,38 @@ Der UC-Analyst ist der erste Agent im Prozess. Er analysiert die Projektvision u
 | **Modell** | Opus |
 | **Aufgabe** | Roadmap aus Use Cases erstellen |
 | **Input** | Use Case Index, Abhängigkeitsbeziehungen |
-| **Output** | ROADMAP.md mit Phasen, Abhängigkeitsgraph, Phase-Use-Case-Matrix |
-| **Ausgelöst durch** | `/esf:create-roadmap` |
+| **Output** | PROJECT-PLAN.md mit Phasen, Abhängigkeitsgraph, Sprint-Use-Case-Matrix |
+| **Ausgelöst durch** | `/esf:create-project-plan` |
 
 Der UC-Modeler organisiert die Use Cases in eine zeitlich geordnete Roadmap. Er:
 - Gruppiert Use Cases in **Phasen** nach fachlichen Abhängigkeiten
 - Erstellt den **Abhängigkeitsgraphen** zwischen Phasen
-- Definiert **Erfolgskriterien** pro Phase (abgeleitet aus Postconditions der Use Cases)
-- Erzeugt eine **Phase-Use-Case-Matrix** zur Übersicht
+- Definiert **Erfolgskriterien** pro Sprint (abgeleitet aus Postconditions der Use Cases)
+- Erzeugt eine **Sprint-Use-Case-Matrix** zur Übersicht
 
-### 2.3 UC-Phase-Researcher (`uc-phase-researcher`)
+### 2.3 UC-Sprint-Researcher (`uc-sprint-researcher`)
 
 | Eigenschaft | Wert |
 |-------------|------|
 | **Modell** | (konfigurierbar) |
-| **Aufgabe** | Implementierungsansätze für eine Phase recherchieren |
-| **Input** | Phase-Definition, Use Cases der Phase, bestehender Code |
+| **Aufgabe** | Implementierungsansätze für eine Sprint recherchieren |
+| **Input** | Sprint-Definition, Use Cases der Sprint, bestehender Code |
 | **Output** | Technologie-Empfehlungen, Architekturvorschläge, Bibliotheksvergleiche |
-| **Ausgelöst durch** | `/esf:plan-phase` (optionaler Vorlauf) |
+| **Ausgelöst durch** | `/esf:plan-sprint` (optionaler Vorlauf) |
 
-Der Phase-Researcher analysiert den aktuellen Stand der Codebasis und recherchiert geeignete Implementierungsansätze. Er kann Web-Suchen durchführen und externe Dokumentation einbeziehen.
+Der Sprint-Researcher analysiert den aktuellen Stand der Codebasis und recherchiert geeignete Implementierungsansätze. Er kann Web-Suchen durchführen und externe Dokumentation einbeziehen.
 
 ### 2.4 UC-Planner (`uc-planner`)
 
 | Eigenschaft | Wert |
 |-------------|------|
 | **Modell** | Opus |
-| **Aufgabe** | Detaillierte Ausführungspläne pro Phase erstellen |
-| **Input** | Phase-Definition, Use Cases, Research-Ergebnisse, bestehender Code |
-| **Output** | Aufgabenliste mit Subfunction-Use-Cases, Dateizuordnungen, Reihenfolge |
-| **Ausgelöst durch** | `/esf:plan-phase` |
+| **Aufgabe** | Detaillierte Ausführungspläne pro Sprint erstellen |
+| **Input** | Sprint-Definition, Use Cases, Research-Ergebnisse, bestehender Code |
+| **Output** | Aufgabenliste mit Task-Use-Cases, Dateizuordnungen, Reihenfolge |
+| **Ausgelöst durch** | `/esf:plan-sprint` |
 
-Der UC-Planner zerlegt die User-Goal Use Cases einer Phase in **Subfunction Use Cases** (UC-SF-XXX) -- konkrete, implementierbare Aufgaben. Er erstellt:
+Der UC-Planner zerlegt die Epic Use Cases einer Sprint in **Task Use Cases** (UC-TK-XXX) -- konkrete, implementierbare Aufgaben. Er erstellt:
 - **Aufgabenlisten** mit klarer Reihenfolge
 - **Dateizuordnungen** (welche Dateien betroffen sind)
 - **Abhängigkeiten** zwischen Aufgaben
@@ -137,7 +137,7 @@ Der UC-Planner zerlegt die User-Goal Use Cases einer Phase in **Subfunction Use 
 | **Aufgabe** | Pläne vor der Ausführung validieren (Pre-Execution Gate) |
 | **Input** | Ausführungsplan, Use-Case-Szenarien, bestehender Code |
 | **Output** | Validierungsbericht (Bestanden / Nachbesserung nötig) |
-| **Ausgelöst durch** | `/esf:plan-phase` (Post-Planning-Schritt) |
+| **Ausgelöst durch** | `/esf:plan-sprint` (Post-Planning-Schritt) |
 
 Der UC-Checker prüft, ob der erstellte Plan tatsächlich alle Szenarien der Use Cases abdeckt. Er ist das **Quality Gate** zwischen Planung und Implementierung:
 - Vergleicht Plan-Aufgaben mit Acceptance Criteria der Use Cases
@@ -152,7 +152,7 @@ Der UC-Checker prüft, ob der erstellte Plan tatsächlich alle Szenarien der Use
 | **Aufgabe** | Plan-Aufgaben implementieren (Code schreiben) |
 | **Input** | Validierter Ausführungsplan, Use-Case-Spezifikationen |
 | **Output** | Implementierter Code, erstellte/geänderte Dateien |
-| **Ausgelöst durch** | `/esf:execute-phase` |
+| **Ausgelöst durch** | `/esf:execute-sprint` |
 
 Der UC-Executor ist der einzige Agent, der tatsächlich Code schreibt. Er arbeitet den Plan Aufgabe für Aufgabe ab und hat Zugriff auf:
 - Datei-Lese- und Schreibwerkzeuge
@@ -167,7 +167,7 @@ Der UC-Executor ist der einzige Agent, der tatsächlich Code schreibt. Er arbeit
 | **Aufgabe** | Implementierte Use Cases gegen Szenarien verifizieren |
 | **Input** | Implementierter Code, Gherkin-Szenarien, laufende Anwendung |
 | **Output** | Verifikationsbericht (Bestanden / Fehlgeschlagen pro Szenario) |
-| **Ausgelöst durch** | `/esf:execute-phase` (Post-Execution), `/esf:verify-phase` |
+| **Ausgelöst durch** | `/esf:execute-sprint` (Post-Execution), `/esf:verify-sprint` |
 
 Der UC-Verifier prüft nach der Implementierung, ob alle Acceptance Criteria erfüllt sind. Er kann dafür den **Agent-Browser** nutzen, um die UI automatisiert zu testen.
 
@@ -177,25 +177,25 @@ Der UC-Verifier prüft nach der Implementierung, ob alle Acceptance Criteria erf
 
 Das ESF verwendet eine dreistufige Use-Case-Hierarchie nach Cockburn:
 
-### 3.1 Summary-Level (Geschäftsprozesse)
+### 3.1 Objectives (Geschäftsprozesse)
 
 ```
-UC-S-XXX: Geschäftsprozess auf höchster Ebene
+UC-OBJ-XXX: Geschäftsprozess auf höchster Ebene
 ```
 
 - Beschreibt **was** das System leisten soll
-- Enthält mehrere User-Goal Use Cases per `<<include>>`
-- Beispiel: `UC-S-001: Neugeschäft abwickeln` umfasst 6 User-Goal UCs
+- Enthält mehrere Epic Use Cases per `<<include>>`
+- Beispiel: `UC-OBJ-001: Neugeschäft abwickeln` umfasst 6 Epic UCs
 - Dient der Übersicht und Vollständigkeitsprüfung
 
-### 3.2 User-Goal-Level (Benutzeraktionen)
+### 3.2 Epic-Level (Benutzeraktionen)
 
 ```
-UC-UG-XXX: Konkrete Aktion eines Benutzers
+UC-EP-XXX: Konkrete Aktion eines Benutzers
 ```
 
-Jeder User-Goal Use Case enthält:
-- **Metadaten**: ID, Level, Parent, Primary Actor, Supporting Actors, Priority, Phase, Status
+Jeder Epic Use Case enthält:
+- **Metadaten**: ID, Level, Parent, Primary Actor, Supporting Actors, Priority, Sprint, Status
 - **Description**: Fließtextbeschreibung der Aktion
 - **Trigger**: Was löst den Use Case aus?
 - **Preconditions**: Welche Voraussetzungen müssen erfüllt sein?
@@ -206,15 +206,15 @@ Jeder User-Goal Use Case enthält:
 - **UI Notes**: Hinweise zur Benutzeroberfläche
 - **Relationships**: Include/Extend-Beziehungen zu anderen Use Cases
 
-### 3.3 Subfunction-Level (Implementierungsaufgaben)
+### 3.3 Task-Level (Implementierungsaufgaben)
 
 ```
-UC-SF-XXX: Technische Teilaufgabe
+UC-TK-XXX: Technische Teilaufgabe
 ```
 
-- Werden erst während der **Phase-Planung** durch den UC-Planner erstellt
+- Werden erst während der **Sprint-Planung** durch den UC-Planner erstellt
 - Sind direkt implementierbare Aufgaben
-- Jede Subfunction ist einem User-Goal UC zugeordnet
+- Jede Task ist einem Epic UC zugeordnet
 
 ### Beziehungen zwischen Use Cases
 
@@ -227,7 +227,7 @@ UC-SF-XXX: Technische Teilaufgabe
 
 ## 4. Der Gesamtprozess: Vom Projekt zur fertigen Software
 
-### 4.1 Phase 0: Projektinitialisierung (`/esf:new-project`)
+### 4.1 Sprint 0: Projektinitialisierung (`/esf:new-project`)
 
 ```
 Benutzer → beschreibt Projektvision
@@ -241,20 +241,20 @@ Benutzer → beschreibt Projektvision
 1. Der Benutzer beschreibt die Projektvision (was soll die Software tun?)
 2. Der **UC-Analyst** analysiert die Vision und extrahiert:
    - Akteure (wer nutzt das System?)
-   - Summary-Level Use Cases (welche Geschäftsprozesse?)
-   - User-Goal Use Cases (welche konkreten Aktionen?)
+   - Objectives Use Cases (welche Geschäftsprozesse?)
+   - Epic Use Cases (welche konkreten Aktionen?)
 3. Es entstehen:
    - `.planning/PROJECT.md` -- Projektbeschreibung mit Akteuren, Kontext, Constraints
-   - `.planning/use-cases/summary/UC-S-XXX-*.md` -- Summary-Level Use Cases
-   - `.planning/use-cases/user-goal/UC-UG-XXX-*.md` -- User-Goal Use Cases
+   - `.planning/use-cases/summary/UC-OBJ-XXX-*.md` -- Objectives Use Cases
+   - `.planning/use-cases/epic/UC-EP-XXX-*.md` -- Epic Use Cases
    - `.planning/use-cases/index.md` -- Master-Index mit Traceability-Matrix
    - `.planning/config.json` -- Projektkonfiguration
-   - `.planning/STATE.md` -- Projektstatus
+   - `.planning/PROJECT-STATUS.md` -- Projektstatus
 
 ### 4.2 Feature-Exploration (`/esf:feature-exploration`)
 
 ```
-Summary-Level Use Cases
+Objectives Use Cases
          ↓
     Szenarien entwickeln (interaktiv)
          ↓
@@ -264,47 +264,47 @@ Summary-Level Use Cases
 ```
 
 **Was passiert:**
-1. Für die Summary-Level Use Cases werden verschiedene **Implementierungsszenarien** entwickelt
+1. Für die Objectives Use Cases werden verschiedene **Implementierungsszenarien** entwickelt
 2. Jedes Szenario beschreibt einen anderen Ansatz (z.B. "Kanban-zentriert" vs. "Dokumentenzentriert")
 3. Szenarien werden über mehrere **Runden** verfeinert (interaktiver Dialog)
 4. Am Ende entsteht ein **Final-Szenario** als Synthese der besten Aspekte
 5. Das Final-Szenario enthält:
-   - Mapping zu allen Summary-Level Use Cases
+   - Mapping zu allen Objectives Use Cases
    - Interaktionskonzept und UI-Konzept
-   - Vorgeschlagene User-Goal Use Cases
+   - Vorgeschlagene Epic Use Cases
    - Vorgeschlagene Roadmap-Phasen
    - Capabilities & Features-Liste
 
 **Dateien:**
-- `.planning/scenarios/scenario-1-*/` -- Szenario-Dokumentation
-- `.planning/scenarios/final/FINAL-SCENARIO.md` -- Finales Szenario
-- `.planning/scenarios/SCENARIOS-STATE.md` -- Status der Exploration
+- `.planning/feature-scenarios/feature-scenario-1-*/` -- Szenario-Dokumentation
+- `.planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md` -- Finales Szenario
+- `.planning/feature-scenarios/FEATURE-SCENARIOS-PROJECT-STATUS.md` -- Status der Exploration
 
-### 4.3 Roadmap erstellen (`/esf:create-roadmap`)
+### 4.3 Roadmap erstellen (`/esf:create-project-plan`)
 
 ```
 Use Cases + Final-Szenario
          ↓
     UC-Modeler Agent
          ↓
-    ROADMAP.md mit Phasen und Abhängigkeiten
+    PROJECT-PLAN.md mit Phasen und Abhängigkeiten
 ```
 
 **Was passiert:**
-1. Der **UC-Modeler** nimmt alle User-Goal Use Cases und das Final-Szenario
+1. Der **UC-Modeler** nimmt alle Epic Use Cases und das Final-Szenario
 2. Er gruppiert die Use Cases in **zeitlich geordnete Phasen**
 3. Er berücksichtigt:
    - Fachliche Abhängigkeiten (z.B. "Editor muss vor Dokumentimport existieren")
    - Include/Extend-Beziehungen zwischen Use Cases
    - Prioritäten (Must vor Should vor Could)
 4. Es entsteht:
-   - `.planning/ROADMAP.md` -- Roadmap mit Phasen, Erfolgskriterien, Abhängigkeitsgraph
-   - Phase-Verzeichnisse unter `.planning/phases/XX-name/`
+   - `.planning/PROJECT-PLAN.md` -- Roadmap mit Phasen, Erfolgskriterien, Abhängigkeitsgraph
+   - Sprint-Verzeichnisse unter `.planning/sprints/XX-name/`
 
-### 4.4 Phase diskutieren (`/esf:discuss-phase`)
+### 4.4 Sprint diskutieren (`/esf:discuss-sprint`)
 
 ```
-Phase-Definition
+Sprint-Definition
          ↓
     Interaktiver Dialog mit dem Benutzer
          ↓
@@ -317,14 +317,14 @@ Phase-Definition
    - Technologie-Entscheidungen
    - UI-Präferenzen
    - Architektur-Vorgaben
-3. Die Ergebnisse fließen in die anschließende Phase-Planung ein
+3. Die Ergebnisse fließen in die anschließende Sprint-Planung ein
 
-### 4.5 Phase planen (`/esf:plan-phase`)
+### 4.5 Sprint planen (`/esf:plan-sprint`)
 
 ```
-Phase + Use Cases + Codebase
+Sprint + Use Cases + Codebase
          ↓
-    UC-Phase-Researcher (optional)
+    UC-Sprint-Researcher (optional)
          ↓
     UC-Planner Agent
          ↓
@@ -334,9 +334,9 @@ Phase + Use Cases + Codebase
 ```
 
 **Was passiert:**
-1. Optional: Der **UC-Phase-Researcher** analysiert die Codebasis und recherchiert Ansätze
+1. Optional: Der **UC-Sprint-Researcher** analysiert die Codebasis und recherchiert Ansätze
 2. Der **UC-Planner** erstellt den Ausführungsplan:
-   - Zerlegt User-Goal Use Cases in **Subfunction Use Cases** (UC-SF-XXX)
+   - Zerlegt Epic Use Cases in **Task Use Cases** (UC-TK-XXX)
    - Definiert Aufgabenreihenfolge und Abhängigkeiten
    - Ordnet Dateien zu
    - Dokumentiert Annahmen
@@ -346,11 +346,11 @@ Phase + Use Cases + Codebase
    - Gibt den Plan erst frei, wenn er vollständig ist
 
 **Dateien:**
-- `.planning/phases/XX-name/plan.md` -- Ausführungsplan
-- `.planning/phases/XX-name/assumptions.md` -- Annahmen und Entscheidungen
-- `.planning/use-cases/subfunction/UC-SF-XXX-*.md` -- Subfunction Use Cases
+- `.planning/sprints/XX-name/plan.md` -- Ausführungsplan
+- `.planning/sprints/XX-name/assumptions.md` -- Annahmen und Entscheidungen
+- `.planning/use-cases/task/UC-TK-XXX-*.md` -- Task Use Cases
 
-### 4.6 Phase ausführen (`/esf:execute-phase`)
+### 4.6 Sprint ausführen (`/esf:execute-sprint`)
 
 ```
 Validierter Plan
@@ -374,11 +374,11 @@ Validierter Plan
    - Nutzt den Agent-Browser für automatisierte UI-Tests
    - Erstellt Verifikationsbericht
 
-### 4.7 Phase verifizieren (`/esf:verify-phase`)
+### 4.7 Sprint verifizieren (`/esf:verify-sprint`)
 
 Kann auch eigenständig (ohne vorherige Execution) aufgerufen werden:
 - Prüft den aktuellen Stand der Implementierung
-- Führt alle Acceptance Criteria der Phase-Use-Cases aus
+- Führt alle Acceptance Criteria der Sprint-Use-Cases aus
 - Erstellt detaillierten Verifikationsbericht
 
 ### 4.8 Milestone abschließen (`/esf:complete-milestone`)
@@ -413,27 +413,27 @@ Alle Phasen implementiert + verifiziert
 │  /esf:feature-exploration ──→ Szenarien ──→ Final-Szenario     │
 │         │                                                       │
 │         ▼                                                       │
-│  /esf:create-roadmap ──→ UC-Modeler ──→ ROADMAP.md             │
+│  /esf:create-project-plan ──→ UC-Modeler ──→ PROJECT-PLAN.md             │
 │         │                                                       │
 │         ▼                                                       │
 │  ┌──────────────────────────────────────────────────────┐       │
-│  │              PRO PHASE (wiederholt)                   │       │
+│  │              PRO SPRINT (wiederholt)                   │       │
 │  │                                                      │       │
-│  │  /esf:discuss-phase ──→ Kontext klären               │       │
+│  │  /esf:discuss-sprint ──→ Kontext klären               │       │
 │  │         │                                            │       │
 │  │         ▼                                            │       │
-│  │  /esf:plan-phase                                     │       │
-│  │    ├─→ UC-Phase-Researcher ──→ Recherche             │       │
+│  │  /esf:plan-sprint                                     │       │
+│  │    ├─→ UC-Sprint-Researcher ──→ Recherche             │       │
 │  │    ├─→ UC-Planner ──→ Ausführungsplan                │       │
 │  │    └─→ UC-Checker ──→ Validierung (Gate)             │       │
 │  │         │                                            │       │
 │  │         ▼                                            │       │
-│  │  /esf:execute-phase                                  │       │
+│  │  /esf:execute-sprint                                  │       │
 │  │    ├─→ UC-Executor ──→ Code schreiben                │       │
 │  │    └─→ UC-Verifier ──→ Szenarien prüfen              │       │
 │  │         │                                            │       │
 │  │         ▼                                            │       │
-│  │  /esf:verify-phase ──→ Abnahme                       │       │
+│  │  /esf:verify-sprint ──→ Abnahme                       │       │
 │  └──────────────────────────────────────────────────────┘       │
 │         │                                                       │
 │         ▼                                                       │
@@ -459,7 +459,7 @@ Alle Phasen implementiert + verifiziert
 | `/esf:new-project` | Neues Projekt initialisieren -- Vision analysieren, Use Cases extrahieren |
 | `/esf:analyze-requirements` | Use Cases aus bestehenden Anforderungsdokumenten extrahieren |
 | `/esf:map-codebase` | Bestehende Codebasis analysieren (Brownfield-Mapping) |
-| `/esf:feature-exploration` | Implementierungsszenarien für Summary-Level Use Cases erkunden |
+| `/esf:feature-exploration` | Implementierungsszenarien für Objectives Use Cases erkunden |
 
 ### 6.2 Use-Case-Verwaltung
 
@@ -473,21 +473,21 @@ Alle Phasen implementiert + verifiziert
 
 | Skill | Beschreibung |
 |-------|-------------|
-| `/esf:create-roadmap` | Roadmap aus Use Cases generieren |
-| `/esf:add-phase` | Neue Phase zur Roadmap hinzufügen |
-| `/esf:insert-phase` | Phase an bestimmter Position einfügen |
-| `/esf:remove-phase` | Phase archivieren und entfernen |
-| `/esf:renumber-phases` | Phasen-Nummerierung korrigieren |
+| `/esf:create-project-plan` | Roadmap aus Use Cases generieren |
+| `/esf:add-sprint` | Neue Sprint zur Roadmap hinzufügen |
+| `/esf:insert-sprint` | Sprint an bestimmter Position einfügen |
+| `/esf:remove-sprint` | Sprint archivieren und entfernen |
+| `/esf:renumber-sprints` | Phasen-Nummerierung korrigieren |
 
 ### 6.4 Planung und Ausführung
 
 | Skill | Beschreibung |
 |-------|-------------|
-| `/esf:discuss-phase` | Kontext für eine Phase durch adaptiven Dialog sammeln |
-| `/esf:plan-phase` | Ausführungsplan für eine Phase erstellen (Research → Plan → Check) |
-| `/esf:execute-phase` | Phase implementieren (Executor → Verifier) |
-| `/esf:verify-phase` | Use-Case-Szenarien einer Phase eigenständig verifizieren |
-| `/esf:list-phase-assumptions` | Annahmen und Entscheidungen einer Phase anzeigen |
+| `/esf:discuss-sprint` | Kontext für eine Sprint durch adaptiven Dialog sammeln |
+| `/esf:plan-sprint` | Ausführungsplan für eine Sprint erstellen (Research → Plan → Check) |
+| `/esf:execute-sprint` | Sprint implementieren (Executor → Verifier) |
+| `/esf:verify-sprint` | Use-Case-Szenarien einer Sprint eigenständig verifizieren |
+| `/esf:list-sprint-assumptions` | Annahmen und Entscheidungen einer Sprint anzeigen |
 
 ### 6.5 Automatisierung
 
@@ -539,22 +539,22 @@ Das ESF erstellt und verwaltet eine standardisierte Projektstruktur:
 .planning/
 ├── config.json                          # Projektkonfiguration
 ├── PROJECT.md                           # Projektbeschreibung
-├── ROADMAP.md                           # Phasen-Roadmap
-├── STATE.md                             # Aktueller Projektstatus
+├── PROJECT-PLAN.md                           # Phasen-Roadmap
+├── PROJECT-STATUS.md                             # Aktueller Projektstatus
 │
 ├── use-cases/
 │   ├── index.md                         # Master-Index + Traceability
 │   ├── summary/
-│   │   ├── UC-S-001-*.md                # Summary-Level Use Cases
+│   │   ├── UC-OBJ-001-*.md                # Objectives Use Cases
 │   │   └── ...
-│   ├── user-goal/
-│   │   ├── UC-UG-001-*.md               # User-Goal Use Cases
+│   ├── epic/
+│   │   ├── UC-EP-001-*.md               # Epic Use Cases
 │   │   └── ...
-│   └── subfunction/                     # (erstellt während Phase-Planung)
-│       ├── UC-SF-001-*.md
+│   └── task/                     # (erstellt während Sprint-Planung)
+│       ├── UC-TK-001-*.md
 │       └── ...
 │
-├── phases/
+├── sprints/
 │   ├── 01-name/
 │   │   ├── plan.md                      # Ausführungsplan
 │   │   └── assumptions.md               # Annahmen-Log
@@ -562,11 +562,11 @@ Das ESF erstellt und verwaltet eine standardisierte Projektstruktur:
 │   └── ...
 │
 ├── scenarios/                           # (erstellt durch Feature-Exploration)
-│   ├── SCENARIOS-STATE.md
-│   ├── scenario-1-name/
-│   ├── scenario-2-name/
+│   ├── FEATURE-SCENARIOS-PROJECT-STATUS.md
+│   ├── feature-scenario-1-name/
+│   ├── feature-scenario-2-name/
 │   └── final/
-│       └── FINAL-SCENARIO.md
+│       └── FINAL-FEATURE-SCENARIO.md
 │
 └── sessions/                            # (erstellt durch Pause/Resume)
 ```
@@ -593,14 +593,14 @@ Das ESF erstellt und verwaltet eine standardisierte Projektstruktur:
 
   "use_case": {
     "template_version": "1.0",
-    "auto_subfunction": true,          // Subfunctions automatisch erstellen
+    "auto_tasks": true,          // Tasks automatisch erstellen
     "verify_scenarios": true,          // Nach Execution verifizieren
     "browser_test_ui": true,           // Agent-Browser für UI-Tests
     "acceptance_format": "gherkin"     // Gherkin-Format für Akzeptanzkriterien
   },
 
   "workflow": {
-    "research": true,                  // Phase-Research vor Planung
+    "research": true,                  // Sprint-Research vor Planung
     "plan_check": false,               // UC-Checker aktivieren
     "verifier": true                   // UC-Verifier nach Execution
   },
@@ -638,7 +638,7 @@ Das ESF implementiert drei Qualitätssicherungsstufen:
 
 ### Gate 1: UC-Checker (Pre-Execution)
 
-- **Wann:** Nach der Phase-Planung, vor der Implementierung
+- **Wann:** Nach der Sprint-Planung, vor der Implementierung
 - **Prüft:** Deckt der Plan alle Acceptance Criteria ab?
 - **Blockiert:** Implementierung startet nur bei bestandener Prüfung
 
@@ -661,9 +661,9 @@ Das ESF implementiert drei Qualitätssicherungsstufen:
 Der Autopilot (`/esf:autopilot`) automatisiert den gesamten Phasen-Zyklus:
 
 ```
-Für jede Phase in der Roadmap:
-  1. plan-phase (Research → Plan → Check)
-  2. execute-phase (Executor → Verifier)
+Für jede Sprint in der Roadmap:
+  1. plan-sprint (Research → Plan → Check)
+  2. execute-sprint (Executor → Verifier)
   3. Bei Checkpoints: Entscheidung nach checkpoint_mode
 ```
 
@@ -679,10 +679,10 @@ Für jede Phase in der Roadmap:
 
 ## 11. Use-Case-Template (Gherkin-Format)
 
-Jeder User-Goal Use Case enthält Acceptance Criteria im Gherkin-Format:
+Jeder Epic Use Case enthält Acceptance Criteria im Gherkin-Format:
 
 ```gherkin
-Feature: UC-UG-XXX Name des Use Case
+Feature: UC-EP-XXX Name des Use Case
 
   Scenario: Normaler Ablauf
     Given [Vorbedingung]
@@ -713,7 +713,7 @@ Benutzer    UC-Analyst    UC-Modeler    Researcher    UC-Planner    UC-Checker  
    │             ├─Use Cases──►│             │             │             │              │              │
    │             │             ├──Roadmap───►│             │             │              │              │
    │             │             │             │             │             │              │              │
-   │  ┌──────── Pro Phase ──────────────────────────────────────────────────────────────────────────┐ │
+   │  ┌──────── Pro Sprint ──────────────────────────────────────────────────────────────────────────┐ │
    │  │         │             │             │             │             │              │              │ │
    │  │         │             │    Research─┤             │             │              │              │ │
    │  │         │             │             ├────Plan────►│             │              │              │ │
@@ -731,8 +731,8 @@ Benutzer    UC-Analyst    UC-Modeler    Researcher    UC-Planner    UC-Checker  
 1. **Use Cases als Single Source of Truth**: Jede Anforderung, jeder Test, jede Verifikation bezieht sich auf Use Cases
 2. **Agenten-Spezialisierung**: Jeder Agent hat genau eine Aufgabe -- kein Agent plant und implementiert gleichzeitig
 3. **Quality Gates**: Drei Prüfpunkte verhindern, dass unvollständige Arbeit weitergegeben wird
-4. **Traceability**: Jede Code-Zeile ist über Subfunctions → User-Goals → Summary-Level bis zur Projektvision rückverfolgbar
-5. **Iterativ und inkrementell**: Der Prozess ist phasenweise angelegt -- jede Phase liefert funktionsfähige Software
+4. **Traceability**: Jede Code-Zeile ist über Tasks → Epics → Objectives bis zur Projektvision rückverfolgbar
+5. **Iterativ und inkrementell**: Der Prozess ist phasenweise angelegt -- jede Sprint liefert funktionsfähige Software
 6. **Mensch-in-the-Loop**: Der Benutzer kontrolliert alle Entscheidungen; Agenten schlagen vor, der Mensch entscheidet
 7. **Dokumentation als Nebenprodukt**: Die Dokumentation entsteht automatisch durch den Prozess, nicht als separate Aufgabe
 

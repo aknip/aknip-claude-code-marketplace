@@ -14,8 +14,8 @@ Session management enables pausing and resuming work across multiple sessions. E
 ### What Gets Captured
 
 **Work Context:**
-- Current phase and plan
-- Current task/subfunction
+- Current sprint and plan
+- Current task/task
 - Model profile in use
 - Working directory
 
@@ -55,7 +55,7 @@ Structure:
 **Message:** [Pause reason]
 
 ## Work Context
-[Phase, plan, task, model profile]
+[Sprint, plan, task, model profile]
 
 ## Progress Status
 [Completed, in progress, pending use cases]
@@ -160,7 +160,7 @@ git checkout main
 - Session context available to agents
 - Helps maintain continuity
 
-### STATE.md
+### PROJECT-STATUS.md
 - Shows PAUSED marker when active
 - Updated when resuming
 
@@ -259,5 +259,5 @@ In `.planning/config.json`:
 ## Related Documentation
 
 - [Milestone Management](milestone-workflow.md)
-- [Phase Management](../workflows/phase-management.md)
+- [Sprint Management](../workflows/sprint-management.md)
 - [State Tracking](../workflows/state-tracking.md)

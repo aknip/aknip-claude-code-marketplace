@@ -34,7 +34,7 @@ None - can run anytime
 **Use Case:** Production-critical projects, complex domains, high stakes
 
 **Agent Assignments:**
-- **Opus:** uc-analyst, uc-modeler, uc-planner, uc-verifier, uc-checker, uc-phase-researcher
+- **Opus:** uc-analyst, uc-modeler, uc-planner, uc-verifier, uc-checker, uc-sprint-researcher
 - **Sonnet:** uc-executor, uc-brownfield-mapper
 
 **Benefits:**
@@ -53,7 +53,7 @@ None - can run anytime
 
 **Agent Assignments:**
 - **Opus:** uc-modeler, uc-planner
-- **Sonnet:** uc-analyst, uc-executor, uc-verifier, uc-checker, uc-phase-researcher, uc-brownfield-mapper
+- **Sonnet:** uc-analyst, uc-executor, uc-verifier, uc-checker, uc-sprint-researcher, uc-brownfield-mapper
 
 **Benefits:**
 - Good quality for planning (Opus)
@@ -111,7 +111,7 @@ AVAILABLE PROFILES
       uc-executor          → Sonnet
       uc-verifier          → Opus
       uc-checker           → Opus
-      uc-phase-researcher  → Opus
+      uc-sprint-researcher  → Opus
       uc-brownfield-mapper → Sonnet
 
 2️⃣  balanced - Good Balance ⭐ CURRENT
@@ -127,7 +127,7 @@ AVAILABLE PROFILES
       uc-executor          → Sonnet
       uc-verifier          → Sonnet
       uc-checker           → Sonnet
-      uc-phase-researcher  → Sonnet
+      uc-sprint-researcher  → Sonnet
       uc-brownfield-mapper → Sonnet
 
 3️⃣  budget - Cost Optimized
@@ -154,7 +154,7 @@ Agent assignments will change:
    uc-executor:          Sonnet → Sonnet  [no change]
    uc-verifier:          Sonnet → Opus    [upgraded]
    uc-checker:           Sonnet → Opus    [upgraded]
-   uc-phase-researcher:  Sonnet → Opus    [upgraded]
+   uc-sprint-researcher:  Sonnet → Opus    [upgraded]
    uc-brownfield-mapper: Sonnet → Sonnet  [no change]
 
 Impact:
@@ -197,7 +197,7 @@ Agent Assignments (all → Sonnet):
    uc-executor          → Sonnet (was Sonnet)
    uc-verifier          → Sonnet (was Sonnet)
    uc-checker           → Sonnet (was Sonnet)
-   uc-phase-researcher  → Sonnet (was Sonnet)
+   uc-sprint-researcher  → Sonnet (was Sonnet)
    uc-brownfield-mapper → Sonnet (was Sonnet)
 
 Impact:
@@ -230,8 +230,8 @@ Cost savings: ~30% for typical project
 You're upgrading from budget (all Sonnet) to quality (mostly Opus).
 
 Cost impact:
-   Current: ~$X per phase (estimate)
-   New: ~$3X per phase (estimate)
+   Current: ~$X per sprint (estimate)
+   New: ~$3X per sprint (estimate)
    Increase: ~3x total cost
 
 Quality improvements:
@@ -293,7 +293,7 @@ Current agent assignments:
    uc-executor          → Sonnet
    uc-verifier          → Sonnet
    uc-checker           → Sonnet
-   uc-phase-researcher  → Sonnet
+   uc-sprint-researcher  → Sonnet
    uc-brownfield-mapper → Sonnet
 
 To view all settings:
@@ -321,7 +321,7 @@ uc-planner         │ Opus       │ Opus      │ Sonnet
 uc-executor        │ Sonnet     │ Sonnet    │ Sonnet
 uc-verifier        │ Opus       │ Sonnet    │ Sonnet
 uc-checker         │ Opus       │ Sonnet    │ Sonnet
-uc-phase-researcher│ Opus       │ Sonnet    │ Sonnet
+uc-sprint-researcher│ Opus       │ Sonnet    │ Sonnet
 uc-brownfield-...  │ Sonnet     │ Sonnet    │ Sonnet
 
 Cost Factor        │ ~3x        │ ~1.5x     │ ~1x
@@ -345,7 +345,7 @@ If changing profile during active project:
 ```
 ⚠️  Mid-Project Profile Change
 
-Current phase in progress: 02-user-authentication
+Current sprint in progress: 02-user-authentication
 
 Changing profile will affect:
    ✅ Future agent executions
@@ -354,8 +354,8 @@ Changing profile will affect:
 This can cause inconsistency in planning/execution style.
 
 Recommendations:
-   1. Complete current phase before changing
-   2. Document profile change in STATE.md
+   1. Complete current sprint before changing
+   2. Document profile change in PROJECT-STATUS.md
    3. Continue with new profile
 
 Continue anyway? (y/n):
@@ -381,7 +381,7 @@ Updates `.planning/config.json`:
     "uc-executor": { "model": "sonnet" },
     "uc-verifier": { "model": "opus" },
     "uc-checker": { "model": "opus" },
-    "uc-phase-researcher": { "model": "opus" },
+    "uc-sprint-researcher": { "model": "opus" },
     "uc-brownfield-mapper": { "model": "sonnet" }
   }
 }

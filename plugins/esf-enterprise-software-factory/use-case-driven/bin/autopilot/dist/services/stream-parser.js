@@ -48,6 +48,17 @@ function* normalizeEvent(event) {
             for (const content of event.message.content) {
                 if (content.type === 'text') {
                     const textContent = content;
+                    // Check for rate limit messages in assistant text
+                    const rateLimitInfo = parseRateLimitMessage(textContent.text);
+                    if (rateLimitInfo) {
+                        yield {
+                            type: 'rate_limit',
+                            resetTime: rateLimitInfo.resetTime,
+                            message: textContent.text,
+                        };
+                        // Don't process this text further
+                        continue;
+                    }
                     const summary = extractTextSummary(textContent.text);
                     if (summary) {
                         yield {
@@ -213,7 +224,7 @@ function extractToolDetail(toolName, input) {
  */
 function getAgentDisplayName(agentType) {
     const names = {
-        'uc-phase-researcher': 'Researching',
+        'uc-sprint-researcher': 'Researching',
         'uc-planner': 'Planning',
         'uc-checker': 'Checking',
         'uc-executor': 'Executing',
@@ -239,10 +250,16 @@ function truncate(str, maxLen) {
  * - "rate limit exceeded, resets at 10:30pm"
  * - "rate limit exceeded, resets in 5 minutes"
  * - "Rate limited. Try again at 2024-02-15T15:30:00Z"
+ * - "You're out of extra usage · resets 10pm"
+ * - "You've exceeded your usage limit"
  */
 export function parseRateLimitMessage(message) {
     // Check if this is a rate limit message
-    if (!/rate.?limit/i.test(message)) {
+    const isRateLimit = /rate.?limit/i.test(message) ||
+        /out of.*(usage|credits)/i.test(message) ||
+        /exceeded.*usage/i.test(message) ||
+        /usage.*limit/i.test(message);
+    if (!isRateLimit) {
         return null;
     }
     const now = new Date();
@@ -328,7 +345,7 @@ export function toolToActivityType(tool) {
  */
 export function agentToStageName(agentType) {
     switch (agentType) {
-        case 'uc-phase-researcher':
+        case 'uc-sprint-researcher':
             return 'RESEARCH';
         case 'uc-planner':
             return 'PLANNING';

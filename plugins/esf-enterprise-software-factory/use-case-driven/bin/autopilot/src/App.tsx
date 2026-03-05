@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import { useAutopilot } from './context/autopilot-context.js';
 import { Header } from './components/Header.js';
-import { PhaseInfo } from './components/PhaseInfo.js';
+import { SprintInfo } from './components/SprintInfo.js';
 import { StageProgress } from './components/StageProgress.js';
 import { CurrentStage } from './components/CurrentStage.js';
 import { ActivityFeed } from './components/ActivityFeed.js';
@@ -19,10 +19,10 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
 
   const {
     mode,
-    currentPhase,
-    phaseInfo,
-    totalPhases,
-    phasesCompleted,
+    currentSprint,
+    sprintInfo,
+    totalSprints,
+    sprintsCompleted,
     currentStage,
     stageDescription,
     stageStartTime,
@@ -43,8 +43,8 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
   });
 
   // Calculate progress
-  const completed = phasesCompleted.length;
-  const displayPhase = currentPhase ? completed + 1 : 0;
+  const completed = sprintsCompleted.length;
+  const displayPhase = currentSprint ? completed + 1 : 0;
 
   // Get last activity time for stale detection
   const lastActivityTime =
@@ -55,15 +55,15 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
       {/* Header */}
       <Header
         projectName={config.projectName}
-        currentPhase={displayPhase}
-        totalPhases={totalPhases}
+        currentSprint={displayPhase}
+        totalSprints={totalSprints}
       />
       <Text> </Text>
 
-      {/* Phase Info */}
-      {currentPhase && (
+      {/* Sprint Info */}
+      {currentSprint && (
         <>
-          <PhaseInfo phase={currentPhase} info={phaseInfo} />
+          <SprintInfo sprint={currentSprint} info={sprintInfo} />
           <Text> </Text>
         </>
       )}
@@ -96,7 +96,7 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
 
       {/* Progress Bar */}
       <Text> </Text>
-      <ProgressBar completed={completed} total={totalPhases} width={40} />
+      <ProgressBar completed={completed} total={totalSprints} width={40} />
 
       {/* Token Counter */}
       <TokenCounter tokens={tokens} cost={cost} showCost={cost > 0} />

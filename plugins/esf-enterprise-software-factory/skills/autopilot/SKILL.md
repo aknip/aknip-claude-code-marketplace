@@ -1,6 +1,6 @@
 ---
 description: Fully automated milestone execution from existing roadmap
-argument-hint: "[--from-phase N] [--dry-run] [--engine node|bash]"
+argument-hint: "[--from-sprint N] [--dry-run] [--engine node|bash]"
 allowed-tools:
   - Read
   - Write
@@ -12,15 +12,15 @@ allowed-tools:
 ---
 
 <objective>
-Launch autonomous execution of all remaining phases in the current milestone.
+Launch autonomous execution of all remaining sprints in the current milestone.
 
-Each phase: plan → execute → verify → handle gaps → next phase.
+Each sprint: plan → execute → verify → handle gaps → next sprint.
 
 **Two Engine Options:**
 
 1. **Node.js/Ink (recommended)** — Flicker-free UI, portable across projects
    - Location: `use-case-driven/bin/autopilot/`
-   - Run: `uc-autopilot --phases "1,2,3,4"`
+   - Run: `uc-autopilot --sprints "1,2,3,4"`
 
 2. **Bash (fallback)** — Generated per-project script
    - Location: `.planning/autopilot.sh`
@@ -29,10 +29,10 @@ Each phase: plan → execute → verify → handle gaps → next phase.
 Both provide infinite context (each claude invocation gets fresh 200k). State persists in `.planning/` enabling resume after interruption.
 
 **TDD E2E Integration:**
-Each phase execution includes TDD cycle with Playwright E2E tests. Between phases, a full regression test suite runs to ensure no regressions. Fix strategy uses agent-browser for fast pre-checks before running full E2E suite.
+Each sprint execution includes TDD cycle with Playwright E2E tests. Between sprints, a full regression test suite runs to ensure no regressions. Fix strategy uses agent-browser for fast pre-checks before running full E2E suite.
 
 **Requires:**
-- `.planning/ROADMAP.md` (run `/esf:new-project` then `/esf:use-case-analysis` first)
+- `.planning/PROJECT-PLAN.md` (run `/esf:new-project` then `/esf:use-case-analysis` first)
 - For Bash: `jq` (JSON processor): `brew install jq`
 - Playwright installed: `npx playwright install`
 </objective>
@@ -40,8 +40,8 @@ Each phase execution includes TDD cycle with Playwright E2E tests. Between phase
 <execution_context>
 @./use-case-driven/references/ui-brand.md
 @./use-case-driven/templates/autopilot-script.sh
-@./use-case-driven/templates/prompts/plan-phase-prompt.md
-@./use-case-driven/templates/prompts/execute-phase-prompt.md
+@./use-case-driven/templates/prompts/plan-sprint-prompt.md
+@./use-case-driven/templates/prompts/execute-sprint-prompt.md
 @./use-case-driven/templates/prompts/complete-milestone-prompt.md
 @./use-case-driven/references/model-profiles.md
 </execution_context>
@@ -50,7 +50,7 @@ Each phase execution includes TDD cycle with Playwright E2E tests. Between phase
 Arguments: $ARGUMENTS
 
 **Flags:**
-- `--from-phase N` — Start from specific phase (default: first incomplete)
+- `--from-sprint N` — Start from specific sprint (default: first incomplete)
 - `--dry-run` — Show commands but don't run
 - `--engine node|bash` — Force specific engine (default: auto-detect)
 </context>
@@ -61,7 +61,7 @@ Arguments: $ARGUMENTS
 
 ```bash
 # Check roadmap exists
-if [ ! -f .planning/ROADMAP.md ]; then
+if [ ! -f .planning/PROJECT-PLAN.md ]; then
   echo "ERROR: No roadmap found. Run /esf:new-project then /esf:use-case-analysis first."
   exit 1
 fi
@@ -77,31 +77,31 @@ fi
 ## 2. Parse Roadmap State
 
 ```bash
-# Get all phases from ROADMAP.md (format: ### Phase N: Name)
-ALL_PHASES=$(grep -E "^### Phase [0-9]+:" .planning/ROADMAP.md | sed 's/.*Phase \([0-9]*\):.*/\1/' | tr '\n' ' ')
+# Get all sprints from PROJECT-PLAN.md (format: ### Sprint N: Name)
+ALL_PHASES=$(grep -E "^### Sprint [0-9]+:" .planning/PROJECT-PLAN.md | sed 's/.*Sprint \([0-9]*\):.*/\1/' | tr '\n' ' ')
 
-# Determine completed vs incomplete phases
+# Determine completed vs incomplete sprints
 INCOMPLETE=""
 COMPLETED=""
-for phase in $ALL_PHASES; do
-  PADDED=$(printf "%02d" "$phase")
-  PHASE_DIR=$(ls -d .planning/phases/${PADDED}-* 2>/dev/null | head -1)
-  if [ -n "$PHASE_DIR" ]; then
-    VERIF_FILE=$(ls "$PHASE_DIR"/*-VERIFICATION.md 2>/dev/null | head -1)
+for sprint in $ALL_PHASES; do
+  PADDED=$(printf "%02d" "$sprint")
+  SPRINT_DIR=$(ls -d .planning/sprints/${PADDED}-* 2>/dev/null | head -1)
+  if [ -n "$SPRINT_DIR" ]; then
+    VERIF_FILE=$(ls "$SPRINT_DIR"/*-VERIFICATION.md 2>/dev/null | head -1)
     if [ -f "$VERIF_FILE" ] && grep -q "status:.*passed" "$VERIF_FILE" 2>/dev/null; then
-      COMPLETED="$COMPLETED $phase"
+      COMPLETED="$COMPLETED $sprint"
     else
-      INCOMPLETE="$INCOMPLETE $phase"
+      INCOMPLETE="$INCOMPLETE $sprint"
     fi
   else
-    INCOMPLETE="$INCOMPLETE $phase"
+    INCOMPLETE="$INCOMPLETE $sprint"
   fi
 done
 ```
 
-**If no incomplete phases:** Report milestone already complete, offer `/esf:complete-milestone`.
+**If no incomplete sprints:** Report milestone already complete, offer `/esf:complete-milestone`.
 
-**If `--from-phase N` specified:** Validate phase exists, use as start point.
+**If `--from-sprint N` specified:** Validate sprint exists, use as start point.
 
 ## 3. Load Config
 
@@ -150,9 +150,9 @@ fi
  UC ► AUTOPILOT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**Milestone:** [from ROADMAP.md]
+**Milestone:** [from PROJECT-PLAN.md]
 
-| Status | Phases |
+| Status | Sprints |
 |--------|--------|
 | ✓ Complete | {completed_phases} |
 | ○ Remaining | {incomplete_phases} |
@@ -164,7 +164,7 @@ fi
 - Notifications: {webhook|bell|none}
 - Model profile: {quality|balanced|budget}
 - E2E TDD: enabled
-- E2E regression: between phases
+- E2E regression: between sprints
 - E2E fix strategy: agent-browser-first
 
 **Available Engines:**
@@ -206,14 +206,14 @@ If Node.js selected or `--engine node`:
 **If globally installed:**
 ```
 cd {project_dir}
-uc-autopilot --phases "{incomplete_phases}" --project-name "{project_name}"
+uc-autopilot --sprints "{incomplete_phases}" --project-name "{project_name}"
 ```
 
 **If local only:**
 ```
 cd {project_dir}
 node use-case-driven/bin/autopilot/dist/index.js \
-  --phases "{incomplete_phases}" \
+  --sprints "{incomplete_phases}" \
   --project-name "{project_name}" \
   --max-retries {max_retries} \
   --budget {budget_limit} \
@@ -274,7 +274,7 @@ tail -f .planning/logs/autopilot.log
 
 ## 8. Update State
 
-Update STATE.md to mark autopilot as ready:
+Update PROJECT-STATUS.md to mark autopilot as ready:
 
 ```markdown
 ## Autopilot
@@ -282,7 +282,7 @@ Update STATE.md to mark autopilot as ready:
 - **Mode:** ready
 - **Engine:** {node|bash}
 - **Prepared:** [timestamp]
-- **Phases:** {incomplete_phases}
+- **Sprints:** {incomplete_phases}
 - **Checkpoints Pending:** (none yet)
 - **Last Error:** none
 ```
@@ -295,7 +295,7 @@ Only needed if Bash engine is selected.
 Read template from `@./use-case-driven/templates/autopilot-script.sh` and fill:
 - `{{project_dir}}` — Current directory (absolute path)
 - `{{project_name}}` — From PROJECT.md
-- `{{phases}}` — Array of incomplete phase numbers
+- `{{sprints}}` — Array of incomplete sprint numbers
 - `{{checkpoint_mode}}` — queue or skip
 - `{{max_retries}}` — From config
 - `{{budget_limit}}` — From config (0 = unlimited)
@@ -311,17 +311,17 @@ Both engines use the same prompt template files:
 
 ```
 use-case-driven/templates/prompts/
-├── plan-phase-prompt.md       # Planning a phase
-├── execute-phase-prompt.md    # Executing a phase
+├── plan-sprint-prompt.md       # Planning a sprint
+├── execute-sprint-prompt.md    # Executing a sprint
 └── complete-milestone-prompt.md  # Completing milestone
 ```
 
 **Placeholders substituted at runtime:**
-- `{{PHASE}}` — Phase number
+- `{{SPRINT}}` — Sprint number
 - `{{PROJECT_DIR}}` — Absolute project directory path
-- `{{PADDED_PHASE}}` — Zero-padded phase number (01, 02, etc.)
-- `{{PHASE_DIR}}` — Relative path to phase directory
-- `{{PHASE_NAME}}` — Phase name (without number prefix)
+- `{{PADDED_SPRINT}}` — Zero-padded sprint number (01, 02, etc.)
+- `{{SPRINT_DIR}}` — Relative path to sprint directory
+- `{{SPRINT_NAME}}` — Sprint name (without number prefix)
 - `{{VERSION}}` — Milestone version (for complete-milestone)
 </prompt_templates>
 
@@ -332,14 +332,14 @@ Plans with `autonomous: false` pause at checkpoints.
 ```
 .planning/checkpoints/
 ├── pending/
-│   └── phase-03-plan-02.json    # Waiting for user
+│   └── sprint-03-plan-02.json    # Waiting for user
 └── approved/
-    └── phase-03-plan-02.json    # User approved, ready to continue
+    └── sprint-03-plan-02.json    # User approved, ready to continue
 ```
 
 **Workflow:**
 1. Executor hits checkpoint → writes to `pending/`
-2. Autopilot logs checkpoint, continues with other phases
+2. Autopilot logs checkpoint, continues with other sprints
 3. User reviews `pending/` (manually or via `/esf:checkpoints`)
 4. User creates approval in `approved/`
 5. Next autopilot run picks up approval
@@ -348,10 +348,10 @@ Plans with `autonomous: false` pause at checkpoints.
 <success_criteria>
 - [ ] Roadmap exists validation
 - [ ] Lock directory prevents concurrent runs
-- [ ] Incomplete phases parsed from ROADMAP.md
+- [ ] Incomplete sprints parsed from PROJECT-PLAN.md
 - [ ] Config loaded (checkpoint mode, retries, budget, webhook)
 - [ ] Engine detection (Node.js vs Bash)
 - [ ] Execution plan presented clearly
 - [ ] User knows to run in separate terminal
-- [ ] STATE.md updated
+- [ ] PROJECT-STATUS.md updated
 </success_criteria>

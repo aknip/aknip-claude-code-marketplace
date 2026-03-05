@@ -85,7 +85,7 @@ Agent Model Assignments:
    uc-executor           → Sonnet  (claude-sonnet-4-5)
    uc-verifier           → Sonnet  (claude-sonnet-4-5)
    uc-checker            → Sonnet  (claude-sonnet-4-5)
-   uc-phase-researcher   → Sonnet  (claude-sonnet-4-5)
+   uc-sprint-researcher   → Sonnet  (claude-sonnet-4-5)
    uc-brownfield-mapper  → Sonnet  (claude-sonnet-4-5)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -103,9 +103,9 @@ WORKFLOW SETTINGS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Specification Mode:     use-case (RUP three-level hierarchy)
-Auto-commit:            Enabled (per subfunction)
+Auto-commit:            Enabled (per task)
 Atomic Commits:         Enabled
-Commit Format:          feat(phase-plan): message
+Commit Format:          feat(sprint-plan): message
 Verification Required:  Yes (agent-browser)
 Auto-push:              Disabled
 Browser Testing:        Enabled (agent-browser)
@@ -123,7 +123,7 @@ AUTOPILOT SETTINGS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Checkpoint Mode:        queue (pause at checkpoints)
-Max Retries:            3 per phase
+Max Retries:            3 per sprint
 Budget Limit:           $0 (unlimited)
 Notify Webhook:         (not configured)
 
@@ -222,7 +222,7 @@ Agent assignments will change:
    uc-executor:          Sonnet → Sonnet  [no change]
    uc-verifier:          Sonnet → Opus    [change]
    uc-checker:           Sonnet → Opus    [change]
-   uc-phase-researcher:  Sonnet → Opus    [change]
+   uc-sprint-researcher:  Sonnet → Opus    [change]
    uc-brownfield-mapper: Sonnet → Sonnet  [no change]
 
 Impact:
@@ -312,9 +312,9 @@ Current Settings:
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Auto-commit after each subfunction? [yes/no] (Enter to keep): yes
+Auto-commit after each task? [yes/no] (Enter to keep): yes
 
-Require verification before completing phase? [yes/no] (Enter to keep): yes
+Require verification before completing sprint? [yes/no] (Enter to keep): yes
 
 Auto-push commits to remote? [yes/no] (Enter to keep): no
 
@@ -383,7 +383,7 @@ Shows only model configuration (faster than full display).
     "uc-executor": { "model": "sonnet" },
     "uc-verifier": { "model": "sonnet" },
     "uc-checker": { "model": "sonnet" },
-    "uc-phase-researcher": { "model": "sonnet" },
+    "uc-sprint-researcher": { "model": "sonnet" },
     "uc-brownfield-mapper": { "model": "sonnet" }
   },
   "autopilot": {

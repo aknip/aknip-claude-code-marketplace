@@ -157,36 +157,36 @@ export async function runClaudeWithPrompt(promptFile, logFile, options) {
  * Generate a prompt file from template
  */
 export async function generatePrompt(templateName, outputFile, options) {
-    const { paths, phase, version, projectDir } = options;
+    const { paths, sprint, version, projectDir } = options;
     const templateFile = path.join(paths.promptTemplatesDir, templateName);
     if (!await fs.pathExists(templateFile)) {
         throw new Error(`Prompt template not found: ${templateFile}`);
     }
     let template = await fs.readFile(templateFile, 'utf-8');
-    // Compute phase-specific values
-    let paddedPhase = '';
-    let phaseDir = '';
-    let phaseName = '';
-    if (phase !== undefined) {
-        paddedPhase = String(phase).padStart(2, '0');
-        // Find phase directory
-        const phaseDirs = await fs.readdir(paths.phasesDir).catch(() => []);
-        const matchingDir = phaseDirs.find((d) => d.startsWith(`${paddedPhase}-`));
+    // Compute sprint-specific values
+    let paddedSprint = '';
+    let sprintDir = '';
+    let sprintName = '';
+    if (sprint !== undefined) {
+        paddedSprint = String(sprint).padStart(2, '0');
+        // Find sprint directory
+        const sprintDirs = await fs.readdir(paths.sprintsDir).catch(() => []);
+        const matchingDir = sprintDirs.find((d) => d.startsWith(`${paddedSprint}-`));
         if (matchingDir) {
-            phaseDir = `.planning/phases/${matchingDir}`;
-            phaseName = matchingDir.replace(`${paddedPhase}-`, '');
+            sprintDir = `.planning/sprints/${matchingDir}`;
+            sprintName = matchingDir.replace(`${paddedSprint}-`, '');
         }
         else {
-            phaseDir = `.planning/phases/${paddedPhase}-unknown`;
+            sprintDir = `.planning/sprints/${paddedSprint}-unknown`;
         }
     }
     // Substitute placeholders
     template = template
-        .replace(/\{\{PHASE\}\}/g, phase?.toString() ?? '')
+        .replace(/\{\{SPRINT\}\}/g, sprint?.toString() ?? '')
         .replace(/\{\{PROJECT_DIR\}\}/g, projectDir)
-        .replace(/\{\{PADDED_PHASE\}\}/g, paddedPhase)
-        .replace(/\{\{PHASE_DIR\}\}/g, phaseDir)
-        .replace(/\{\{PHASE_NAME\}\}/g, phaseName)
+        .replace(/\{\{PADDED_SPRINT\}\}/g, paddedSprint)
+        .replace(/\{\{SPRINT_DIR\}\}/g, sprintDir)
+        .replace(/\{\{SPRINT_NAME\}\}/g, sprintName)
         .replace(/\{\{VERSION\}\}/g, version ?? '');
     // Write output file
     await fs.ensureDir(path.dirname(outputFile));

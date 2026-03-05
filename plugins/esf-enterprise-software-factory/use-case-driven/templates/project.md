@@ -27,10 +27,10 @@ One sentence that drives prioritization when tradeoffs arise.]
 
 ## Use Cases (Summary)
 
-[Brief list of Summary-Level use cases identified. Full details in .planning/use-cases/]
+[Brief list of Objectives use cases identified. Full details in .planning/use-cases/]
 
-- UC-S-001: [Name] — [Brief description]
-- UC-S-002: [Name] — [Brief description]
+- UC-OBJ-001: [Name] — [Brief description]
+- UC-OBJ-002: [Name] — [Brief description]
 
 ## Context
 
@@ -82,7 +82,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 - This feeds directly into use case analysis
 
 **Use Cases (Summary):**
-- Brief reference to Summary-Level use cases
+- Brief reference to Objectives use cases
 - Full details live in .planning/use-cases/summary/
 - Updated as use cases are added or changed
 
@@ -107,7 +107,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 **Last Updated:**
 - Always note when and why the document was updated
-- Format: `after Phase 2` or `after UC-UG-001 implemented`
+- Format: `after Sprint 2` or `after UC-EP-001 implemented`
 - Triggers review of whether content is still accurate
 
 </guidelines>
@@ -116,7 +116,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 PROJECT.md evolves throughout the project lifecycle.
 
-**After each phase transition:**
+**After each sprint transition:**
 1. Use cases completed? → Update Use Cases summary
 2. New actors discovered? → Add to Actors table
 3. Decisions to log? → Add to Key Decisions

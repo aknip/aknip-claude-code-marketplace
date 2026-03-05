@@ -7,7 +7,7 @@ allowed-tools:
 
 <objective>
 
-Display project progress from use case perspective. Shows completion at all three levels (Summary, User-Goal, Subfunction) and routes to next action.
+Display project progress from use case perspective. Shows completion at all three levels (Summary, Epic, Task) and routes to next action.
 
 </objective>
 
@@ -16,9 +16,9 @@ Display project progress from use case perspective. Shows completion at all thre
 ## Load State
 
 ```bash
-cat .planning/STATE.md
+cat .planning/PROJECT-STATUS.md
 cat .planning/use-cases/index.md
-cat .planning/ROADMAP.md
+cat .planning/PROJECT-PLAN.md
 cat .planning/config.json
 ```
 
@@ -31,9 +31,9 @@ MILESTONE_VERSION=$(cat .planning/config.json 2>/dev/null | grep -o '"current_ve
 
 **Session status:**
 ```bash
-SESSION_PAUSED=$(grep -A5 "## Session Status" .planning/STATE.md 2>/dev/null | grep "PAUSED" || echo "")
+SESSION_PAUSED=$(grep -A5 "## Session Status" .planning/PROJECT-STATUS.md 2>/dev/null | grep "PAUSED" || echo "")
 SESSION_ID=$(echo "$SESSION_PAUSED" | grep -o "Session ID: [^)]*" | cut -d' ' -f3 || echo "")
-SESSION_MESSAGE=$(grep -A10 "## Session Status" .planning/STATE.md 2>/dev/null | grep "Message:" | sed 's/Message: //' || echo "")
+SESSION_MESSAGE=$(grep -A10 "## Session Status" .planning/PROJECT-STATUS.md 2>/dev/null | grep "Message:" | sed 's/Message: //' || echo "")
 ```
 
 **TODO count:**
@@ -50,18 +50,18 @@ fi
 
 ## Calculate Progress
 
-**Summary-Level:**
+**Objectives:**
 - For each UC-S, count child UC-UG completed vs total
 
-**User-Goal-Level:**
+**Epic-Level:**
 - Count UC-UG by status (Draft, Approved, Implemented, Verified)
 
-**Subfunction-Level:**
+**Task-Level:**
 - Count UC-SF by status
 
-**Phase Progress:**
-- Current phase from STATE.md
-- Use cases in current phase by status
+**Sprint Progress:**
+- Current sprint from PROJECT-STATUS.md
+- Use cases in current sprint by status
 
 ## Display
 
@@ -88,27 +88,27 @@ Message: {SESSION_MESSAGE}
 Resume: /esf:resume-work
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Summary-Level (Epics)
+## Objectives (Epics)
 
 | ID | Name | Progress |
 |----|------|----------|
-| UC-S-001 | Manage Task Lifecycle | ████░░░░ 50% (2/4) |
-| UC-S-002 | Organize Tasks | ░░░░░░░░ 0% (0/2) |
+| UC-OBJ-001 | Manage Task Lifecycle | ████░░░░ 50% (2/4) |
+| UC-OBJ-002 | Organize Tasks | ░░░░░░░░ 0% (0/2) |
 
-## Current Phase: Phase 2
+## Current Sprint: Sprint 2
 
-| User-Goal | Status | Subfunctions |
+| Epic | Status | Tasks |
 |-----------|--------|--------------|
-| UC-UG-003 | In Progress | 2/4 implemented |
-| UC-UG-004 | Planned | 0/3 implemented |
+| UC-EP-003 | In Progress | 2/4 implemented |
+| UC-EP-004 | Planned | 0/3 implemented |
 
 ## Overall
 
 | Level | Total | Complete |
 |-------|-------|----------|
 | Summary | 2 | 0 |
-| User-Goal | 6 | 2 |
-| Subfunction | 12 | 5 |
+| Epic | 6 | 2 |
+| Task | 12 | 5 |
 
 **Progress:** 42%
 
@@ -130,12 +130,12 @@ View: /esf:check-todos
 ## ▶ Next Action
 
 {Based on state:}
-- If phase has plans but not executed: /esf:execute-phase N
-- If phase has no plans: /esf:plan-phase N
-- If phase needs gaps closed: /esf:plan-phase N --gaps
-- If phase complete: /esf:plan-phase N+1
+- If sprint has plans but not executed: /esf:execute-sprint N
+- If sprint has no plans: /esf:plan-sprint N
+- If sprint needs gaps closed: /esf:plan-sprint N --gaps
+- If sprint complete: /esf:plan-sprint N+1
 
-{If all phases complete:}
+{If all sprints complete:}
 - Check milestone readiness: /esf:audit-milestone
 - Mark complete: /esf:complete-milestone --version {MILESTONE_VERSION}
 ```

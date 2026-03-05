@@ -28,7 +28,7 @@ export declare function showBanner(config: AutopilotConfig): void;
 /**
  * Display completion banner
  */
-export declare function showCompletionBanner(phasesCompleted: number, durationSeconds: number, totalTokens: number, totalCost: number): void;
+export declare function showCompletionBanner(sprintsCompleted: number, durationSeconds: number, totalTokens: number, totalCost: number): void;
 /**
  * Display failure banner
  */

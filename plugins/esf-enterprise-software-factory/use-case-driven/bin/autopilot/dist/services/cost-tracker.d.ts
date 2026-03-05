@@ -17,9 +17,9 @@ export declare function createCostTracker(): CostTrackerState;
  */
 export declare function estimateCostCents(tokens: number): number;
 /**
- * Track tokens and cost for a phase
+ * Track tokens and cost for a sprint
  */
-export declare function trackPhase(tracker: CostTrackerState, phase: number, tokens: number, costCents?: number): void;
+export declare function trackPhase(tracker: CostTrackerState, sprint: number, tokens: number, costCents?: number): void;
 /**
  * Get total cost in dollars
  */

@@ -4,12 +4,12 @@ description: List, filter, and manage TODO items
 
 ## Purpose
 
-List, filter, and manage TODO items. Mark TODOs as complete, view by phase or priority, and track progress on follow-up work.
+List, filter, and manage TODO items. Mark TODOs as complete, view by sprint or priority, and track progress on follow-up work.
 
 ## When to Use
 
 - Review pending TODOs before starting work
-- Check what needs to be done for specific phase
+- Check what needs to be done for specific sprint
 - Mark completed TODOs
 - Plan next actions based on TODO list
 - Weekly/daily review of outstanding items
@@ -21,12 +21,12 @@ List, filter, and manage TODO items. Mark TODOs as complete, view by phase or pr
 ## Usage
 
 ```bash
-/esf:check-todos [--phase N] [--priority high|medium|low] [--done ID] [--all] [--tag "label"]
+/esf:check-todos [--sprint N] [--priority high|medium|low] [--done ID] [--all] [--tag "label"]
 ```
 
 ### Flags
 
-- `--phase N`: Show TODOs for specific phase only
+- `--sprint N`: Show TODOs for specific sprint only
 - `--priority X`: Filter by priority (high/medium/low)
 - `--done ID`: Mark TODO as complete
 - `--all`: Show completed TODOs too (default: only pending)
@@ -37,13 +37,13 @@ List, filter, and manage TODO items. Mark TODOs as complete, view by phase or pr
 ### Default (No Flags)
 
 Shows all pending TODOs:
-- Grouped by phase
+- Grouped by sprint
 - Sorted by priority (high → medium → low)
 - Shows ID, priority, text, tags
 
 ### With Filters
 
-Filters TODOs by phase, priority, or tag.
+Filters TODOs by sprint, priority, or tag.
 
 ### With --done
 
@@ -72,12 +72,12 @@ By Priority:
    🟡 Medium: 3
    🔵 Low: 1
 
-By Phase:
-   Phase 02: 3 TODOs
+By Sprint:
+   Sprint 02: 3 TODOs
    Unassigned: 5 TODOs
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE 02: user-authentication
+SPRINT 02: user-authentication
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔴 TODO-20260127-001 [HIGH] #refactor
@@ -123,22 +123,22 @@ UNASSIGNED
 
 Commands:
    /esf:check-todos --done TODO-ID    Mark complete
-   /esf:check-todos --phase 2         Filter by phase
+   /esf:check-todos --sprint 2         Filter by sprint
    /esf:check-todos --priority high   Filter by priority
    /esf:check-todos --all             Show completed
    /esf:add-todo "text"               Add new TODO
 ```
 
-## Filter by Phase
+## Filter by Sprint
 
 ```bash
-/esf:check-todos --phase 2
+/esf:check-todos --sprint 2
 ```
 
 ```
-📋 TODO List - Phase 02
+📋 TODO List - Sprint 02
 
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Pending: 3 TODOs
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -157,7 +157,7 @@ Pending: 3 TODOs
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-3 TODOs in phase 02
+3 TODOs in sprint 02
 
 Mark complete: /esf:check-todos --done TODO-ID
 ```
@@ -174,7 +174,7 @@ Mark complete: /esf:check-todos --done TODO-ID
 Showing: 🔴 High priority only
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE 02: user-authentication
+SPRINT 02: user-authentication
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔴 TODO-20260127-001 Review error handling patterns #refactor
@@ -206,10 +206,10 @@ Showing: TODOs tagged with "refactor"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔴 TODO-20260127-001 [HIGH] Review error handling patterns
-   Phase: 02-user-authentication
+   Sprint: 02-user-authentication
 
 🔴 TODO-20260127-006 [HIGH] Refactor auth service
-   Phase: 02-user-authentication
+   Sprint: 02-user-authentication
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -227,17 +227,17 @@ Showing: TODOs tagged with "refactor"
 
 ID: TODO-20260127-001
 Text: Review error handling patterns
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Priority: high
 
 Completed: 2026-01-27 18:30
 
 ✅ TODO marked complete
 ✅ Moved to completed section
-✅ STATE.md updated (7 pending, 4 completed)
+✅ PROJECT-STATUS.md updated (7 pending, 4 completed)
 
-Remaining in Phase 02: 2 TODOs
-View: /esf:check-todos --phase 2
+Remaining in Sprint 02: 2 TODOs
+View: /esf:check-todos --sprint 2
 ```
 
 ## Show All (Including Completed)
@@ -260,7 +260,7 @@ COMPLETED (4)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ TODO-20260127-001 [HIGH] Review error handling patterns
-   Phase: 02-user-authentication
+   Sprint: 02-user-authentication
    Added: 2026-01-27 16:45
    Completed: 2026-01-27 18:30 (1 hour 45 min)
 
@@ -298,19 +298,19 @@ View completed TODOs:
 ## No TODOs for Filter
 
 ```bash
-/esf:check-todos --phase 5
+/esf:check-todos --sprint 5
 ```
 
 ```
-ℹ️  No TODOs in Phase 05
+ℹ️  No TODOs in Sprint 05
 
-Phase 05-deployment has no pending TODOs.
+Sprint 05-deployment has no pending TODOs.
 
 View all TODOs:
    /esf:check-todos
 
-Add TODO for this phase:
-   /esf:add-todo "text" --phase 5
+Add TODO for this sprint:
+   /esf:add-todo "text" --sprint 5
 ```
 
 ## Invalid TODO ID
@@ -344,7 +344,7 @@ List all TODO IDs:
 2. TODO-20260127-002: Add German translations ✅
 
 ✅ 2 TODOs marked complete
-✅ STATE.md updated (5 pending, 6 completed)
+✅ PROJECT-STATUS.md updated (5 pending, 6 completed)
 ```
 
 ## Summary Statistics
@@ -359,8 +359,8 @@ STATISTICS
 Total TODOs: 11 (7 pending, 4 completed)
 Completion Rate: 36%
 
-By Phase:
-   Phase 02: 2 pending, 1 completed
+By Sprint:
+   Sprint 02: 2 pending, 1 completed
    Unassigned: 5 pending, 3 completed
 
 By Priority (pending):
@@ -390,13 +390,13 @@ View file: cat todos.txt
 ## Combined Filters
 
 ```bash
-/esf:check-todos --phase 2 --priority high
+/esf:check-todos --sprint 2 --priority high
 ```
 
 ```
-📋 TODO List - Phase 02, High Priority
+📋 TODO List - Sprint 02, High Priority
 
-Filters: Phase 02 + High Priority
+Filters: Sprint 02 + High Priority
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -421,23 +421,23 @@ Filters: Phase 02 + High Priority
 ## Files Modified
 
 - `.planning/TODO.md` - When marking TODOs complete (--done flag)
-- `.planning/STATE.md` - TODO counter updated
+- `.planning/PROJECT-STATUS.md` - TODO counter updated
 
 ## Integration with Workflow
 
-TODOs appear in phase planning:
+TODOs appear in sprint planning:
 
 ```
-/esf:plan-phase 2
+/esf:plan-sprint 2
 
 [Agent loads context]
 
-⚠️  Phase 02 has 3 pending TODOs:
+⚠️  Sprint 02 has 3 pending TODOs:
    - TODO-20260127-001: Review error handling patterns
    - TODO-20260127-002: Add German translations
    - TODO-20260127-006: Refactor auth service
 
-Should these be addressed in this phase? (y/n)
+Should these be addressed in this sprint? (y/n)
 ```
 
 ## Implementation Details
@@ -445,15 +445,15 @@ Should these be addressed in this phase? (y/n)
 This command should:
 
 1. **Load TODO.md** - Parse TODO list
-2. **Apply filters** - Phase, priority, tag, all/pending
-3. **Format output** - Group by phase, sort by priority
+2. **Apply filters** - Sprint, priority, tag, all/pending
+3. **Format output** - Group by sprint, sort by priority
 4. **Calculate statistics** - Counts, percentages, age
 5. **Mark complete** - If --done flag, update checkboxes and timestamps
-6. **Update STATE.md** - Sync TODO counter
+6. **Update PROJECT-STATUS.md** - Sync TODO counter
 
 The implementation should:
 - **Be fast** - Display in < 1 second even with 100+ TODOs
 - **Be flexible** - Support multiple filter combinations
-- **Be informative** - Show context (time ago, phase name, etc.)
+- **Be informative** - Show context (time ago, sprint name, etc.)
 - **Handle edge cases** - Empty lists, invalid IDs, missing TODO.md
 - **Preserve format** - Don't corrupt TODO.md structure

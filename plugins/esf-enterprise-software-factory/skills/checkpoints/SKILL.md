@@ -47,7 +47,7 @@ Run /esf:autopilot to start autonomous execution.
 ## 2. Present Checkpoint Selection
 
 Build options from pending checkpoint files. Parse each JSON to extract:
-- Phase number
+- Sprint number
 - Plan name
 - Brief description of what's awaiting
 
@@ -56,9 +56,9 @@ Use AskUserQuestion:
 question: "You have {N} pending checkpoints. Which would you like to handle?"
 header: "Checkpoint"
 options:
-  - label: "Phase {X}: {task_name}"
+  - label: "Sprint {X}: {task_name}"
     description: "{brief awaiting description}"
-  - label: "Phase {Y}: {task_name}"
+  - label: "Sprint {Y}: {task_name}"
     description: "{brief awaiting description}"
   - ... (up to 4, or summarize if more)
   - label: "Skip for now"
@@ -76,7 +76,7 @@ For the selected checkpoint, read the full JSON and display:
  UC ► CHECKPOINT: {task_name}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Phase {X}, Plan {Y} paused here waiting for you.
+Sprint {X}, Plan {Y} paused here waiting for you.
 
 ## What you need to do
 
@@ -118,7 +118,7 @@ options:
 Create approval file:
 ```json
 {
-  "phase": "{phase}",
+  "sprint": "{sprint}",
   "plan": "{plan}",
   "approved": true,
   "note": "{user note or empty}",
@@ -140,7 +140,7 @@ Autopilot will continue this plan on next run.
 Create rejection file:
 ```json
 {
-  "phase": "{phase}",
+  "sprint": "{sprint}",
   "plan": "{plan}",
   "approved": false,
   "reason": "User skipped - feature not needed",
@@ -199,7 +199,7 @@ Pending checkpoint files contain:
 
 ```json
 {
-  "phase": "03",
+  "sprint": "03",
   "plan": "02",
   "plan_name": "OAuth Integration",
   "task_name": "Add Google OAuth credentials",

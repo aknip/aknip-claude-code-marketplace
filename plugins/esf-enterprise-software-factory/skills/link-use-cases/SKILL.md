@@ -13,12 +13,12 @@ allowed-tools:
 Create <<include>> or <<extend>> relationships between use cases. Updates both source and target documents and the index.
 
 **Arguments:**
-- `source-id` — Source use case ID (e.g., UC-UG-001)
-- `target-id` — Target use case ID (e.g., UC-SF-001)
+- `source-id` — Source use case ID (e.g., UC-EP-001)
+- `target-id` — Target use case ID (e.g., UC-TK-001)
 - `relationship` — Either "include" or "extend"
 
 **Relationship Rules:**
-- `<<include>>`: User-Goal → Subfunction (mandatory inclusion)
+- `<<include>>`: Epic → Task (mandatory inclusion)
 - `<<extend>>`: Any level to same or lower level (optional extension)
 
 </objective>
@@ -49,10 +49,10 @@ fi
 
 | Source Level | Target Level | include | extend |
 |--------------|--------------|---------|--------|
-| Summary | User-Goal | ✓ | ✓ |
-| User-Goal | Subfunction | ✓ | ✓ |
-| User-Goal | User-Goal | ✗ | ✓ |
-| Subfunction | Subfunction | ✗ | ✓ |
+| Summary | Epic | ✓ | ✓ |
+| Epic | Task | ✓ | ✓ |
+| Epic | Epic | ✗ | ✓ |
+| Task | Task | ✗ | ✓ |
 
 Error if relationship doesn't make sense for levels.
 
@@ -65,7 +65,7 @@ Build relationship graph and check for cycles.
 Add to Includes or Extends section:
 
 ```markdown
-## Includes (Mandatory Subfunctions)
+## Includes (Mandatory Tasks)
 - <<include>> ${TARGET_ID}: [Target Name] (at step N)
 ```
 

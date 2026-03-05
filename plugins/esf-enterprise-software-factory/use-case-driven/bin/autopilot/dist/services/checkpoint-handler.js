@@ -3,16 +3,16 @@ import path from 'node:path';
 /**
  * Create a unique checkpoint ID
  */
-function createCheckpointId(phase, plan) {
+function createCheckpointId(sprint, plan) {
     const timestamp = Date.now().toString(36);
     const planStr = plan !== undefined ? `-plan-${plan}` : '';
-    return `phase-${phase}${planStr}-${timestamp}`;
+    return `sprint-${sprint}${planStr}-${timestamp}`;
 }
 /**
  * Queue a checkpoint for later review
  */
 export async function queueCheckpoint(paths, checkpoint) {
-    const id = createCheckpointId(checkpoint.phase, checkpoint.plan);
+    const id = createCheckpointId(checkpoint.sprint, checkpoint.plan);
     const fullCheckpoint = {
         ...checkpoint,
         id,

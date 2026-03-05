@@ -5,7 +5,7 @@ import { z } from 'zod';
 export declare const AutopilotConfigSchema: z.ZodObject<{
     projectDir: z.ZodString;
     projectName: z.ZodDefault<z.ZodString>;
-    phases: z.ZodArray<z.ZodNumber, "many">;
+    sprints: z.ZodArray<z.ZodNumber, "many">;
     checkpointMode: z.ZodDefault<z.ZodEnum<["queue", "pause", "skip"]>>;
     maxRetries: z.ZodDefault<z.ZodNumber>;
     budgetLimit: z.ZodDefault<z.ZodNumber>;
@@ -16,7 +16,7 @@ export declare const AutopilotConfigSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     projectDir: string;
     projectName: string;
-    phases: number[];
+    sprints: number[];
     checkpointMode: "queue" | "pause" | "skip";
     maxRetries: number;
     budgetLimit: number;
@@ -26,7 +26,7 @@ export declare const AutopilotConfigSchema: z.ZodObject<{
     webhookUrl?: string | undefined;
 }, {
     projectDir: string;
-    phases: number[];
+    sprints: number[];
     projectName?: string | undefined;
     checkpointMode?: "queue" | "pause" | "skip" | undefined;
     maxRetries?: number | undefined;
@@ -38,9 +38,9 @@ export declare const AutopilotConfigSchema: z.ZodObject<{
 }>;
 export type AutopilotConfig = z.infer<typeof AutopilotConfigSchema>;
 /**
- * Phase information extracted from ROADMAP.md
+ * Sprint information extracted from PROJECT-PLAN.md
  */
-export interface PhaseInfo {
+export interface SprintInfo {
     number: number;
     name: string;
     goal?: string;
@@ -48,15 +48,15 @@ export interface PhaseInfo {
     useCases: string[];
 }
 /**
- * Phase execution status
+ * Sprint execution status
  */
-export type PhaseStatus = 'pending' | 'running' | 'passed' | 'gaps_found' | 'needs_verification' | 'incomplete' | 'human_needed' | 'failed';
+export type SprintStatus = 'pending' | 'running' | 'passed' | 'gaps_found' | 'needs_verification' | 'incomplete' | 'human_needed' | 'failed';
 /**
- * Phase execution result
+ * Sprint execution result
  */
-export interface PhaseResult {
-    phase: number;
-    status: PhaseStatus;
+export interface SprintResult {
+    sprint: number;
+    status: SprintStatus;
     attempts: number;
     duration: number;
     tokens: number;
@@ -64,14 +64,14 @@ export interface PhaseResult {
     error?: string;
 }
 /**
- * Autopilot state persisted in STATE.md
+ * Autopilot state persisted in PROJECT-STATUS.md
  */
 export interface AutopilotState {
     mode: 'idle' | 'running' | 'paused' | 'completed' | 'failed';
     startedAt?: Date;
-    currentPhase?: number;
-    phasesRemaining: number[];
-    phasesCompleted: number[];
+    currentSprint?: number;
+    sprintsRemaining: number[];
+    sprintsCompleted: number[];
     checkpointsPending: number;
     lastError?: string;
     updatedAt: Date;
@@ -83,7 +83,7 @@ export interface AutopilotState {
  */
 export interface Checkpoint {
     id: string;
-    phase: number;
+    sprint: number;
     plan?: number;
     type: 'human_verification' | 'approval_needed' | 'question';
     data: Record<string, unknown>;
@@ -107,9 +107,9 @@ export interface DerivedPaths {
     logDir: string;
     promptTemplatesDir: string;
     checkpointDir: string;
-    stateFile: string;
-    phasesDir: string;
-    roadmapFile: string;
+    projectStatusFile: string;
+    sprintsDir: string;
+    projectPlanFile: string;
     displayStateDir: string;
 }
 /**

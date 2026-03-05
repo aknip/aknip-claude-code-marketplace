@@ -29,7 +29,7 @@ export declare function runClaudeWithPrompt(promptFile: string, logFile: string,
  */
 export declare function generatePrompt(templateName: string, outputFile: string, options: {
     paths: DerivedPaths;
-    phase?: number;
+    sprint?: number;
     version?: string;
     projectDir: string;
 }): Promise<void>;

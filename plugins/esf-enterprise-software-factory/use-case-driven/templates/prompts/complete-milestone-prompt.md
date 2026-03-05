@@ -12,22 +12,22 @@ Mark the current milestone as complete, create a git release tag, and archive al
 
 Read these files first:
 - {{PROJECT_DIR}}/.planning/PROJECT.md
-- {{PROJECT_DIR}}/.planning/ROADMAP.md
-- {{PROJECT_DIR}}/.planning/STATE.md
+- {{PROJECT_DIR}}/.planning/PROJECT-PLAN.md
+- {{PROJECT_DIR}}/.planning/PROJECT-STATUS.md
 - {{PROJECT_DIR}}/.planning/use-cases/index.md
 
 ## Process
 
-### 1. Validation Phase
+### 1. Validation Sprint
 
 Check milestone is ready for completion:
 
 ```bash
-# Check all phases have passed verification
-TOTAL_PHASES=$(grep -E "^### Phase [0-9]+:" {{PROJECT_DIR}}/.planning/ROADMAP.md | wc -l)
+# Check all sprints have passed verification
+TOTAL_PHASES=$(grep -E "^### Sprint [0-9]+:" {{PROJECT_DIR}}/.planning/PROJECT-PLAN.md | wc -l)
 VERIFIED_PHASES=0
 
-for phase_dir in {{PROJECT_DIR}}/.planning/phases/*/; do
+for phase_dir in {{PROJECT_DIR}}/.planning/sprints/*/; do
   VERIF_FILE=$(ls "$phase_dir"/*-VERIFICATION.md 2>/dev/null | head -1)
   if [ -f "$VERIF_FILE" ] && grep -q "status:.*passed" "$VERIF_FILE" 2>/dev/null; then
     ((VERIFIED_PHASES++))
@@ -35,7 +35,7 @@ for phase_dir in {{PROJECT_DIR}}/.planning/phases/*/; do
 done
 
 if [ "$VERIFIED_PHASES" -lt "$TOTAL_PHASES" ]; then
-  echo "ERROR: Not all phases verified ($VERIFIED_PHASES/$TOTAL_PHASES)"
+  echo "ERROR: Not all sprints verified ($VERIFIED_PHASES/$TOTAL_PHASES)"
   exit 1
 fi
 
@@ -50,7 +50,7 @@ Display validation results:
 ```
 VALIDATION
 
-All phases verified (N/N)
+All sprints verified (N/N)
 No uncommitted changes
 All use cases implemented
 Git repository clean
@@ -83,8 +83,8 @@ git tag -a "v${VERSION}" -m "Release v${VERSION} - [Milestone Title from PROJECT
 Completed Use Cases:
 ${UC_LIST}
 
-Phases:
-$(ls -d {{PROJECT_DIR}}/.planning/phases/*/ | xargs -I{} basename {} | sed 's/^/- /')
+Sprints:
+$(ls -d {{PROJECT_DIR}}/.planning/sprints/*/ | xargs -I{} basename {} | sed 's/^/- /')
 
 Statistics:
 - ${COMMIT_COUNT} commits
@@ -102,22 +102,22 @@ Create milestone archive structure:
 ARCHIVE_DIR="{{PROJECT_DIR}}/.planning/milestones/v${VERSION}"
 mkdir -p "$ARCHIVE_DIR"
 
-# Copy phase directories (ALL contents including untracked files like screenshots)
-cp -r {{PROJECT_DIR}}/.planning/phases "$ARCHIVE_DIR/"
+# Copy sprint directories (ALL contents including untracked files like screenshots)
+cp -r {{PROJECT_DIR}}/.planning/sprints "$ARCHIVE_DIR/"
 
 # Copy use cases
 cp -r {{PROJECT_DIR}}/.planning/use-cases "$ARCHIVE_DIR/"
 
 # Copy project files
 cp {{PROJECT_DIR}}/.planning/PROJECT.md "$ARCHIVE_DIR/"
-cp {{PROJECT_DIR}}/.planning/ROADMAP.md "$ARCHIVE_DIR/"
-cp {{PROJECT_DIR}}/.planning/STATE.md "$ARCHIVE_DIR/"
+cp {{PROJECT_DIR}}/.planning/PROJECT-PLAN.md "$ARCHIVE_DIR/"
+cp {{PROJECT_DIR}}/.planning/PROJECT-STATUS.md "$ARCHIVE_DIR/"
 
 # Clean up working directories (now archived)
 # IMPORTANT: Use rm -rf to delete ALL contents including untracked files (screenshots, etc.)
 # The git rm --cached in the commit step only handles tracked files.
-# This rm -rf ensures phases/ is completely empty after archiving.
-rm -rf {{PROJECT_DIR}}/.planning/phases
+# This rm -rf ensures sprints/ is completely empty after archiving.
+rm -rf {{PROJECT_DIR}}/.planning/sprints
 ```
 
 ### 5. Generate MILESTONE-SUMMARY.md
@@ -135,15 +135,15 @@ Create `{{PROJECT_DIR}}/.planning/milestones/v${VERSION}/MILESTONE-SUMMARY.md`:
 ### Summary Level
 [List from index.md]
 
-### User-Goal Level
+### Epic Level
 [List from index.md]
 
-### Subfunctions
+### Tasks
 [Count and summary]
 
-## Phases Completed
+## Sprints Completed
 
-[For each phase: name, date range, key deliverables]
+[For each sprint: name, date range, key deliverables]
 
 ## Statistics
 
@@ -164,10 +164,10 @@ Run /esf:new-milestone to start.
 
 ### 6. Documentation Updates
 
-**Update ROADMAP.md:**
-- Mark all phases as COMPLETED with completion date
+**Update PROJECT-PLAN.md:**
+- Mark all sprints as COMPLETED with completion date
 
-**Update STATE.md:**
+**Update PROJECT-STATUS.md:**
 - Reset for next milestone
 - Add milestone completion marker
 
@@ -178,19 +178,19 @@ Run /esf:new-milestone to start.
 
 ```bash
 git add {{PROJECT_DIR}}/.planning/milestones/
-git add {{PROJECT_DIR}}/.planning/ROADMAP.md
-git add {{PROJECT_DIR}}/.planning/STATE.md
+git add {{PROJECT_DIR}}/.planning/PROJECT-PLAN.md
+git add {{PROJECT_DIR}}/.planning/PROJECT-STATUS.md
 git add {{PROJECT_DIR}}/.planning/PROJECT.md
-# Stage deletion of phases/ — rm -rf already removed the directory,
+# Stage deletion of sprints/ — rm -rf already removed the directory,
 # git add -A picks up the deletions of previously tracked files.
-git add -A {{PROJECT_DIR}}/.planning/phases/
+git add -A {{PROJECT_DIR}}/.planning/sprints/
 
 git commit -m "chore: complete milestone v${VERSION}
 
 - Created milestone archive
-- Removed phases/ working directory (all contents archived to milestones/v${VERSION}/)
+- Removed sprints/ working directory (all contents archived to milestones/v${VERSION}/)
 - Updated documentation
-- All phases verified
+- All sprints verified
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
@@ -207,16 +207,16 @@ Git tag created successfully
 
 ARCHIVING MILESTONE
 Archived:
-  - N phases
-  - M use cases (K subfunctions)
+  - N sprints
+  - M use cases (K tasks)
   - X commits
   - Y files changed
 
 Location: .planning/milestones/v${VERSION}/
 
 UPDATING DOCUMENTATION
-Updated ROADMAP.md (phases marked complete)
-Updated STATE.md (reset for next version)
+Updated PROJECT-PLAN.md (sprints marked complete)
+Updated PROJECT-STATUS.md (reset for next version)
 Updated PROJECT.md (added milestone history)
 Generated MILESTONE-SUMMARY.md
 
@@ -228,18 +228,18 @@ Next Steps:
 
 ## Success Criteria
 
-- [ ] All phases verified
+- [ ] All sprints verified
 - [ ] No uncommitted changes
 - [ ] Version determined
 - [ ] Git tag created with summary
 - [ ] Archive directory created
-- [ ] Phase directories copied
+- [ ] Sprint directories copied
 - [ ] Use cases copied
 - [ ] Project files copied
-- [ ] Working directories cleaned up (phases/ completely removed, including untracked files)
+- [ ] Working directories cleaned up (sprints/ completely removed, including untracked files)
 - [ ] MILESTONE-SUMMARY.md generated
-- [ ] ROADMAP.md updated
-- [ ] STATE.md reset
+- [ ] PROJECT-PLAN.md updated
+- [ ] PROJECT-STATUS.md reset
 - [ ] PROJECT.md updated with history
 - [ ] Changes committed
 

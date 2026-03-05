@@ -9,7 +9,7 @@ Diagnostic command for troubleshooting UC framework issues. Checks framework con
 ## When to Use
 
 - Something seems broken or inconsistent
-- Phase numbers don't match directories
+- Sprint numbers don't match directories
 - Use case references are broken
 - Git commits missing traceability
 - Configuration issues suspected
@@ -23,12 +23,12 @@ None - diagnostic command, can run anytime
 ## Usage
 
 ```bash
-/esf:debug [--phase N] [--verbose] [--fix] [--category NAME]
+/esf:debug [--sprint N] [--verbose] [--fix] [--category NAME]
 ```
 
 ### Flags
 
-- `--phase N`: Debug specific phase only
+- `--sprint N`: Debug specific sprint only
 - `--verbose`: Show detailed diagnostic output
 - `--fix`: Attempt to auto-fix common issues (requires confirmation)
 - `--category NAME`: Check specific category (system, framework, git, usecase, docs)
@@ -49,43 +49,43 @@ Configuration and structure:
 - `.planning/config.json` valid JSON
 - All agents exist in `.claude/agents/`
 - All skills exist in `.claude/skills/`
-- ROADMAP.md format valid
-- Phase directory structure correct
+- PROJECT-PLAN.md format valid
+- Sprint directory structure correct
 
 ### 3. Use Case Validation
 
 Traceability and format:
 - Use case index exists
-- ID format valid (UC-S-*, UC-UG-*, UC-SF-*)
-- No orphaned subfunctions
+- ID format valid (UC-OBJ-*, UC-EP-*, UC-TK-*)
+- No orphaned tasks
 - Parent-child relationships intact
-- Phase assignments valid
+- Sprint assignments valid
 
 ### 4. Git History Check
 
 Commit traceability:
 - All commits reference use cases (or documented exceptions)
-- Subfunction commits have "Implements:" field
-- Atomic commits per subfunction
+- Task commits have "Implements:" field
+- Atomic commits per task
 - Branch naming follows convention
 
 ### 5. Documentation Completeness
 
 Required files:
 - PROJECT.md exists
-- ROADMAP.md exists and current
-- STATE.md exists and current
-- Phase CONTEXT files (for planned phases)
-- Phase SUMMARY files (for executed phases)
-- VERIFICATION files (for verified phases)
+- PROJECT-PLAN.md exists and current
+- PROJECT-STATUS.md exists and current
+- Sprint CONTEXT files (for planned sprints)
+- Sprint SUMMARY files (for executed sprints)
+- VERIFICATION files (for verified sprints)
 
-### 6. Phase Structure
+### 6. Sprint Structure
 
 Directory consistency:
-- Phase numbering sequential (no gaps)
-- Directory names match ROADMAP.md
+- Sprint numbering sequential (no gaps)
+- Directory names match PROJECT-PLAN.md
 - Plan files named correctly
-- No duplicate phase numbers
+- No duplicate sprint numbers
 
 ## Output Example (No Issues)
 
@@ -115,30 +115,30 @@ FRAMEWORK VALIDATION
 ✅ Config file valid (.planning/config.json)
 ✅ All agents present (8/8)
 ✅ All commands valid
-✅ ROADMAP.md format correct
-✅ Phase directory structure valid
+✅ PROJECT-PLAN.md format correct
+✅ Sprint directory structure valid
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 USE CASE VALIDATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ Use case index exists
-✅ All IDs follow format (UC-S-*, UC-UG-*, UC-SF-*)
+✅ All IDs follow format (UC-OBJ-*, UC-EP-*, UC-TK-*)
 ✅ No orphaned use cases
 ✅ Traceability links valid
-✅ Phase assignments correct
+✅ Sprint assignments correct
 
 Summary:
-   2 Summary-level (UC-S-*)
-   8 User-Goal-level (UC-UG-*)
-   25 Subfunction-level (UC-SF-*)
+   2 Objectives (UC-OBJ-*)
+   8 Epic-level (UC-EP-*)
+   25 Task-level (UC-TK-*)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 GIT HISTORY CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ All commits reference use cases (47/47)
-✅ Atomic commits per subfunction
+✅ Atomic commits per task
 ✅ Traceability fields present
 ✅ Branch naming follows convention
 
@@ -147,22 +147,22 @@ DOCUMENTATION CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ PROJECT.md exists and valid
-✅ ROADMAP.md exists and current
-✅ STATE.md exists and current
-✅ All phases have CONTEXT.md (3/3)
-✅ All executed phases have SUMMARY.md (3/3)
-✅ All verified phases have VERIFICATION.md (3/3)
+✅ PROJECT-PLAN.md exists and current
+✅ PROJECT-STATUS.md exists and current
+✅ All sprints have CONTEXT.md (3/3)
+✅ All executed sprints have SUMMARY.md (3/3)
+✅ All verified sprints have VERIFICATION.md (3/3)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE STRUCTURE
+SPRINT STRUCTURE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Phases numbered sequentially (01-03)
-✅ Directory names match ROADMAP.md
+✅ Sprints numbered sequentially (01-03)
+✅ Directory names match PROJECT-PLAN.md
 ✅ Plan files named correctly
-✅ No duplicate phase numbers
+✅ No duplicate sprint numbers
 
-Phases:
+Sprints:
    01-foundation ✅
    02-user-authentication ✅
    03-user-profile ✅
@@ -209,8 +209,8 @@ FRAMEWORK VALIDATION
 ✅ Config file valid
 ✅ All agents present
 ✅ All commands valid
-✅ ROADMAP.md format correct
-⚠️  Phase directory naming inconsistent
+✅ PROJECT-PLAN.md format correct
+⚠️  Sprint directory naming inconsistent
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 USE CASE VALIDATION
@@ -218,16 +218,16 @@ USE CASE VALIDATION
 
 ✅ Use case index exists
 ✅ All IDs follow format
-❌ Orphaned subfunction detected
+❌ Orphaned task detected
 ✅ Traceability links valid
-⚠️  Phase assignment mismatch
+⚠️  Sprint assignment mismatch
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 GIT HISTORY CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚠️  Commits with use case refs: 44/47 (94%)
-✅ Atomic commits per subfunction
+✅ Atomic commits per task
 ⚠️  3 commits missing traceability fields
 ✅ Branch naming follows convention
 
@@ -236,20 +236,20 @@ DOCUMENTATION CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ PROJECT.md exists and valid
-✅ ROADMAP.md exists and current
-⚠️  STATE.md outdated (last modified 3 days ago)
-✅ All phases have CONTEXT.md
-⚠️  Phase 03 missing SUMMARY.md for plan 03-02
-❌ Phase 03 missing VERIFICATION.md
+✅ PROJECT-PLAN.md exists and current
+⚠️  PROJECT-STATUS.md outdated (last modified 3 days ago)
+✅ All sprints have CONTEXT.md
+⚠️  Sprint 03 missing SUMMARY.md for plan 03-02
+❌ Sprint 03 missing VERIFICATION.md
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE STRUCTURE
+SPRINT STRUCTURE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-❌ Gap in phase numbering (01, 02, 04, 05 - missing 03)
-✅ Directory names match ROADMAP.md
+❌ Gap in sprint numbering (01, 02, 04, 05 - missing 03)
+✅ Directory names match PROJECT-PLAN.md
 ✅ Plan files named correctly
-✅ No duplicate phase numbers
+✅ No duplicate sprint numbers
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SUMMARY
@@ -267,24 +267,24 @@ ERRORS (3)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. ❌ Orphaned Use Case
-   Problem: UC-SF-999 exists but has no parent UC-UG use case
-   Location: .planning/use-cases/subfunction/UC-SF-999.md
+   Problem: UC-TK-999 exists but has no parent UC-UG use case
+   Location: .planning/use-cases/task/UC-TK-999.md
    Fix: Remove orphaned file or assign to parent use case
    Command:
-      rm .planning/use-cases/subfunction/UC-SF-999.md
+      rm .planning/use-cases/task/UC-TK-999.md
       # OR assign to parent use case manually
 
-2. ❌ Phase Numbering Gap
-   Problem: Missing phase 03 (sequence: 01, 02, 04, 05)
-   Fix: Renumber phases to close gap
+2. ❌ Sprint Numbering Gap
+   Problem: Missing sprint 03 (sequence: 01, 02, 04, 05)
+   Fix: Renumber sprints to close gap
    Command:
-      /esf:renumber-phases
+      /esf:renumber-sprints
 
 3. ❌ Missing Verification Report
-   Problem: Phase 03 missing VERIFICATION.md
-   Fix: Run verification for phase 03
+   Problem: Sprint 03 missing VERIFICATION.md
+   Fix: Run verification for sprint 03
    Command:
-      /esf:verify-phase 3
+      /esf:verify-sprint 3
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 WARNINGS (5)
@@ -297,11 +297,11 @@ WARNINGS (5)
    Command:
       npm install -g npm@latest
 
-2. ⚠️  Phase Directory Naming
+2. ⚠️  Sprint Directory Naming
    Problem: Directory "02-user-auth" doesn't match ROADMAP name "user-authentication"
    Fix: Rename directory to match ROADMAP
    Command:
-      mv .planning/phases/02-user-auth .planning/phases/02-user-authentication
+      mv .planning/sprints/02-user-auth .planning/sprints/02-user-authentication
 
 3. ⚠️  Missing Traceability Fields
    Problem: 3 commits don't reference use cases
@@ -309,16 +309,16 @@ WARNINGS (5)
       - abc123f: "fix typo in login form"
       - def456g: "update dependencies"
       - ghi789h: "refactor auth service"
-   Fix: Document in STATE.md or amend commits (if not pushed)
+   Fix: Document in PROJECT-STATUS.md or amend commits (if not pushed)
    Notes: Minor commits, can be documented as non-UC work
 
-4. ⚠️  Outdated STATE.md
+4. ⚠️  Outdated PROJECT-STATUS.md
    Problem: Last modified 3 days ago, may be stale
-   Fix: Update STATE.md with current status
+   Fix: Update PROJECT-STATUS.md with current status
    Command: (manual update needed)
 
 5. ⚠️  Missing SUMMARY.md
-   Problem: Phase 03 plan 03-02 has no summary
+   Problem: Sprint 03 plan 03-02 has no summary
    Fix: Will be generated after execution
    Note: Not a blocker if plan not yet executed
 
@@ -328,13 +328,13 @@ RECOMMENDED ACTIONS
 
 Priority 1 (Fix Errors):
    1. Remove orphaned use case or assign parent
-   2. Renumber phases: /esf:renumber-phases
-   3. Run verification: /esf:verify-phase 3
+   2. Renumber sprints: /esf:renumber-sprints
+   3. Run verification: /esf:verify-sprint 3
 
 Priority 2 (Address Warnings):
    4. Update npm: npm install -g npm@latest
-   5. Rename directory: mv .planning/phases/02-user-auth .planning/phases/02-user-authentication
-   6. Document non-UC commits in STATE.md
+   5. Rename directory: mv .planning/sprints/02-user-auth .planning/sprints/02-user-authentication
+   6. Document non-UC commits in PROJECT-STATUS.md
 
 After fixes, run:
    /esf:debug
@@ -343,22 +343,22 @@ Auto-fix available for some issues:
    /esf:debug --fix
 ```
 
-## Debug Specific Phase
+## Debug Specific Sprint
 
 ```bash
-/esf:debug --phase 3
+/esf:debug --sprint 3
 ```
 
 ```
-🔍 Debugging Phase 03
+🔍 Debugging Sprint 03
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE 03: user-profile
+SPRINT 03: user-profile
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Phase directory exists
-✅ Phase in ROADMAP.md
-✅ Phase number correct (03)
+✅ Sprint directory exists
+✅ Sprint in PROJECT-PLAN.md
+✅ Sprint number correct (03)
 ❌ Missing VERIFICATION.md
 ⚠️  Plan 03-02 missing SUMMARY.md
 
@@ -367,11 +367,11 @@ Plans:
    ⚠️  03-02-PLAN.md (incomplete)
 
 Use Cases:
-   ✅ UC-UG-004 assigned to phase
-   ✅ UC-UG-005 assigned to phase
+   ✅ UC-EP-004 assigned to sprint
+   ✅ UC-EP-005 assigned to sprint
 
 Commits:
-   12 commits reference phase 03
+   12 commits reference sprint 03
    ✅ All commits have use case references
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -379,8 +379,8 @@ Commits:
 Issues: 1 error, 1 warning
 
 Recommendations:
-   1. Complete plan 03-02: /esf:execute-phase 3 --plan 03-02
-   2. Run verification: /esf:verify-phase 3
+   1. Complete plan 03-02: /esf:execute-sprint 3 --plan 03-02
+   2. Run verification: /esf:verify-sprint 3
 ```
 
 ## Verbose Mode
@@ -408,7 +408,7 @@ Shows detailed diagnostic information:
 ⚠️  This will attempt to fix common issues automatically.
 
 Fixable issues found:
-   1. Phase numbering gap (can renumber)
+   1. Sprint numbering gap (can renumber)
    2. Directory name mismatch (can rename)
 
 Cannot auto-fix:
@@ -421,7 +421,7 @@ Proceed with auto-fix? (y/n): y
 
 Fixing...
 
-✅ Renumbered phases (closed gap)
+✅ Renumbered sprints (closed gap)
 ✅ Renamed directory: 02-user-auth → 02-user-authentication
 
 Fixed: 2 issues
@@ -448,18 +448,18 @@ Outputs diagnostic results as JSON (useful for tooling).
 
 ## Common Issues Detected
 
-- Phase numbering gaps
+- Sprint numbering gaps
 - Orphaned use cases
 - Missing documentation files
 - Broken traceability links
 - Invalid configuration
 - Directory naming mismatches
-- Missing commits for subfunctions
-- Duplicate phase numbers
+- Missing commits for tasks
+- Duplicate sprint numbers
 
 ## Related Commands
 
-- `/esf:renumber-phases` - Fix phase numbering
+- `/esf:renumber-sprints` - Fix sprint numbering
 - `/esf:audit-milestone` - Check milestone completeness
 - `/esf:settings` - Check and fix configuration
 - `/esf:progress` - View current progress
@@ -468,9 +468,9 @@ Outputs diagnostic results as JSON (useful for tooling).
 
 - `.planning/config.json`
 - `.planning/PROJECT.md`
-- `.planning/ROADMAP.md`
-- `.planning/STATE.md`
-- `.planning/phases/**/*`
+- `.planning/PROJECT-PLAN.md`
+- `.planning/PROJECT-STATUS.md`
+- `.planning/sprints/**/*`
 - `.planning/use-cases/**/*`
 - `.claude/agents/**/*`
 - `.claude/skills/**/*`
@@ -485,7 +485,7 @@ Outputs diagnostic results as JSON (useful for tooling).
 
 This command should:
 
-1. **Run all checks systematically** - System, framework, use cases, git, docs, phases
+1. **Run all checks systematically** - System, framework, use cases, git, docs, sprints
 2. **Classify issues** - Error vs warning vs info
 3. **Suggest fixes** - Provide exact commands to resolve
 4. **Auto-fix option** - Safe automated fixes with `--fix`

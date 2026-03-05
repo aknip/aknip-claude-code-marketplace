@@ -9,14 +9,14 @@ export const AutopilotConfigSchema = z.object({
   projectDir: z.string().describe('Root directory of the project'),
   projectName: z.string().default('Project').describe('Display name for the project'),
 
-  // Phases to execute
-  phases: z.array(z.number()).min(1).describe('Phase numbers to execute'),
+  // Sprints to execute
+  sprints: z.array(z.number()).min(1).describe('Sprint numbers to execute'),
 
   // Execution settings
   checkpointMode: z.enum(['queue', 'pause', 'skip']).default('queue')
     .describe('How to handle checkpoints: queue for later, pause execution, or skip'),
   maxRetries: z.number().min(1).max(10).default(3)
-    .describe('Maximum retry attempts per phase'),
+    .describe('Maximum retry attempts per sprint'),
   budgetLimit: z.number().min(0).default(0)
     .describe('Maximum budget in USD (0 = unlimited)'),
 
@@ -36,9 +36,9 @@ export const AutopilotConfigSchema = z.object({
 export type AutopilotConfig = z.infer<typeof AutopilotConfigSchema>;
 
 /**
- * Phase information extracted from ROADMAP.md
+ * Sprint information extracted from PROJECT-PLAN.md
  */
-export interface PhaseInfo {
+export interface SprintInfo {
   number: number;
   name: string;
   goal?: string;
@@ -47,9 +47,9 @@ export interface PhaseInfo {
 }
 
 /**
- * Phase execution status
+ * Sprint execution status
  */
-export type PhaseStatus =
+export type SprintStatus =
   | 'pending'
   | 'running'
   | 'passed'
@@ -60,11 +60,11 @@ export type PhaseStatus =
   | 'failed';
 
 /**
- * Phase execution result
+ * Sprint execution result
  */
-export interface PhaseResult {
-  phase: number;
-  status: PhaseStatus;
+export interface SprintResult {
+  sprint: number;
+  status: SprintStatus;
   attempts: number;
   duration: number; // seconds
   tokens: number;
@@ -73,14 +73,14 @@ export interface PhaseResult {
 }
 
 /**
- * Autopilot state persisted in STATE.md
+ * Autopilot state persisted in PROJECT-STATUS.md
  */
 export interface AutopilotState {
   mode: 'idle' | 'running' | 'paused' | 'completed' | 'failed';
   startedAt?: Date;
-  currentPhase?: number;
-  phasesRemaining: number[];
-  phasesCompleted: number[];
+  currentSprint?: number;
+  sprintsRemaining: number[];
+  sprintsCompleted: number[];
   checkpointsPending: number;
   lastError?: string;
   updatedAt: Date;
@@ -93,7 +93,7 @@ export interface AutopilotState {
  */
 export interface Checkpoint {
   id: string;
-  phase: number;
+  sprint: number;
   plan?: number;
   type: 'human_verification' | 'approval_needed' | 'question';
   data: Record<string, unknown>;
@@ -119,9 +119,9 @@ export interface DerivedPaths {
   logDir: string;
   promptTemplatesDir: string;
   checkpointDir: string;
-  stateFile: string;
-  phasesDir: string;
-  roadmapFile: string;
+  projectStatusFile: string;
+  sprintsDir: string;
+  projectPlanFile: string;
   displayStateDir: string;
 }
 
@@ -133,9 +133,9 @@ export function getDerivedPaths(projectDir: string): DerivedPaths {
     logDir: `${projectDir}/.planning/logs`,
     promptTemplatesDir: `${projectDir}/.claude/use-case-driven/templates/prompts`,
     checkpointDir: `${projectDir}/.planning/checkpoints`,
-    stateFile: `${projectDir}/.planning/STATE.md`,
-    phasesDir: `${projectDir}/.planning/phases`,
-    roadmapFile: `${projectDir}/.planning/ROADMAP.md`,
+    projectStatusFile: `${projectDir}/.planning/PROJECT-STATUS.md`,
+    sprintsDir: `${projectDir}/.planning/sprints`,
+    projectPlanFile: `${projectDir}/.planning/PROJECT-PLAN.md`,
     displayStateDir: `${projectDir}/.planning/logs/.display`,
   };
 }

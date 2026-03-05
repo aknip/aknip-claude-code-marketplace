@@ -8,14 +8,14 @@ Mark the current milestone as complete, create a git release tag, and archive al
 
 ## When to Use
 
-- All phases in current milestone are complete
+- All sprints in current milestone are complete
 - All use case scenarios have passed verification
 - Ready to mark a release version (v1.0.0, v2.0.0, etc.)
 - Before starting a new milestone cycle
 
 ## Prerequisites
 
-- All phases must have passed verification
+- All sprints must have passed verification
 - No uncommitted changes in git
 - All use cases should be implemented and verified
 
@@ -33,13 +33,13 @@ Mark the current milestone as complete, create a git release tag, and archive al
 
 ## What This Command Does
 
-### 1. Validation Phase
+### 1. Validation Sprint
 
 First, validates the milestone is ready for completion:
 
 ```
 Checking milestone readiness...
-✓ All phases verified
+✓ All sprints verified
 ✓ No uncommitted changes
 ✓ All use cases implemented
 ✓ Git repository is clean
@@ -62,14 +62,14 @@ Creates an annotated git tag with milestone summary:
 git tag -a v1.0.0 -m "Release v1.0.0 - [Milestone Title]
 
 Completed Use Cases:
-- UC-UG-001: User Registration
-- UC-UG-002: User Login
-- UC-UG-003: Profile Management
+- UC-EP-001: User Registration
+- UC-EP-002: User Login
+- UC-EP-003: Profile Management
 
-Phases:
-- Phase 01: Foundation
-- Phase 02: User Authentication
-- Phase 03: User Profile
+Sprints:
+- Sprint 01: Foundation
+- Sprint 02: User Authentication
+- Sprint 03: User Profile
 
 Statistics:
 - 47 commits
@@ -86,18 +86,18 @@ Creates milestone archive structure:
 ```
 .planning/milestones/v1.0.0/
 ├── MILESTONE-SUMMARY.md      # Generated completion summary
-├── phases/                    # Copy of all phase directories
+├── sprints/                    # Copy of all sprint directories
 │   ├── 01-foundation/
 │   ├── 02-user-authentication/
 │   └── 03-user-profile/
 ├── use-cases/                 # Copy of use case hierarchy
 │   ├── index.md
 │   ├── summary/
-│   ├── user-goal/
-│   └── subfunction/
+│   ├── epic/
+│   └── task/
 ├── PROJECT.md                 # Snapshot of project definition
-├── ROADMAP.md                 # Snapshot of roadmap
-└── STATE.md                   # Snapshot of final state
+├── PROJECT-PLAN.md                 # Snapshot of roadmap
+└── PROJECT-STATUS.md                   # Snapshot of final state
 ```
 
 ### 5. Cleanup Working Directories
@@ -105,13 +105,13 @@ Creates milestone archive structure:
 After successful archive creation, clean up the working directories:
 
 ```bash
-# Remove phases working directory COMPLETELY (now archived in milestones/vX.Y.Z/phases/)
+# Remove sprints working directory COMPLETELY (now archived in milestones/vX.Y.Z/sprints/)
 # IMPORTANT: This must remove ALL contents including untracked files (screenshots, temp files, etc.)
-rm -rf .planning/phases/
+rm -rf .planning/sprints/
 
-# Verify cleanup — phases/ must not exist after this step
-if [ -d ".planning/phases" ]; then
-  echo "ERROR: phases/ still exists after cleanup!"
+# Verify cleanup — sprints/ must not exist after this step
+if [ -d ".planning/sprints" ]; then
+  echo "ERROR: sprints/ still exists after cleanup!"
   exit 1
 fi
 ```
@@ -122,8 +122,8 @@ This prevents stale duplicates from remaining after milestone completion. The `r
 
 Updates project files:
 
-**ROADMAP.md**: Marks all phases as COMPLETED with completion date
-**STATE.md**: Resets for next milestone, adds milestone completion marker
+**PROJECT-PLAN.md**: Marks all sprints as COMPLETED with completion date
+**PROJECT-STATUS.md**: Resets for next milestone, adds milestone completion marker
 **PROJECT.md**: Adds "Previous Milestones" section
 
 ### 6. Generate Milestone Summary
@@ -139,29 +139,29 @@ Creates `.planning/milestones/v1.0.0/MILESTONE-SUMMARY.md`:
 ## Completed Use Cases
 
 ### Summary Level
-- UC-S-001: User Management System
+- UC-OBJ-001: User Management System
 
-### User-Goal Level
-- UC-UG-001: User Registration
-- UC-UG-002: User Login
-- UC-UG-003: Profile Management
+### Epic Level
+- UC-EP-001: User Registration
+- UC-EP-002: User Login
+- UC-EP-003: Profile Management
 
-### Subfunctions
-- UC-SF-001 through UC-SF-025 (25 total)
+### Tasks
+- UC-TK-001 through UC-TK-025 (25 total)
 
-## Phases Completed
+## Sprints Completed
 
-### Phase 01: Foundation (2026-01-15 - 2026-01-18)
+### Sprint 01: Foundation (2026-01-15 - 2026-01-18)
 - Database schema
 - Project structure
 - Core utilities
 
-### Phase 02: User Authentication (2026-01-19 - 2026-01-23)
+### Sprint 02: User Authentication (2026-01-19 - 2026-01-23)
 - Registration flow
 - Login/logout
 - Session management
 
-### Phase 03: User Profile (2026-01-24 - 2026-01-27)
+### Sprint 03: User Profile (2026-01-24 - 2026-01-27)
 - Profile viewing
 - Profile editing
 - Avatar upload
@@ -177,7 +177,7 @@ Creates `.planning/milestones/v1.0.0/MILESTONE-SUMMARY.md`:
 ## Git Commit Range
 
 First commit: abc123f - Initial project setup
-Last commit: xyz789a - Complete UC-SF-025 Avatar Upload
+Last commit: xyz789a - Complete UC-TK-025 Avatar Upload
 
 ## Known Issues / Limitations
 
@@ -198,7 +198,7 @@ Run `/esf:new-milestone` to start next version.
 VALIDATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ All phases verified (3/3)
+✅ All sprints verified (3/3)
 ✅ No uncommitted changes
 ✅ All use cases implemented (12/12)
 ✅ Git repository clean
@@ -217,8 +217,8 @@ ARCHIVING MILESTONE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📦 Archived:
-   - 3 phases
-   - 12 use cases (25 subfunctions)
+   - 3 sprints
+   - 12 use cases (25 tasks)
    - 47 commits
    - 23 files changed
 
@@ -228,8 +228,8 @@ ARCHIVING MILESTONE
 UPDATING DOCUMENTATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Updated ROADMAP.md (phases marked complete)
-✅ Updated STATE.md (reset for v2)
+✅ Updated PROJECT-PLAN.md (sprints marked complete)
+✅ Updated PROJECT-STATUS.md (reset for v2)
 ✅ Updated PROJECT.md (added milestone history)
 ✅ Generated MILESTONE-SUMMARY.md
 
@@ -256,12 +256,12 @@ Issues Found:
    ❌ Uncommitted changes in 2 files:
       - src/auth.ts
       - tests/auth.test.ts
-   ⚠️  Phase 03 verification not run
-   ⚠️  1 use case not implemented: UC-UG-004
+   ⚠️  Sprint 03 verification not run
+   ⚠️  1 use case not implemented: UC-EP-004
 
 Recommendations:
    1. Commit pending changes: git add . && git commit -m "message"
-   2. Run verification: /esf:verify-phase 3
+   2. Run verification: /esf:verify-sprint 3
    3. Review completeness: /esf:audit-milestone
 
 After resolving issues, run:
@@ -270,9 +270,9 @@ After resolving issues, run:
 
 ## Notes
 
-- **Archive & Cleanup:** After successful archiving, `phases/` is deleted completely (including untracked files like screenshots) via `rm -rf`. The archived copy in `milestones/vX.Y.Z/` is the historical reference.
+- **Archive & Cleanup:** After successful archiving, `sprints/` is deleted completely (including untracked files like screenshots) via `rm -rf`. The archived copy in `milestones/vX.Y.Z/` is the historical reference.
 - **Git Tag:** Annotated tag includes full milestone summary
-- **Atomic Operation:** If archiving fails, `phases/` is NOT deleted and git tag is not created (unless `--tag-only`)
+- **Atomic Operation:** If archiving fails, `sprints/` is NOT deleted and git tag is not created (unless `--tag-only`)
 - **Reversible:** Can delete tag and archive if needed
 - **State Preservation:** Original PROJECT.md and actors are preserved for continuity
 
@@ -284,8 +284,8 @@ After resolving issues, run:
 
 ## Files Modified
 
-- `.planning/ROADMAP.md` - Phases marked as completed
-- `.planning/STATE.md` - Reset for next milestone
+- `.planning/PROJECT-PLAN.md` - Sprints marked as completed
+- `.planning/PROJECT-STATUS.md` - Reset for next milestone
 - `.planning/PROJECT.md` - Milestone history added
 
 ## Files Created
@@ -301,15 +301,15 @@ This command should:
 1. Run validation checks (similar to `/esf:audit-milestone`)
 2. Prompt for version if not provided
 3. Create milestone archive directory structure
-4. Copy phase directories and use cases to archive
-5. Clean up working directories (delete `phases/` after successful archive)
+4. Copy sprint directories and use cases to archive
+5. Clean up working directories (delete `sprints/` after successful archive)
 6. Generate MILESTONE-SUMMARY.md with statistics
 7. Create annotated git tag with meaningful message
-8. Update ROADMAP.md, STATE.md, PROJECT.md
+8. Update PROJECT-PLAN.md, PROJECT-STATUS.md, PROJECT.md
 9. Report success with next steps
 
 The implementation should be careful about:
 - **Validation before modification:** Check everything first
-- **Atomic operations:** If archiving fails, don't delete phases/ or create tag
-- **Archive then cleanup:** Copy phases to archive first, delete working directory only after successful copy
+- **Atomic operations:** If archiving fails, don't delete sprints/ or create tag
+- **Archive then cleanup:** Copy sprints to archive first, delete working directory only after successful copy
 - **Git tag format:** Use semantic versioning (vX.Y.Z)

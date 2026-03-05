@@ -20,14 +20,14 @@ None - this is a read-only diagnostic command
 ## Usage
 
 ```bash
-/esf:audit-milestone [--detailed] [--output FILE] [--phase N]
+/esf:audit-milestone [--detailed] [--output FILE] [--sprint N]
 ```
 
 ### Flags
 
 - `--detailed`: Include verbose output with file paths and commit references
 - `--output FILE`: Save report to file (default: display only)
-- `--phase N`: Audit specific phase only
+- `--sprint N`: Audit specific sprint only
 
 ## What This Command Checks
 
@@ -36,24 +36,24 @@ None - this is a read-only diagnostic command
 Checks all use cases are implemented:
 
 ```
-✓ Summary-level use cases: 2/2 (100%)
-✓ User-goal-level use cases: 8/8 (100%)
-✓ Subfunction-level use cases: 25/25 (100%)
+✓ Objectives use cases: 2/2 (100%)
+✓ Epic-level use cases: 8/8 (100%)
+✓ Task-level use cases: 25/25 (100%)
 ```
 
 Identifies:
 - Use cases without implementation
 - Use cases with failed verification
-- Orphaned subfunctions (no parent user-goal)
+- Orphaned tasks (no parent epic)
 
 ### 2. Scenario Verification
 
 Checks all scenarios have passed:
 
 ```
-✓ UC-UG-001: User Registration (3 scenarios) - PASSED
-✓ UC-UG-002: User Login (4 scenarios) - PASSED
-⚠ UC-UG-003: Profile Update (2 scenarios) - NOT VERIFIED
+✓ UC-EP-001: User Registration (3 scenarios) - PASSED
+✓ UC-EP-002: User Login (4 scenarios) - PASSED
+⚠ UC-EP-003: Profile Update (2 scenarios) - NOT VERIFIED
 ```
 
 Identifies:
@@ -61,20 +61,20 @@ Identifies:
 - Scenarios with failed verification
 - Missing verification reports
 
-### 3. Phase Completion
+### 3. Sprint Completion
 
-Checks all phases are complete:
+Checks all sprints are complete:
 
 ```
-✓ Phase 01: Foundation - COMPLETE
-✓ Phase 02: User Authentication - COMPLETE
-⚠ Phase 03: User Profile - VERIFICATION PENDING
+✓ Sprint 01: Foundation - COMPLETE
+✓ Sprint 02: User Authentication - COMPLETE
+⚠ Sprint 03: User Profile - VERIFICATION PENDING
 ```
 
 Identifies:
-- Phases without verification
-- Phases with incomplete plans
-- Phases with failed scenarios
+- Sprints without verification
+- Sprints with incomplete plans
+- Sprints with failed scenarios
 
 ### 4. Git Status
 
@@ -99,13 +99,13 @@ Validates all commits reference use cases:
 ```
 ✓ 47 commits total
 ✓ 47 commits reference use cases (100%)
-✓ All subfunctions have commits
+✓ All tasks have commits
 ```
 
 Identifies:
 - Commits without use case references
 - Commits missing "Implements:" field
-- Subfunctions without corresponding commits
+- Tasks without corresponding commits
 
 ### 6. Documentation Completeness
 
@@ -113,16 +113,16 @@ Checks required documentation exists:
 
 ```
 ✓ PROJECT.md exists and valid
-✓ ROADMAP.md exists and valid
-✓ STATE.md exists and current
-✓ All phases have CONTEXT.md
-✓ All phases have SUMMARY.md
-✓ All phases have VERIFICATION.md
+✓ PROJECT-PLAN.md exists and valid
+✓ PROJECT-STATUS.md exists and current
+✓ All sprints have CONTEXT.md
+✓ All sprints have SUMMARY.md
+✓ All sprints have VERIFICATION.md
 ```
 
 Identifies:
 - Missing documentation files
-- Incomplete phase documentation
+- Incomplete sprint documentation
 - Outdated files
 
 ## Output Example (All Pass)
@@ -138,9 +138,9 @@ Status: READY ✅
 USE CASE COVERAGE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Summary-level: 2/2 (100%)
-✅ User-goal-level: 8/8 (100%)
-✅ Subfunction-level: 25/25 (100%)
+✅ Objectives: 2/2 (100%)
+✅ Epic-level: 8/8 (100%)
+✅ Task-level: 25/25 (100%)
 
 All use cases implemented.
 
@@ -152,21 +152,21 @@ SCENARIO VERIFICATION
 ✅ All scenarios passed verification
 
 Scenarios by use case:
-   ✅ UC-UG-001: User Registration (3 scenarios)
-   ✅ UC-UG-002: User Login (4 scenarios)
-   ✅ UC-UG-003: Profile Viewing (2 scenarios)
-   ✅ UC-UG-004: Profile Editing (3 scenarios)
+   ✅ UC-EP-001: User Registration (3 scenarios)
+   ✅ UC-EP-002: User Login (4 scenarios)
+   ✅ UC-EP-003: Profile Viewing (2 scenarios)
+   ✅ UC-EP-004: Profile Editing (3 scenarios)
    [... 4 more ...]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE COMPLETION
+SPRINT COMPLETION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Phase 01: Foundation - COMPLETE
-✅ Phase 02: User Authentication - COMPLETE
-✅ Phase 03: User Profile - COMPLETE
+✅ Sprint 01: Foundation - COMPLETE
+✅ Sprint 02: User Authentication - COMPLETE
+✅ Sprint 03: User Profile - COMPLETE
 
-All 3 phases complete.
+All 3 sprints complete.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 GIT STATUS
@@ -184,7 +184,7 @@ COMMIT TRACEABILITY
 
 ✅ Total commits: 47
 ✅ Commits with use case refs: 47 (100%)
-✅ All subfunctions have commits
+✅ All tasks have commits
 ✅ Traceability complete
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -192,11 +192,11 @@ DOCUMENTATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ PROJECT.md exists and valid
-✅ ROADMAP.md exists and valid
-✅ STATE.md exists and current
-✅ All phases have CONTEXT.md (3/3)
-✅ All phases have SUMMARY.md (3/3)
-✅ All phases have VERIFICATION.md (3/3)
+✅ PROJECT-PLAN.md exists and valid
+✅ PROJECT-STATUS.md exists and current
+✅ All sprints have CONTEXT.md (3/3)
+✅ All sprints have SUMMARY.md (3/3)
+✅ All sprints have VERIFICATION.md (3/3)
 
 Documentation complete.
 
@@ -229,14 +229,14 @@ Status: NOT READY ⚠️
 USE CASE COVERAGE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Summary-level: 2/2 (100%)
-⚠️  User-goal-level: 7/8 (88%)
-⚠️  Subfunction-level: 23/25 (92%)
+✅ Objectives: 2/2 (100%)
+⚠️  Epic-level: 7/8 (88%)
+⚠️  Task-level: 23/25 (92%)
 
 Missing implementations:
-   ❌ UC-UG-004: Profile Deletion (not implemented)
-   ❌ UC-SF-024: Delete User API (no commit found)
-   ❌ UC-SF-025: Delete Confirmation UI (no commit found)
+   ❌ UC-EP-004: Profile Deletion (not implemented)
+   ❌ UC-TK-024: Delete User API (no commit found)
+   ❌ UC-TK-025: Delete Confirmation UI (no commit found)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SCENARIO VERIFICATION
@@ -246,18 +246,18 @@ SCENARIO VERIFICATION
 ❌ 3 scenarios not verified
 
 Not verified:
-   ❌ UC-UG-003: Profile Update (2 scenarios) - NO VERIFICATION FILE
-   ❌ UC-UG-004: Profile Deletion (3 scenarios) - NOT IMPLEMENTED
+   ❌ UC-EP-003: Profile Update (2 scenarios) - NO VERIFICATION FILE
+   ❌ UC-EP-004: Profile Deletion (3 scenarios) - NOT IMPLEMENTED
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PHASE COMPLETION
+SPRINT COMPLETION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✅ Phase 01: Foundation - COMPLETE
-✅ Phase 02: User Authentication - COMPLETE
-❌ Phase 03: User Profile - INCOMPLETE
+✅ Sprint 01: Foundation - COMPLETE
+✅ Sprint 02: User Authentication - COMPLETE
+❌ Sprint 03: User Profile - INCOMPLETE
 
-Phase 03 issues:
+Sprint 03 issues:
    - Plan 03-02 not executed (Profile Deletion)
    - Verification report missing
 
@@ -288,11 +288,11 @@ DOCUMENTATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ PROJECT.md exists and valid
-✅ ROADMAP.md exists and valid
-✅ STATE.md exists and current
-✅ All phases have CONTEXT.md (3/3)
-⚠️  Phase 03 missing SUMMARY.md for plan 03-02
-❌ Phase 03 missing VERIFICATION.md
+✅ PROJECT-PLAN.md exists and valid
+✅ PROJECT-STATUS.md exists and current
+✅ All sprints have CONTEXT.md (3/3)
+⚠️  Sprint 03 missing SUMMARY.md for plan 03-02
+❌ Sprint 03 missing VERIFICATION.md
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SUMMARY
@@ -308,30 +308,30 @@ Overall Status: NOT READY ⚠️
 BLOCKERS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. ❌ Use Case Not Implemented: UC-UG-004
+1. ❌ Use Case Not Implemented: UC-EP-004
    Problem: Profile Deletion feature not implemented
-   Fix: Execute phase 03 plan 03-02
-   Command: /esf:execute-phase 3 --plan 03-02
+   Fix: Execute sprint 03 plan 03-02
+   Command: /esf:execute-sprint 3 --plan 03-02
 
-2. ❌ Missing Subfunctions: UC-SF-024, UC-SF-025
-   Problem: Subfunctions have no corresponding commits
+2. ❌ Missing Tasks: UC-TK-024, UC-TK-025
+   Problem: Tasks have no corresponding commits
    Fix: Implement or remove from use case hierarchy
-   Files: .planning/use-cases/subfunction/UC-SF-024.md, UC-SF-025.md
+   Files: .planning/use-cases/task/UC-TK-024.md, UC-TK-025.md
 
 3. ❌ Uncommitted Changes
    Problem: 2 files modified but not committed
    Fix: Commit changes or discard
    Command: git add . && git commit -m "message"
 
-4. ❌ Verification Missing: UC-UG-003
+4. ❌ Verification Missing: UC-EP-003
    Problem: Profile Update scenarios not verified
-   Fix: Run verification for phase 03
-   Command: /esf:verify-phase 3
+   Fix: Run verification for sprint 03
+   Command: /esf:verify-sprint 3
 
 5. ❌ Documentation Missing
-   Problem: Phase 03 missing VERIFICATION.md
+   Problem: Sprint 03 missing VERIFICATION.md
    Fix: Run verification to generate report
-   Command: /esf:verify-phase 3
+   Command: /esf:verify-sprint 3
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 WARNINGS
@@ -344,11 +344,11 @@ WARNINGS
 
 2. ⚠️  Missing Use Case References
    Problem: 3 commits don't reference use cases
-   Fix: Document in STATE.md or amend commits
+   Fix: Document in PROJECT-STATUS.md or amend commits
    Commits: abc123f, def456g, ghi789h
 
 3. ⚠️  Missing SUMMARY.md
-   Problem: Phase 03 plan 03-02 has no summary
+   Problem: Sprint 03 plan 03-02 has no summary
    Fix: Will be generated after execution
    Note: Not a blocker if plan not yet executed
 
@@ -357,13 +357,13 @@ RECOMMENDED ACTIONS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Priority 1 (Blockers):
-   1. Execute plan: /esf:execute-phase 3 --plan 03-02
+   1. Execute plan: /esf:execute-sprint 3 --plan 03-02
    2. Commit changes: git add . && git commit -m "feat(03-02): complete profile editing"
-   3. Verify phase: /esf:verify-phase 3
+   3. Verify sprint: /esf:verify-sprint 3
 
 Priority 2 (Warnings):
    4. Push commits: git push origin main
-   5. Document non-UC commits in STATE.md
+   5. Document non-UC commits in PROJECT-STATUS.md
 
 After completing actions, run:
    /esf:audit-milestone
@@ -386,12 +386,12 @@ Commits without use case references:
 1. abc123f - "fix typo in login form"
    Date: 2026-01-25 14:23
    Files: src/components/LoginForm.tsx
-   Note: Minor fix, consider adding "Fixes: UC-SF-007" reference
+   Note: Minor fix, consider adding "Fixes: UC-TK-007" reference
 
 2. def456g - "update dependencies"
    Date: 2026-01-26 10:15
    Files: package.json, package-lock.json
-   Note: Maintenance commit, document in STATE.md
+   Note: Maintenance commit, document in PROJECT-STATUS.md
 
 3. ghi789h - "refactor auth service"
    Date: 2026-01-27 09:30
@@ -402,7 +402,7 @@ Commits without use case references:
 SUBFUNCTION COMMIT MAPPING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[Lists each subfunction with its corresponding commit]
+[Lists each task with its corresponding commit]
 ```
 
 ## Output to File
@@ -423,20 +423,20 @@ View report:
    cat audit-report.md
 ```
 
-## Phase-Specific Audit
+## Sprint-Specific Audit
 
 ```bash
-/esf:audit-milestone --phase 3
+/esf:audit-milestone --sprint 3
 ```
 
-Audits only Phase 03 (faster for checking specific phase).
+Audits only Sprint 03 (faster for checking specific sprint).
 
 ## Related Commands
 
 - `/esf:complete-milestone` - Complete milestone (run after audit passes)
 - `/esf:progress` - Simpler progress overview
 - `/esf:debug` - General framework diagnostics
-- `/esf:verify-phase N` - Run verification for specific phase
+- `/esf:verify-sprint N` - Run verification for specific sprint
 
 ## Exit Codes
 
@@ -454,7 +454,7 @@ This command should:
 3. **Analyze git status** - Check for uncommitted/unpushed changes
 4. **Parse git log** - Verify all commits reference use cases
 5. **Check documentation** - Ensure all required files exist
-6. **Validate phase structure** - Check each phase has required files
+6. **Validate sprint structure** - Check each sprint has required files
 7. **Generate prioritized recommendations** - Sort by severity (blockers vs warnings)
 8. **Provide clear action items** - Include exact commands to resolve issues
 

@@ -1,16 +1,16 @@
 import React, { ReactNode } from 'react';
 import type { StageName, CompletedStage, ActivityEntry } from '../types/events.js';
-import type { AutopilotConfig, AutopilotState, PhaseInfo, PhaseResult } from '../types/config.js';
+import type { AutopilotConfig, AutopilotState, SprintInfo, SprintResult } from '../types/config.js';
 /**
  * Autopilot UI State
  */
 export interface AutopilotUIState {
     config: AutopilotConfig | null;
     mode: AutopilotState['mode'];
-    currentPhase: number | null;
-    phaseInfo: PhaseInfo | null;
-    totalPhases: number;
-    phasesCompleted: number[];
+    currentSprint: number | null;
+    sprintInfo: SprintInfo | null;
+    totalSprints: number;
+    sprintsCompleted: number[];
     currentStage: StageName | null;
     stageDescription: string;
     stageStartTime: Date | null;
@@ -29,15 +29,15 @@ export interface AutopilotUIState {
 export type AutopilotAction = {
     type: 'INIT';
     config: AutopilotConfig;
-    totalPhases: number;
+    totalSprints: number;
 } | {
-    type: 'START_PHASE';
-    phase: number;
-    phaseInfo: PhaseInfo;
+    type: 'START_SPRINT';
+    sprint: number;
+    sprintInfo: SprintInfo;
 } | {
-    type: 'COMPLETE_PHASE';
-    phase: number;
-    result: PhaseResult;
+    type: 'COMPLETE_SPRINT';
+    sprint: number;
+    result: SprintResult;
 } | {
     type: 'SET_STAGE';
     stage: StageName;
@@ -71,9 +71,9 @@ export type AutopilotAction = {
 interface AutopilotContextType {
     state: AutopilotUIState;
     dispatch: React.Dispatch<AutopilotAction>;
-    init: (config: AutopilotConfig, totalPhases: number) => void;
-    startPhase: (phase: number, phaseInfo: PhaseInfo) => void;
-    completePhase: (phase: number, result: PhaseResult) => void;
+    init: (config: AutopilotConfig, totalSprints: number) => void;
+    startSprint: (sprint: number, sprintInfo: SprintInfo) => void;
+    completeSprint: (sprint: number, result: SprintResult) => void;
     setStage: (stage: StageName, description: string) => void;
     completeStage: () => void;
     addActivity: (activity: ActivityEntry) => void;

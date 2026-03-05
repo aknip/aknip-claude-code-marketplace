@@ -30,7 +30,7 @@ Initialize a new project using use case driven methodology. Gathers project cont
 
 <process>
 
-## Phase 1: Setup
+## Sprint 1: Setup
 
 **MANDATORY FIRST STEP — Execute these checks before ANY user interaction:**
 
@@ -56,7 +56,7 @@ Initialize a new project using use case driven methodology. Gathers project cont
    HAS_CODEBASE_MAP=$([ -d .planning/codebase ] && echo "yes")
    ```
 
-## Phase 2: Brownfield Offer
+## Sprint 2: Brownfield Offer
 
 **If existing code detected and .planning/codebase/ doesn't exist:**
 
@@ -69,7 +69,7 @@ Use AskUserQuestion:
 
 **If "Map codebase first":** Run `/gsd:map-codebase` first, then return.
 
-## Phase 3: Deep Questioning
+## Sprint 3: Deep Questioning
 
 **Display stage banner:**
 
@@ -109,7 +109,7 @@ Use AskUserQuestion:
   - "Create PROJECT.md" — Let's move forward
   - "Keep exploring" — I want to share more
 
-## Phase 4: Write PROJECT.md
+## Sprint 4: Write PROJECT.md
 
 Synthesize context into `.planning/PROJECT.md`.
 
@@ -132,7 +132,7 @@ git add .planning/PROJECT.md
 git commit -m "docs: initialize project with actor identification"
 ```
 
-## Phase 5: Workflow Preferences
+## Sprint 5: Workflow Preferences
 
 Same as /gsd:new-project but with use case specific options:
 
@@ -170,7 +170,7 @@ Create `.planning/config.json` with use case settings:
   },
   "use_case": {
     "template_version": "1.0",
-    "auto_subfunction": true,
+    "auto_tasks": true,
     "verify_scenarios": true,
     "browser_test_ui": true,
     "acceptance_format": "gherkin"
@@ -208,7 +208,7 @@ mkdir -p .planning/milestones
 mkdir -p .planning/sessions
 ```
 
-## Phase 6: Done
+## Sprint 6: Done
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

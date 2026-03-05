@@ -34,7 +34,7 @@ export function ProgressBar({
       {showCount && (
         <Text>
           {' '}
-          {completed}/{total} phases
+          {completed}/{total} sprints
         </Text>
       )}
     </Box>

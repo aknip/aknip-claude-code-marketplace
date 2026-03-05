@@ -10,18 +10,18 @@ allowed-tools:
 
 <objective>
 
-Extract business capabilities as Summary-Level use cases, decompose to User-Goal use cases, and create a use case driven roadmap.
+Extract business capabilities as Objectives use cases, decompose to Epic use cases, and create a use case driven roadmap.
 
 **Requires:** `.planning/PROJECT.md` and `.planning/config.json` (created by `/esf:new-project`)
 
 **Creates:**
-- `.planning/use-cases/summary/` — Summary-Level use cases
-- `.planning/use-cases/user-goal/` — User-Goal use cases
+- `.planning/use-cases/summary/` — Objectives use cases
+- `.planning/use-cases/epic/` — Epic use cases
 - `.planning/use-cases/index.md` — traceability index
-- `.planning/ROADMAP.md` — use case driven roadmap
-- `.planning/STATE.md` — use case progress tracking
+- `.planning/PROJECT-PLAN.md` — use case driven roadmap
+- `.planning/PROJECT-STATUS.md` — use case progress tracking
 
-**After this command:** Run `/esf:plan-phase 1` to start execution.
+**After this command:** Run `/esf:plan-sprint 1` to start execution.
 
 </objective>
 
@@ -37,7 +37,7 @@ Extract business capabilities as Summary-Level use cases, decompose to User-Goal
 
 <process>
 
-## Phase 1: Prerequisites Check
+## Sprint 1: Prerequisites Check
 
 **MANDATORY FIRST STEP — Execute these checks before ANY further processing:**
 
@@ -61,7 +61,7 @@ Extract business capabilities as Summary-Level use cases, decompose to User-Goal
 
 4. **Check for exploration context (optional):**
    ```bash
-   if [ -f .planning/scenarios/final/FINAL-SCENARIO.md ]; then
+   if [ -f .planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md ]; then
      echo "Finales Exploration-Szenario gefunden — wird als zusätzlicher Kontext verwendet"
    fi
    ```
@@ -72,7 +72,7 @@ Extract business capabilities as Summary-Level use cases, decompose to User-Goal
    cat .planning/config.json
    ```
 
-## Phase 2: Use Case Analysis
+## Sprint 2: Use Case Analysis
 
 **Display stage banner:**
 
@@ -87,18 +87,18 @@ Extract business capabilities as Summary-Level use cases, decompose to User-Goal
 Create use-cases directory structure:
 
 ```bash
-mkdir -p .planning/use-cases/{summary,user-goal,subfunction}
+mkdir -p .planning/use-cases/{summary,epic,task}
 mkdir -p .planning/milestones
 mkdir -p .planning/sessions
 touch .planning/use-cases/.gitkeep
 touch .planning/use-cases/summary/.gitkeep
-touch .planning/use-cases/user-goal/.gitkeep
-touch .planning/use-cases/subfunction/.gitkeep
+touch .planning/use-cases/epic/.gitkeep
+touch .planning/use-cases/task/.gitkeep
 ```
 
 Spawn uc-analyst agent:
 
-**If `.planning/scenarios/final/FINAL-SCENARIO.md` exists**, include it as exploration context:
+**If `.planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md` exists**, include it as exploration context:
 
 ```
 Task(prompt="
@@ -113,25 +113,25 @@ Extract and structure use cases from this project.
 </project_context>
 
 <exploration_context>
-@.planning/scenarios/final/FINAL-SCENARIO.md
+@.planning/feature-scenarios/final/FINAL-FEATURE-SCENARIO.md
 Use the exploration scenario as additional input:
-- Proposed User-Goal Use Cases (UG-E-XXX) as starting point
+- Proposed Epic Use Cases (UG-E-XXX) as starting point
 - Feature list for prioritization
-- Suggested roadmap phases as orientation
+- Suggested roadmap sprints as orientation
 - UI concepts for scenario descriptions
-Note: UG-E IDs will be mapped to official UC-UG-XXX IDs.
+Note: UG-E IDs will be mapped to official UC-EP-XXX IDs.
 Not all UG-E entries must be adopted 1:1 — you may merge, split, or supplement.
 </exploration_context>
 
 <templates>
-Summary-Level: @.planning/templates/UC-SUMMARY.md
-User-Goal-Level: @.planning/templates/UC-USER-GOAL.md
+Objectives: @.planning/templates/UC-SUMMARY.md
+Epic-Level: @.planning/templates/UC-USER-GOAL.md
 Index: @.planning/templates/UC-INDEX.md
 </templates>
 
 <output>
-1. Create Summary-Level use cases in .planning/use-cases/summary/
-2. Create User-Goal-Level use cases in .planning/use-cases/user-goal/
+1. Create Objectives use cases in .planning/use-cases/summary/
+2. Create Epic-Level use cases in .planning/use-cases/epic/
 3. Create index.md in .planning/use-cases/
 4. Commit all use case documents
 5. Return USE CASE ANALYSIS COMPLETE with hierarchy
@@ -154,14 +154,14 @@ Extract and structure use cases from this project.
 </project_context>
 
 <templates>
-Summary-Level: @.planning/templates/UC-SUMMARY.md
-User-Goal-Level: @.planning/templates/UC-USER-GOAL.md
+Objectives: @.planning/templates/UC-SUMMARY.md
+Epic-Level: @.planning/templates/UC-USER-GOAL.md
 Index: @.planning/templates/UC-INDEX.md
 </templates>
 
 <output>
-1. Create Summary-Level use cases in .planning/use-cases/summary/
-2. Create User-Goal-Level use cases in .planning/use-cases/user-goal/
+1. Create Objectives use cases in .planning/use-cases/summary/
+2. Create Epic-Level use cases in .planning/use-cases/epic/
 3. Create index.md in .planning/use-cases/
 4. Commit all use case documents
 5. Return USE CASE ANALYSIS COMPLETE with hierarchy
@@ -178,14 +178,14 @@ Index: @.planning/templates/UC-INDEX.md
 
 ## Use Case Hierarchy
 
-**UC-S-001: [Summary Name]**
-├── UC-UG-001: [User-Goal] [Must]
-├── UC-UG-002: [User-Goal] [Should]
-└── UC-UG-003: [User-Goal] [Could]
+**UC-OBJ-001: [Summary Name]**
+├── UC-EP-001: [Epic] [Must]
+├── UC-EP-002: [Epic] [Should]
+└── UC-EP-003: [Epic] [Could]
 
-**UC-S-002: [Summary Name]**
-├── UC-UG-004: [User-Goal] [Must]
-└── UC-UG-005: [User-Goal] [Should]
+**UC-OBJ-002: [Summary Name]**
+├── UC-EP-004: [Epic] [Must]
+└── UC-EP-005: [Epic] [Should]
 ```
 
 Use AskUserQuestion:
@@ -195,7 +195,7 @@ Use AskUserQuestion:
   - "Approve" — Continue to roadmap
   - "Adjust" — Tell me what to change
 
-## Phase 3: Create Roadmap
+## Sprint 3: Create Roadmap
 
 **Display stage banner:**
 
@@ -227,10 +227,10 @@ Create roadmap from use case hierarchy.
 </project_context>
 
 <output>
-1. Create .planning/ROADMAP.md with phases derived from use cases
-2. Create/update .planning/STATE.md with use case tracking
-3. Update User-Goal use cases with phase assignments
-4. Update index.md with phase mapping
+1. Create .planning/PROJECT-PLAN.md with sprints derived from use cases
+2. Create/update .planning/PROJECT-STATUS.md with use case tracking
+3. Update Epic use cases with sprint assignments
+4. Update index.md with sprint mapping
 5. Commit all artifacts
 6. Return ROADMAP CREATED with summary
 </output>
@@ -242,10 +242,10 @@ Create roadmap from use case hierarchy.
 ```
 ## Proposed Roadmap
 
-| Phase | Goal | Use Cases | Priority |
+| Sprint | Goal | Use Cases | Priority |
 |-------|------|-----------|----------|
-| 1 | [Goal] | UC-UG-001, UC-UG-002 | Must |
-| 2 | [Goal] | UC-UG-003 | Should |
+| 1 | [Goal] | UC-EP-001, UC-EP-002 | Must |
+| 2 | [Goal] | UC-EP-003 | Should |
 ```
 
 Use AskUserQuestion for approval:
@@ -255,7 +255,7 @@ Use AskUserQuestion for approval:
   - "Approve" — Commit and continue
   - "Adjust" — Tell me what to change
 
-## Phase 4: Done
+## Sprint 4: Done
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -269,9 +269,9 @@ Use AskUserQuestion for approval:
 | Project        | `.planning/PROJECT.md`      |
 | Use Cases      | `.planning/use-cases/`      |
 | Index          | `.planning/use-cases/index.md` |
-| Roadmap        | `.planning/ROADMAP.md`      |
+| Roadmap        | `.planning/PROJECT-PLAN.md`      |
 
-**[N] phases** | **[X] use cases** | **v1.0.0** | Ready to build ✓
+**[N] sprints** | **[X] use cases** | **v1.0.0** | Ready to build ✓
 
 **Milestone tracking initialized**
 - Version: v1.0.0
@@ -282,16 +282,16 @@ Use AskUserQuestion for approval:
 
 ## ▶ Next Up
 
-**Phase 1: [Phase Name]** — [Goal]
+**Sprint 1: [Sprint Name]** — [Goal]
 
-`/esf:plan-phase 1`
+`/esf:plan-sprint 1`
 
 <sub>`/clear` first → fresh context window</sub>
 
 ───────────────────────────────────────────────────────
 
 **Also available:**
-- `/esf:discuss-phase 1` — gather context through discussion before planning
+- `/esf:discuss-sprint 1` — gather context through discussion before planning
 - `/esf:progress` — view use case completion status
 - `/esf:help` — show all available commands
 
@@ -303,14 +303,14 @@ Use AskUserQuestion for approval:
 <success_criteria>
 
 - [ ] Prerequisites verified (PROJECT.md, config.json exist)
-- [ ] Exploration context detected and passed to uc-analyst (if FINAL-SCENARIO.md exists)
+- [ ] Exploration context detected and passed to uc-analyst (if FINAL-FEATURE-SCENARIO.md exists)
 - [ ] uc-analyst spawned and completed
-- [ ] Summary-Level use cases created
-- [ ] User-Goal use cases created
+- [ ] Objectives use cases created
+- [ ] Epic use cases created
 - [ ] index.md with traceability → committed
 - [ ] uc-modeler spawned and completed
-- [ ] ROADMAP.md with use case mapping → committed
-- [ ] STATE.md with use case tracking → committed
-- [ ] User knows next step is `/esf:plan-phase 1`
+- [ ] PROJECT-PLAN.md with use case mapping → committed
+- [ ] PROJECT-STATUS.md with use case tracking → committed
+- [ ] User knows next step is `/esf:plan-sprint 1`
 
 </success_criteria>

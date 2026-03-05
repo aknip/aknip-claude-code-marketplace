@@ -39,7 +39,7 @@ Resume work from a paused session. Loads captured context, displays current stat
 
 Shows available paused sessions:
 - Session ID and timestamp
-- Phase and task
+- Sprint and task
 - Tag and message
 - Time since pause
 
@@ -71,7 +71,7 @@ Shows detailed session info:
 ### 5. Optional: Continue Work
 
 With `--continue` flag, automatically:
-- Updates STATE.md (remove PAUSED marker)
+- Updates PROJECT-STATUS.md (remove PAUSED marker)
 - Sets up for continuation
 - Executes first recommended command (if safe)
 
@@ -89,20 +89,20 @@ RECENT SESSIONS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1️⃣  20260127_163045 (2 hours ago) ⭐ Most Recent
-   Phase: 02-user-authentication (67% complete)
-   Task: UC-SF-007 Login Form Component
+   Sprint: 02-user-authentication (67% complete)
+   Task: UC-TK-007 Login Form Component
    Tag: eod
    Message: End of day
 
 2️⃣  20260127_090030 (9 hours ago)
-   Phase: 02-user-authentication (50% complete)
-   Task: UC-SF-005 Login Endpoint
+   Sprint: 02-user-authentication (50% complete)
+   Task: UC-TK-005 Login Endpoint
    Tag: coffee-break
    Message: Quick break
 
 3️⃣  20260126_170015 (1 day ago)
-   Phase: 01-foundation (100% complete)
-   Task: Phase complete, ready for phase 2
+   Sprint: 01-foundation (100% complete)
+   Task: Sprint complete, ready for sprint 2
    Tag: end-of-day
    Message: Foundation complete, starting auth tomorrow
 
@@ -138,27 +138,27 @@ Message: End of day
 WORK CONTEXT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Phase: 02-user-authentication
+Sprint: 02-user-authentication
 Plan: 02-01-PLAN.md (Login & Session Management)
-Task: UC-SF-007 Login Form Component
+Task: UC-TK-007 Login Form Component
 Model Profile: balanced
 
-Progress: 6/9 subfunctions (67% complete)
+Progress: 6/9 tasks (67% complete)
 
 Completed:
-   ✅ UC-SF-001: Database schema
-   ✅ UC-SF-002: User model
-   ✅ UC-SF-003: Password hashing
-   ✅ UC-SF-004: Session middleware
-   ✅ UC-SF-005: Login endpoint
-   ✅ UC-SF-006: Logout endpoint
+   ✅ UC-TK-001: Database schema
+   ✅ UC-TK-002: User model
+   ✅ UC-TK-003: Password hashing
+   ✅ UC-TK-004: Session middleware
+   ✅ UC-TK-005: Login endpoint
+   ✅ UC-TK-006: Logout endpoint
 
 In Progress:
-   🔄 UC-SF-007: Login form component
+   🔄 UC-TK-007: Login form component
 
 Pending:
-   ⏳ UC-SF-008: Protected route guard
-   ⏳ UC-SF-009: Session persistence
+   ⏳ UC-TK-008: Protected route guard
+   ⏳ UC-TK-009: Session persistence
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 STATE COMPARISON
@@ -166,7 +166,7 @@ STATE COMPARISON
 
 Checking current state vs session state...
 
-✅ Git branch matches: phase-02-user-auth
+✅ Git branch matches: sprint-02-user-auth
 ✅ Last commit matches: abc123f
 ⚠️  Uncommitted changes status changed:
    At pause: src/components/LoginForm.tsx (modified)
@@ -193,21 +193,21 @@ NEXT ACTIONS
 Recommended steps:
    1. Complete LoginForm component (add validation)
    2. Write unit tests for LoginForm
-   3. Commit UC-SF-007
-   4. Start UC-SF-008 Protected Route Guard
+   3. Commit UC-TK-007
+   4. Start UC-TK-008 Protected Route Guard
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ Session Context Loaded
 
-Ready to continue work on UC-SF-007 Login Form Component.
+Ready to continue work on UC-TK-007 Login Form Component.
 
 Continue working? (y/n): y
 
 ✅ Continuing work
-✅ STATE.md updated (PAUSED marker removed)
+✅ PROJECT-STATUS.md updated (PAUSED marker removed)
 
-You can now continue implementing UC-SF-007.
+You can now continue implementing UC-TK-007.
 ```
 
 ## List Mode
@@ -230,11 +230,11 @@ DIFFERENCES FROM SESSION STATE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ❌ Git branch changed:
-   At pause: phase-02-user-auth
+   At pause: sprint-02-user-auth
    Now: main
 
 ⚠️  New commits since pause: 5 commits
-   xyz123a: feat(02-01): complete UC-SF-007 Login Form
+   xyz123a: feat(02-01): complete UC-TK-007 Login Form
    (and 4 more...)
 
 ⚠️  Uncommitted changes differ:
@@ -265,12 +265,12 @@ If on different branch:
 ```
 ⚠️  Branch Mismatch
 
-Session was on branch: phase-02-user-auth
+Session was on branch: sprint-02-user-auth
 Currently on branch: main
 
 Options:
    1. Switch back to session branch:
-      git checkout phase-02-user-auth
+      git checkout sprint-02-user-auth
 
    2. Continue on current branch (not recommended)
 
@@ -286,15 +286,15 @@ If work from session is done:
 ```
 ℹ️  Session Work Complete
 
-The task from this session (UC-SF-007) has been completed:
-   ✅ Commit found: xyz123a - feat(02-01): implement UC-SF-007
+The task from this session (UC-TK-007) has been completed:
+   ✅ Commit found: xyz123a - feat(02-01): implement UC-TK-007
 
 This session may no longer be relevant.
 
 Options:
    1. Load context anyway (for reference)
    2. Resume from different session: /esf:resume-work --list
-   3. Continue with next task (UC-SF-008)
+   3. Continue with next task (UC-TK-008)
 
 What would you like to do? [1/2/3]:
 ```
@@ -308,7 +308,7 @@ What would you like to do? [1/2/3]:
 Automatically:
 - Loads context
 - Removes PAUSED marker
-- Updates STATE.md
+- Updates PROJECT-STATUS.md
 - Displays next steps
 - Does NOT automatically execute commands (for safety)
 
@@ -318,9 +318,9 @@ Automatically:
 [... loads context ...]
 
 ✅ Session loaded and resumed automatically
-✅ STATE.md updated
+✅ PROJECT-STATUS.md updated
 
-Current task: UC-SF-007 Login Form Component
+Current task: UC-TK-007 Login Form Component
 Next action: Complete LoginForm component validation
 
 Ready to work!
@@ -384,7 +384,7 @@ If multiple sessions paused from same state:
 ℹ️  Multiple Sessions from Same Point
 
 Sessions 2 and 3 both paused from:
-   - Phase: 02-user-authentication
+   - Sprint: 02-user-authentication
    - Commit: abc123f
    - Time: within 1 hour
 
@@ -406,10 +406,10 @@ Each session shows:
 
 ```
 Session: 20260127_163045 (2 hours ago)
-├─ Phase: 02-user-authentication (67%)
-├─ Task: UC-SF-007 Login Form Component
+├─ Sprint: 02-user-authentication (67%)
+├─ Task: UC-TK-007 Login Form Component
 ├─ Tag: eod
-├─ Branch: phase-02-user-auth
+├─ Branch: sprint-02-user-auth
 ├─ Uncommitted: 1 file
 └─ Unpushed: 3 commits
 ```
@@ -422,13 +422,13 @@ Session: 20260127_163045 (2 hours ago)
 
 ## Files Modified
 
-- `.planning/STATE.md` - Remove PAUSED marker (if continuing)
+- `.planning/PROJECT-STATUS.md` - Remove PAUSED marker (if continuing)
 
 ## Files Read
 
 - `.planning/sessions/[session-id]_pause.md` - Session state
 - Current git status - For comparison
-- `.planning/STATE.md` - Current project state
+- `.planning/PROJECT-STATUS.md` - Current project state
 
 ## Implementation Details
 
@@ -440,7 +440,7 @@ This command should:
 4. **Compare states** - Detect changes since pause
 5. **Display context** - Show all relevant information clearly
 6. **Handle mismatches** - Warn about state changes, offer solutions
-7. **Optional continue** - Update STATE.md if user chooses to continue
+7. **Optional continue** - Update PROJECT-STATUS.md if user chooses to continue
 8. **Smart defaults** - Auto-select most recent if appropriate
 
 The implementation should:
