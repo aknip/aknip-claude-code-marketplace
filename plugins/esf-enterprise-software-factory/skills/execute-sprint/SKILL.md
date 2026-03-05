@@ -181,6 +181,12 @@ Execute plan ${PLAN_NUM}.
    grep -rn "TODO: Implement during execution" ${TEST_FILE}
    # MUST return 0 matches. If not: go back to step 2!
    ```
+3b. **Load Unit-Test file** from PLAN.md `<unit_tests>` section (if exists)
+3c. **Flesh out Unit-Test skeletons** with real assertions
+3d. **Run Unit-Tests (RED):** `npx vitest run <test-file>` — tests should fail
+3e. **Implement logic code** (validation, calculations, transformations)
+3f. **Run Unit-Tests (GREEN):** `npx vitest run <test-file>` — tests should pass
+3g. **If Unit-Tests FAIL → fix code, NOT test** (max 5 attempts)
 4. **Run E2E tests (RED sprint)** — tests should fail before implementation
 5. Implement each task per task specification
 6. **Run E2E tests after each task** — TDD green sprint
@@ -193,7 +199,21 @@ Execute plan ${PLAN_NUM}.
 9. Run "Agent Browser Test:" commands from PLAN.md verification section (if present)
 10. Capture screenshots as evidence in .planning/sprints/NN-*/screenshots/
 11. **Run Skeleton Gate AGAIN before commit** — `grep "TODO: Implement" ${TEST_FILE}` MUST return 0
-12. Commit atomically per task (include E2E test files!)
+11b. **Anti-Pattern Gate (run before ANY commit):**
+    ```bash
+    # Check 1: No TODO skeletons in unit tests
+    grep -rn "TODO: Implement during execution" src/**/__tests__/ 2>/dev/null
+    # MUST return 0 matches
+
+    # Check 2: No mock-behavior-only tests (heuristic)
+    grep -rn "toHaveBeenCalled\b" src/**/__tests__/ 2>/dev/null | grep -v "// verified-mock"
+    # Review any matches — are they testing mock behavior instead of real behavior?
+
+    # Check 3: No test-only methods in production code
+    grep -rn "// test-only\|// for testing\|@VisibleForTesting" src/ --include="*.ts" --include="*.tsx" 2>/dev/null
+    # MUST return 0 matches
+    ```
+12. Commit atomically per task (include E2E test files + unit test files!)
 13. **Run sprint regression:** `npx playwright test tests/e2e/v{VERSION}/sprint-{NN}/`
 14. Update task status to Implemented
 14b. **COMPLETION SELF-CHECK (MANDATORY before SUMMARY):**
@@ -205,6 +225,15 @@ Execute plan ${PLAN_NUM}.
 </output>
 
 <tdd_strategy>
+## The Iron Law
+
+> **NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.**
+> Write code before the test? Delete it. Start over.
+
+Dies gilt auf ZWEI Ebenen:
+1. **Unit-Level** (Vitest): Jede Logik-Funktion
+2. **E2E-Level** (Playwright): Jeder User-Flow (bestehend)
+
 CRITICAL: Every sub-sprint plan follows Test-Driven Development.
 
 **TDD Loop:**
@@ -588,6 +617,11 @@ Commit state update.
 - [ ] uc-executor spawned for each plan
 - [ ] Parallel execution within sub-sprints
 - [ ] **Skeleton Gate passed** — no `TODO: Implement during execution` markers remain in any test file
+- [ ] **Iron Law enforced** — kein Produktions-Code ohne fehlschlagenden Test
+- [ ] **Unit-Tests geschrieben** fuer alle Logik-Funktionen (Validation, Berechnung, Transformation)
+- [ ] **Unit-Tests in TDD-Modus** (RED → implement → GREEN)
+- [ ] **Anti-Pattern Gate passed** — keine Mock-Verhalten-Tests, keine test-only Methoden
+- [ ] **Unit-Test-Skelette ausimplementiert** — keine TODO-Marker
 - [ ] **E2E tests run in TDD mode** (RED → implement → GREEN)
 - [ ] **E2E tests contain concrete detail assertions** (exact values, counts, formats — not generic checks)
 - [ ] **Every test body has real assertions** — at least one `expect()` or `await page.` call per test

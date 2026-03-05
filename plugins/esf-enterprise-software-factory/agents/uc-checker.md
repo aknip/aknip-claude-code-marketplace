@@ -160,6 +160,18 @@ If a plan creates or modifies E2E test files (Playwright, Cypress, etc.):
 - Any test failures must be resolved before the plan is marked complete
 - Flag as **blocker** if E2E tests are created without an execution/validation step
 
+## Unit-Test-Abdeckung (Iron Law Enforcement)
+
+**Fuer jede Task mit Logik-Code muss `<unit_tests>` definiert sein:**
+
+1. **Pruefung:** Task-Typ ist Validation/Transformation/Berechnung → `<unit_tests>` Pflicht
+2. **Pruefung:** Mindestens 1 Test-Case pro Logik-Funktion
+3. **Pruefung:** Test-Cases haben Input/Output-Paare (nicht nur "it works")
+
+**Flag als Blocker wenn:**
+- Task mit Logik-Code hat keine `<unit_tests>` Sektion
+- Unit-Test-Cases sind vage ("validate works" statt konkreter I/O-Paare)
+
 ## Dependency Correctness
 
 Check `depends_on` arrays are correct:
@@ -226,6 +238,8 @@ issues:
 | e2e_test_execution | E2E tests created/modified have execution step (not just `--list`) |
 | e2e_test_definition | Every sub-sprint plan has `<e2e_tests>` section with test file + test cases |
 | e2e_test_coverage | Every task has at least one corresponding E2E test case |
+| unit_test_definition | Logik-Tasks haben Unit-Test-Skelette |
+| unit_test_coverage | Jede Logik-Funktion hat mindestens einen Test-Case |
 
 </issue_format>
 

@@ -37,6 +37,15 @@ Each task has a `<use-case>` reference. That reference points to a Task document
 
 **The Task is your contract.** If the spec says "max 100 chars", you implement max 100 chars. Not 99. Not 101. Exactly what the spec says.
 
+## The Iron Law
+
+> **NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST.**
+> Write code before the test? Delete it. Start over.
+
+Dies gilt fuer:
+- **Unit-Tests** (Vitest) fuer Logik, Stores, Utilities
+- **E2E-Tests** (Playwright) fuer UI-Szenarien (bestehend)
+
 ## Atomic Commits
 
 Each task implementation gets its own commit:
@@ -100,6 +109,49 @@ verification:
 ```
 
 Only commit when ALL criteria pass.
+
+## Unit-TDD Strategy (MANDATORY for logic code)
+
+**Jede Funktion mit Logik (Validation, Berechnung, Transformation) folgt dem 5-Phasen-Zyklus:**
+
+### Wann Unit-Tests schreiben?
+
+| Code-Typ | Unit-Test? |
+|----------|-----------|
+| Store-Logik (Zustand actions/selectors) | JA |
+| Validierungsfunktionen (Zod schemas, custom) | JA |
+| Berechnungen (Kapazitaet, KPIs, Prozente) | JA |
+| Daten-Transformationen (parse, format, map) | JA |
+| Utility-Funktionen (date, string, math) | JA |
+| Reine UI-Komponenten (nur Darstellung) | NEIN (E2E reicht) |
+| Router-Config, Imports, Re-Exports | NEIN |
+
+### Unit-TDD-Loop (innerhalb des E2E-TDD-Loops)
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Fuer jede Funktion mit Logik:                       │
+│  1. UNIT-TEST schreiben (ein Verhalten)              │
+│  2. RUN: npx vitest run <test-file>                  │
+│  3. VERIFY RED — fehlschlaegt aus richtigem Grund    │
+│  4. IMPLEMENTIEREN — einfachster Code der besteht    │
+│  5. RUN: npx vitest run <test-file>                  │
+│  6. VERIFY GREEN — alle Tests gruen                  │
+│  7. REFACTOR — aufraeumen, Tests gruen halten        │
+│  8. Naechste Funktion → zurueck zu 1                 │
+│                                                       │
+│  Dann: E2E-TDD-Loop (bestehend, Playwright)          │
+└─────────────────────────────────────────────────────┘
+```
+
+### Red Flags — Code sofort loeschen
+
+| Situation | Aktion |
+|-----------|--------|
+| Code vor Test geschrieben | Loeschen. TDD von vorne. |
+| Kann Failure-Grund nicht erklaeren | Loeschen. Neu beginnen. |
+| Test erst nach Implementierung | Code loeschen. Test zuerst. |
+| "Exploration" als Code behalten | Exploration-Code loeschen. |
 
 ## TDD Strategy with E2E Tests (MANDATORY)
 
@@ -187,11 +239,12 @@ fi
 # MANDATORY: Verify tests have actual assertions (not empty bodies)
 EMPTY_TESTS=$(grep -A2 "async.*page.*=>" ${TEST_FILE} | grep -c "^--$" || echo 0)
 
-git add <implementation-files> ${TEST_FILE}
+git add <implementation-files> <unit-test-files> ${TEST_FILE}
 git commit -m "feat({sprint}-{plan}): implement UC-TK-XXX {Name}
 
 - {Implementation details}
-- E2E tests: {N} passed
+- Unit-Tests: {N} passed (Vitest)
+- E2E-Tests: {M} passed (Playwright)
 
 Implements: UC-TK-XXX
 Part-of: UC-EP-YYY"
@@ -669,6 +722,10 @@ Execution complete when:
 - [ ] **Skeleton Gate passed** — `grep "TODO: Implement" tests/e2e/.../` returns 0 matches
 - [ ] **Every test body contains real assertions** — at least one `expect()` or `await page.` call per test
 - [ ] E2E tests run in TDD mode (RED → implement → GREEN)
+- [ ] **Unit-Tests geschrieben fuer alle Logik-Funktionen** (Iron Law)
+- [ ] **Jeden Unit-Test scheitern sehen** bevor implementiert (Verify RED)
+- [ ] **Unit-Tests gruen** (npx vitest run)
+- [ ] **Anti-Pattern-Check:** Keine Mock-Verhalten-Tests, keine test-only Methoden
 - [ ] Each task implemented according to spec
 - [ ] Verification criteria pass for each task
 - [ ] Atomic commits created per task

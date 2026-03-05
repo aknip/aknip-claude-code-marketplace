@@ -81,6 +81,15 @@ Required files:
 
 ### 6. Sprint Structure
 
+### 7. Unit-Test Health
+
+Unit-Test-Abdeckung und Qualitaet:
+- Logik-Dateien haben zugehoerige `__tests__/` Verzeichnisse
+- Keine `TODO: Implement` Marker in Unit-Tests
+- Keine Mock-only Tests (heuristic: `toHaveBeenCalled` ohne echte Assertions)
+- Keine test-only Methoden in Produktions-Code
+- Unit-Tests laufen fehlerfrei: `npx vitest run`
+
 Directory consistency:
 - Sprint numbering sequential (no gaps)
 - Directory names match PROJECT-PLAN.md

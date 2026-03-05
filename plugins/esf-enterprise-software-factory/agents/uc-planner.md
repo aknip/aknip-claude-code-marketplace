@@ -111,6 +111,22 @@ Use the template at `.planning/templates/UC-SUBFUNCTION.md`.
 .planning/use-cases/task/UC-TK-001-validate-task-title.md
 ```
 
+### Unit-Test-Spezifikation
+
+Fuer jede Task mit Logik-Code: Unit-Test-Tabelle mit konkreten Input/Output-Paaren definieren.
+
+```markdown
+### Unit-Test-Spezifikation
+
+| Test | Input | Expected Output |
+|------|-------|-----------------|
+| Leerer String | `''` | `{ valid: false, error: 'Titel ist erforderlich' }` |
+| Zu lang | `'x'.repeat(101)` | `{ valid: false, error: 'Titel zu lang' }` |
+| Gueltig | `'Aufgabe 1'` | `{ valid: true }` |
+
+**Test-Datei:** `src/stores/__tests__/task-store.test.ts`
+```
+
 </task_template>
 
 <plan_generation>
@@ -454,6 +470,57 @@ Add an `<e2e_tests>` section to each PLAN.md:
 - All test descriptions in German where they reference UI elements
 
 </e2e_test_definition>
+
+<unit_test_definition>
+
+## Unit-Test-Definition (ergaenzend zu E2E)
+
+**Fuer jede Task mit Logik-Code:** Unit-Test-Skelette definieren.
+
+### Was Unit-Tests braucht
+
+| Task-Typ | Unit-Test? | Beispiel |
+|----------|-----------|---------|
+| Validation UC-TK | JA | Input/Output-Paare |
+| Transformation UC-TK | JA | Eingabe → erwartete Ausgabe |
+| Berechnung UC-TK | JA | Bekannte Inputs → Ergebnis |
+| UI Display UC-TK | NEIN | E2E reicht |
+
+### In PLAN.md aufnehmen
+
+```xml
+<unit_tests>
+  <test_file>src/stores/__tests__/task-store.test.ts</test_file>
+  <test_cases>
+    - validateTaskTitle: rejects empty string
+    - validateTaskTitle: rejects >100 chars
+    - validateTaskTitle: trims whitespace
+    - validateTaskTitle: accepts valid title
+  </test_cases>
+</unit_tests>
+```
+
+### Skelett-Format
+
+```typescript
+import { describe, test, expect } from 'vitest';
+
+describe('UC-TK-001: Validate Task Title', () => {
+  test('rejects empty string with German error', () => {
+    // TODO: Implement during execution
+    // Input: ''
+    // Expected: { valid: false, error: 'Titel ist erforderlich' }
+  });
+
+  test('rejects title longer than 100 chars', () => {
+    // TODO: Implement during execution
+    // Input: 'x'.repeat(101)
+    // Expected: { valid: false, error: 'Titel darf maximal 100 Zeichen lang sein' }
+  });
+});
+```
+
+</unit_test_definition>
 
 <execution_flow>
 
