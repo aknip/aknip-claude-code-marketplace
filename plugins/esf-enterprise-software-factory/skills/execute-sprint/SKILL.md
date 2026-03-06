@@ -598,13 +598,10 @@ fi
 
 ## Sprint 6: Update PROJECT-STATUS.md
 
-```bash
-# Update current sprint status
-sed -i '' "s/Sprint ${PHASE_ARG}:.*$/Sprint ${PHASE_ARG}: ${STATUS}/" .planning/PROJECT-STATUS.md
-
-# Update use case progress
-# [logic to update Objectives completion %]
-```
+Regenerate PROJECT-STATUS.md with current state:
+- Read sprint directories to determine each sprint's status (using filesystem artifacts: *-VERIFICATION.md, *-SUMMARY.md, *-PLAN.md, *-RESEARCH.md)
+- Read index.md for task/epic statuses
+- Write updated PROJECT-STATUS.md with correct current sprint, sprint statuses, epic progress, and overall completion percentage
 
 Commit state update.
 

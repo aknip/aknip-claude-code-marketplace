@@ -59,9 +59,51 @@ fi
 **Task-Level:**
 - Count UC-SF by status
 
-**Sprint Progress:**
-- Current sprint from PROJECT-STATUS.md
-- Use cases in current sprint by status
+**Sprint Status (derived from filesystem artifacts):**
+
+For each sprint defined in PROJECT-PLAN.md, derive status from filesystem:
+
+```bash
+for SPRINT_DIR in .planning/sprints/*/; do
+  SPRINT_NUM=$(basename "$SPRINT_DIR" | grep -o '^[0-9]*')
+
+  HAS_VERIFICATION=$(ls "${SPRINT_DIR}"/*-VERIFICATION.md 2>/dev/null | head -1)
+  HAS_SUMMARY=$(ls "${SPRINT_DIR}"/*-SUMMARY.md 2>/dev/null | head -1)
+  HAS_PLAN=$(ls "${SPRINT_DIR}"/*-PLAN.md 2>/dev/null | head -1)
+  HAS_RESEARCH=$(ls "${SPRINT_DIR}"/*-RESEARCH.md 2>/dev/null | head -1)
+
+  if [ -n "$HAS_VERIFICATION" ]; then
+    STATUS="Verified"
+  elif [ -n "$HAS_SUMMARY" ]; then
+    STATUS="Executed"
+  elif [ -n "$HAS_PLAN" ]; then
+    STATUS="Planned"
+  elif [ -n "$HAS_RESEARCH" ]; then
+    STATUS="Researched"
+  else
+    STATUS="Not Started"
+  fi
+done
+
+# Sprints in PROJECT-PLAN.md without a sprint directory:
+STATUS="Not Started"
+```
+
+**Status definitions:**
+
+| Status | Meaning | Artifact |
+|--------|---------|----------|
+| Not Started | Defined in roadmap, no artifacts | No sprint directory or empty directory |
+| Researched | Research completed | `*-RESEARCH.md` present |
+| Planned | Execution plans created | `*-PLAN.md` present |
+| Executed | Plans executed, not yet verified | `*-SUMMARY.md` present |
+| Verified | Sprint verified and complete | `*-VERIFICATION.md` present |
+
+IMPORTANT: Do NOT use PROJECT-STATUS.md for sprint status. Always derive from filesystem artifacts above.
+
+**Current sprint:** The first sprint with status != "Verified" (or last sprint if all verified).
+
+**Use cases in current sprint by status.**
 
 ## Display
 
@@ -95,12 +137,22 @@ Resume: /esf:resume-work
 | UC-OBJ-001 | Manage Task Lifecycle | ████░░░░ 50% (2/4) |
 | UC-OBJ-002 | Organize Tasks | ░░░░░░░░ 0% (0/2) |
 
-## Current Sprint: Sprint 2
+## Sprints
+
+| Sprint | Name | Status |
+|--------|------|--------|
+| 1 | {name} | ✓ Verified |
+| 2 | {name} | ✓ Verified |
+| 3 | {name} | ○ Not Started |
+
+Status symbols: ○ Not Started | ◐ Researched | ◑ Planned | ◕ Executed | ✓ Verified
+
+## Current Sprint: Sprint {N}
 
 | Epic | Status | Tasks |
 |-----------|--------|--------------|
 | UC-EP-003 | In Progress | 2/4 implemented |
-| UC-EP-004 | Planned | 0/3 implemented |
+| UC-EP-004 | Not Started | 0/3 implemented |
 
 ## Overall
 
