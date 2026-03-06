@@ -132,7 +132,7 @@ Save to: ${OUTPUT_DIR}/UC-Content-Analysis.md
 
 <files>
 @.planning/use-cases/index.md
-@.planning/use-cases/summary/
+@.planning/use-cases/objective/
 @.planning/use-cases/epic/
 @.planning/use-cases/task/
 </files>

@@ -27,7 +27,7 @@ Create or regenerate PROJECT-PLAN.md from use case hierarchy. Use this after add
 
 ```bash
 cat .planning/use-cases/index.md
-ls .planning/use-cases/summary/*.md
+ls .planning/use-cases/objective/*.md
 ls .planning/use-cases/epic/*.md
 ```
 

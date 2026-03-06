@@ -171,7 +171,7 @@ Read the use case index and all use case documents:
 
 ```bash
 cat .planning/use-cases/index.md
-ls .planning/use-cases/summary/*.md
+ls .planning/use-cases/objective/*.md
 ls .planning/use-cases/epic/*.md
 ```
 

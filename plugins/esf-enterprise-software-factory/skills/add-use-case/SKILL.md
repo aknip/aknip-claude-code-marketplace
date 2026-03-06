@@ -87,7 +87,7 @@ Read template from `.planning/templates/UC-{LEVEL}.md`.
 Fill in gathered information.
 
 Write to appropriate directory:
-- Summary: `.planning/use-cases/summary/${NEW_ID}-${kebab-name}.md`
+- Summary: `.planning/use-cases/objective/${NEW_ID}-${kebab-name}.md`
 - Epic: `.planning/use-cases/epic/${NEW_ID}-${kebab-name}.md`
 - Task: `.planning/use-cases/task/${NEW_ID}-${kebab-name}.md`
 

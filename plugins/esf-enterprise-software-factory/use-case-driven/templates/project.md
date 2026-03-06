@@ -83,7 +83,7 @@ Common types: Tech stack, Timeline, Budget, Dependencies, Compatibility, Perform
 
 **Use Cases (Summary):**
 - Brief reference to Objectives use cases
-- Full details live in .planning/use-cases/summary/
+- Full details live in .planning/use-cases/objective/
 - Updated as use cases are added or changed
 
 **Context:**

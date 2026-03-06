@@ -195,7 +195,7 @@ Fill in:
 **File Naming Convention:**
 
 ```
-.planning/use-cases/summary/UC-OBJ-001-manage-task-lifecycle.md
+.planning/use-cases/objective/UC-OBJ-001-manage-task-lifecycle.md
 .planning/use-cases/epic/UC-EP-001-create-new-task.md
 ```
 
@@ -225,7 +225,7 @@ The index at `.planning/use-cases/index.md` tracks all use cases and their relat
 
 ```bash
 # Count use cases
-SUMMARY_COUNT=$(ls .planning/use-cases/summary/*.md 2>/dev/null | wc -l)
+SUMMARY_COUNT=$(ls .planning/use-cases/objective/*.md 2>/dev/null | wc -l)
 USER_GOAL_COUNT=$(ls .planning/use-cases/epic/*.md 2>/dev/null | wc -l)
 SUBFUNCTION_COUNT=$(ls .planning/use-cases/task/*.md 2>/dev/null | wc -l)
 ```
@@ -266,7 +266,7 @@ For each:
 2. Assign sequential ID (UC-OBJ-001, UC-OBJ-002...)
 3. Define scope and boundaries
 4. List anticipated Epic children
-5. Write to `.planning/use-cases/summary/`
+5. Write to `.planning/use-cases/objective/`
 </step>
 
 <step name="decompose_to_user_goal">
@@ -369,7 +369,7 @@ Ready for roadmap creation"
 
 ### Files Created
 
-- .planning/use-cases/summary/UC-OBJ-001-{name}.md
+- .planning/use-cases/objective/UC-OBJ-001-{name}.md
 - .planning/use-cases/epic/UC-EP-001-{name}.md
 - .planning/use-cases/index.md
 

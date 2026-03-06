@@ -245,7 +245,7 @@ Benutzer → beschreibt Projektvision
    - Epic Use Cases (welche konkreten Aktionen?)
 3. Es entstehen:
    - `.planning/PROJECT.md` -- Projektbeschreibung mit Akteuren, Kontext, Constraints
-   - `.planning/use-cases/summary/UC-OBJ-XXX-*.md` -- Objectives Use Cases
+   - `.planning/use-cases/objective/UC-OBJ-XXX-*.md` -- Objectives Use Cases
    - `.planning/use-cases/epic/UC-EP-XXX-*.md` -- Epic Use Cases
    - `.planning/use-cases/index.md` -- Master-Index mit Traceability-Matrix
    - `.planning/config.json` -- Projektkonfiguration

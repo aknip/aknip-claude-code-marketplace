@@ -15,7 +15,7 @@ Extract business capabilities as Objectives use cases, decompose to Epic use cas
 **Requires:** `.planning/PROJECT.md` and `.planning/config.json` (created by `/esf:new-project`)
 
 **Creates:**
-- `.planning/use-cases/summary/` — Objectives use cases
+- `.planning/use-cases/objective/` — Objectives use cases
 - `.planning/use-cases/epic/` — Epic use cases
 - `.planning/use-cases/index.md` — traceability index
 - `.planning/PROJECT-PLAN.md` — use case driven roadmap
@@ -87,11 +87,11 @@ Extract business capabilities as Objectives use cases, decompose to Epic use cas
 Create use-cases directory structure:
 
 ```bash
-mkdir -p .planning/use-cases/{summary,epic,task}
+mkdir -p .planning/use-cases/{objective,epic,task}
 mkdir -p .planning/milestones
 mkdir -p .planning/sessions
 touch .planning/use-cases/.gitkeep
-touch .planning/use-cases/summary/.gitkeep
+touch .planning/use-cases/objective/.gitkeep
 touch .planning/use-cases/epic/.gitkeep
 touch .planning/use-cases/task/.gitkeep
 ```
@@ -130,7 +130,7 @@ Index: @.planning/templates/UC-INDEX.md
 </templates>
 
 <output>
-1. Create Objectives use cases in .planning/use-cases/summary/
+1. Create Objectives use cases in .planning/use-cases/objective/
 2. Create Epic-Level use cases in .planning/use-cases/epic/
 3. Create index.md in .planning/use-cases/
 4. Commit all use case documents
@@ -160,7 +160,7 @@ Index: @.planning/templates/UC-INDEX.md
 </templates>
 
 <output>
-1. Create Objectives use cases in .planning/use-cases/summary/
+1. Create Objectives use cases in .planning/use-cases/objective/
 2. Create Epic-Level use cases in .planning/use-cases/epic/
 3. Create index.md in .planning/use-cases/
 4. Commit all use case documents
