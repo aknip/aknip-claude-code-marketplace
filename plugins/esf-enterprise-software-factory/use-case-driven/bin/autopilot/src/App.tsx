@@ -32,6 +32,9 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
     cost,
     currentAgent,
     lastError,
+    currentSubSprint,
+    totalSubSprints,
+    subSprintsCompleted,
   } = state;
 
   // Note: init is called in index.tsx by AutopilotRunner, not here
@@ -94,6 +97,20 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
         lastActivityTime={lastActivityTime}
         activeAgent={currentAgent}
       />
+
+      {/* Sub-Sprint Progress Bar */}
+      {totalSubSprints > 0 && (
+        <>
+          <Text> </Text>
+          <ProgressBar
+            completed={subSprintsCompleted}
+            total={totalSubSprints}
+            width={40}
+            label="Sub-Sprints"
+            unit="sub-sprints"
+          />
+        </>
+      )}
 
       {/* Progress Bar */}
       <Text> </Text>

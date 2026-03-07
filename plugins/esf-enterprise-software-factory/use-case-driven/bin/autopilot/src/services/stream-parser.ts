@@ -164,8 +164,8 @@ function extractTextSummary(text: string, maxLen = 60): string | null {
   // Skip very short fragments
   if (cleaned.length < 10) return null;
 
-  // Always keep important structural messages (UC markers, sub-sprint, wave info)
-  if (/^(UC\s*[>►]|━|Sub-Sprint|WAVE|Sprint\s+\d|EXECUTING|PLANNING|VERIFYING)/i.test(cleaned)) {
+  // Always keep important structural messages (UC markers, sub-sprint info)
+  if (/^(UC\s*[>►]|━|Sub-Sprint|Sprint\s+\d|EXECUTING|PLANNING|VERIFYING)/i.test(cleaned)) {
     if (cleaned.length > maxLen) {
       return cleaned.slice(0, maxLen - 3) + '...';
     }
@@ -173,7 +173,7 @@ function extractTextSummary(text: string, maxLen = 60): string | null {
   }
 
   // Always keep messages about spawning executors/agents
-  if (/spawn|executor|verifier|sub-sprint|wave\s+\d/i.test(cleaned)) {
+  if (/spawn|executor|verifier|sub-sprint\s+\d/i.test(cleaned)) {
     if (cleaned.length > maxLen) {
       return cleaned.slice(0, maxLen - 3) + '...';
     }
@@ -243,10 +243,10 @@ function extractToolDetail(
         const friendly = getAgentDisplayName(agentType);
         // Try to extract plan/sub-sprint info from description or prompt
         const planMatch = (desc || prompt || '').match(/(?:plan|sub-sprint)\s*(\d{2}-\d{2})/i);
-        const waveMatch = (desc || prompt || '').match(/(?:wave|sub-sprint)\s*(\d+)/i);
+        const subSprintMatch = (desc || prompt || '').match(/sub-sprint\s*(\d+)/i);
         let suffix = '';
         if (planMatch) suffix = ` [${planMatch[1]}]`;
-        else if (waveMatch) suffix = ` [wave ${waveMatch[1]}]`;
+        else if (subSprintMatch) suffix = ` [sub-sprint ${subSprintMatch[1]}]`;
         if (desc) return `${friendly}${suffix}: ${truncate(desc, 30)}`;
         return `${friendly}${suffix}`;
       }

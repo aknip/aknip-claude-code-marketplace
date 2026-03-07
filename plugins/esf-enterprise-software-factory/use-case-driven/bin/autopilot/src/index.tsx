@@ -28,6 +28,8 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
     init,
     startSprint,
     completeSprint,
+    setSubSprint,
+    completeSubSprint,
     setStage,
     addActivity,
     setAgent,
@@ -96,6 +98,21 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
           const agentMatch = activity.detail.match(/^([\w-]+)/);
           if (agentMatch) {
             setAgent(agentMatch[1]);
+          }
+        }
+
+        // Detect sub-sprint progress from text events
+        if (activity.type === 'text') {
+          const subSprintMatch = activity.detail.match(/(?:Sub-Sprint|sub-sprint|WAVE)\s+(\d+)\s+(?:of|von)\s+(\d+)/i);
+          if (subSprintMatch) {
+            const current = parseInt(subSprintMatch[1], 10);
+            const total = parseInt(subSprintMatch[2], 10);
+            setSubSprint(current, total);
+          }
+
+          // Detect sub-sprint completion
+          if (/(?:sub-sprint|wave)\s+\d+\s+(?:complete|done|finished)/i.test(activity.detail)) {
+            completeSubSprint();
           }
         }
 
@@ -170,7 +187,7 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
 
     // Exit the app
     exit();
-  }, [config, paths, init, startSprint, completeSprint, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
+  }, [config, paths, init, startSprint, completeSprint, setSubSprint, completeSubSprint, setStage, addActivity, setAgent, updateTokens, setError, setMode, resetStages, exit]);
 
   // Start on mount
   useEffect(() => {

@@ -60,13 +60,13 @@ For each plan, read frontmatter to extract:
 Skip completed plans (have SUMMARY.md).
 </step>
 
-<step name="group_by_wave">
+<step name="group_by_sub_sprint">
 Read `sub-sprint` from each plan's frontmatter and group by sub-sprint number.
 
 No dependency analysis needed. Sub-Sprint numbers are pre-computed during `/esf:plan-sprint`.
 </step>
 
-<step name="execute_waves">
+<step name="execute_sub_sprints">
 Execute each sub-sprint in sequence. Autonomous plans within a sub-sprint run in parallel.
 
 **For each sub-sprint:**

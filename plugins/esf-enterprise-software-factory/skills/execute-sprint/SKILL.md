@@ -103,9 +103,9 @@ MAX_FIX_ATTEMPTS=$(cat .planning/config.json 2>/dev/null | grep -o '"max_fix_att
 ```bash
 for plan_file in "${SPRINT_DIR}"/*-PLAN.md; do
   PLAN_NUM=$(basename "$plan_file" | sed 's/.*-\([0-9]*\)-PLAN.md/\1/')
-  WAVE=$(sed -n '/^sub-sprint:/p' "$plan_file" | head -1 | awk '{print $2}')
+  SUB_SPRINT=$(sed -n '/^sub-sprint:/p' "$plan_file" | head -1 | awk '{print $2}')
   AUTONOMOUS=$(sed -n '/^autonomous:/p' "$plan_file" | head -1 | awk '{print $2}')
-  echo "Plan ${PLAN_NUM}: sub-sprint=${WAVE}, autonomous=${AUTONOMOUS}"
+  echo "Plan ${PLAN_NUM}: sub-sprint=${SUB_SPRINT}, autonomous=${AUTONOMOUS}"
 done
 ```
 
@@ -127,17 +127,17 @@ Sub-Sprint 2: [plan-03]
 
 Sprint: ${SPRINT_NAME}
 Plans: ${PLAN_COUNT}
-Sub-Sprints: ${WAVE_COUNT}
+Sub-Sprints: ${SUB_SPRINT_COUNT}
 ```
 
 **For each sub-sprint (sequentially):**
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- WAVE ${WAVE_NUM} of ${WAVE_COUNT}
+ Sub-Sprint ${SUB_SPRINT_NUM} of ${SUB_SPRINT_COUNT}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-◆ Spawning ${PLAN_COUNT_IN_WAVE} executor(s)...
+◆ Spawning ${PLAN_COUNT_IN_SUB_SPRINT} executor(s)...
 ```
 
 **If parallelization enabled:**
@@ -390,7 +390,7 @@ CRITICAL: For any task that implements API-calling functionality:
 TODO_FILES=$(grep -rln "TODO: Implement during execution" tests/e2e/v${MILESTONE_VERSION}/sprint-${PADDED_SPRINT}/ 2>/dev/null)
 
 if [ -n "$TODO_FILES" ]; then
-  echo "⚠️  SKELETON GATE WARNING: Unimplemented test skeletons found after sub-sprint ${WAVE_NUM}:"
+  echo "⚠️  SKELETON GATE WARNING: Unimplemented test skeletons found after sub-sprint ${SUB_SPRINT_NUM}:"
   grep -rn "TODO: Implement during execution" tests/e2e/v${MILESTONE_VERSION}/sprint-${PADDED_SPRINT}/
   echo ""
   echo "These test skeletons were NOT fleshed out by the executor."

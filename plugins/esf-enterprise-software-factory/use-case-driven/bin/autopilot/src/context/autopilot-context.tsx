@@ -26,6 +26,11 @@ export interface AutopilotUIState {
   totalSprints: number;
   sprintsCompleted: number[];
 
+  // Sub-sprint tracking
+  currentSubSprint: number;
+  totalSubSprints: number;
+  subSprintsCompleted: number;
+
   // Stage tracking
   currentStage: StageName | null;
   stageDescription: string;
@@ -55,6 +60,8 @@ export type AutopilotAction =
   | { type: 'INIT'; config: AutopilotConfig; totalSprints: number }
   | { type: 'START_SPRINT'; sprint: number; sprintInfo: SprintInfo }
   | { type: 'COMPLETE_SPRINT'; sprint: number; result: SprintResult }
+  | { type: 'SET_SUB_SPRINT'; current: number; total: number }
+  | { type: 'COMPLETE_SUB_SPRINT' }
   | { type: 'SET_STAGE'; stage: StageName; description: string }
   | { type: 'COMPLETE_STAGE' }
   | { type: 'ADD_ACTIVITY'; activity: ActivityEntry }
@@ -75,6 +82,9 @@ const initialState: AutopilotUIState = {
   sprintInfo: null,
   totalSprints: 0,
   sprintsCompleted: [],
+  currentSubSprint: 0,
+  totalSubSprints: 0,
+  subSprintsCompleted: 0,
   currentStage: null,
   stageDescription: '',
   stageStartTime: null,
@@ -120,6 +130,9 @@ function autopilotReducer(
         ...state,
         currentSprint: action.sprint,
         sprintInfo: action.sprintInfo,
+        currentSubSprint: 0,
+        totalSubSprints: 0,
+        subSprintsCompleted: 0,
         currentStage: null,
         stageDescription: '',
         stageStartTime: null,
@@ -133,6 +146,19 @@ function autopilotReducer(
         sprintsCompleted: [...state.sprintsCompleted, action.sprint],
         tokens: state.tokens + action.result.tokens,
         cost: state.cost + action.result.cost,
+      };
+
+    case 'SET_SUB_SPRINT':
+      return {
+        ...state,
+        currentSubSprint: action.current,
+        totalSubSprints: Math.max(state.totalSubSprints, action.total),
+      };
+
+    case 'COMPLETE_SUB_SPRINT':
+      return {
+        ...state,
+        subSprintsCompleted: state.subSprintsCompleted + 1,
       };
 
     case 'SET_STAGE': {
@@ -240,6 +266,8 @@ interface AutopilotContextType {
   init: (config: AutopilotConfig, totalSprints: number) => void;
   startSprint: (sprint: number, sprintInfo: SprintInfo) => void;
   completeSprint: (sprint: number, result: SprintResult) => void;
+  setSubSprint: (current: number, total: number) => void;
+  completeSubSprint: () => void;
   setStage: (stage: StageName, description: string) => void;
   completeStage: () => void;
   addActivity: (activity: ActivityEntry) => void;
@@ -278,6 +306,17 @@ export function AutopilotProvider({ children }: { children: ReactNode }) {
     },
     []
   );
+
+  const setSubSprint = useCallback(
+    (current: number, total: number) => {
+      dispatch({ type: 'SET_SUB_SPRINT', current, total });
+    },
+    []
+  );
+
+  const completeSubSprint = useCallback(() => {
+    dispatch({ type: 'COMPLETE_SUB_SPRINT' });
+  }, []);
 
   const setStage = useCallback(
     (stage: StageName, description: string) => {
@@ -322,6 +361,8 @@ export function AutopilotProvider({ children }: { children: ReactNode }) {
         init,
         startSprint,
         completeSprint,
+        setSubSprint,
+        completeSubSprint,
         setStage,
         completeStage,
         addActivity,

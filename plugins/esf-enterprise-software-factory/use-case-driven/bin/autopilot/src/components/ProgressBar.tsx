@@ -7,6 +7,7 @@ export interface ProgressBarProps {
   total: number;
   width?: number;
   label?: string;
+  unit?: string;
   showCount?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function ProgressBar({
   total,
   width = 40,
   label = 'Progress',
+  unit = 'sprints',
   showCount = true,
 }: ProgressBarProps) {
   // Calculate filled portion
@@ -34,7 +36,7 @@ export function ProgressBar({
       {showCount && (
         <Text>
           {' '}
-          {completed}/{total} sprints
+          {completed}/{total} {unit}
         </Text>
       )}
     </Box>

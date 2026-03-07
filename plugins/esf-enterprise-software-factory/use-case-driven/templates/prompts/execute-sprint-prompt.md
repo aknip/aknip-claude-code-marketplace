@@ -69,7 +69,7 @@ Sprint: {{SPRINT_NAME}}
 Plans: [count]
 Sub-Sprints: [count]
 
-WAVE [N] of [total]
+Sub-Sprint [N] of [total]
 Spawning [count] executor(s)...
 ```
 
