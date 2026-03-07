@@ -89,9 +89,10 @@ function AutopilotDisplay({ config }: { config: AutopilotConfig }) {
       {/* Activity Feed */}
       <ActivityFeed
         activities={activities}
-        maxLines={10}
+        maxLines={12}
         showEmptyState={mode === 'running'}
         lastActivityTime={lastActivityTime}
+        activeAgent={currentAgent}
       />
 
       {/* Progress Bar */}

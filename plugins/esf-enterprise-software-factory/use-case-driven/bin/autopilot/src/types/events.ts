@@ -98,6 +98,7 @@ export type StreamEvent =
   | { type: 'tool_result'; toolId: string; success: boolean }
   | { type: 'text'; content: string }
   | { type: 'thinking'; summary: string }
+  | { type: 'subagent_start'; agent: string; detail: string; toolId: string }
   | { type: 'result'; turns: number; cost: number; tokens: number; isError: boolean }
   | { type: 'error'; message: string }
   | { type: 'rate_limit'; resetTime: Date; message: string };
@@ -111,9 +112,12 @@ export type ToolName =
   | 'Glob'
   | 'Grep'
   | 'Task'
+  | 'Agent'
   | 'TaskCreate'
   | 'TaskUpdate'
   | 'TaskList'
+  | 'ToolSearch'
+  | 'Skill'
   | 'WebFetch'
   | 'WebSearch'
   | 'AskUserQuestion'

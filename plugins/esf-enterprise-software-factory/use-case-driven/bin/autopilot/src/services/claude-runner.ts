@@ -3,6 +3,7 @@ import { createWriteStream, WriteStream } from 'node:fs';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { parseStream, toolToActivityType, agentToStageName } from './stream-parser.js';
+import { FileActivityWatcher } from './file-watcher.js';
 import type { StreamEvent, StageName, ActivityEntry } from '../types/events.js';
 import type { AutopilotConfig, DerivedPaths } from '../types/config.js';
 
@@ -93,9 +94,23 @@ export async function runClaudeWithPrompt(
   let error: string | undefined;
   let rateLimitResetTime: Date | undefined;
 
+  // Start file watcher for activity during quiet periods (subagent execution)
+  let fileWatcher: FileActivityWatcher | null = null;
+  if (onActivity) {
+    fileWatcher = new FileActivityWatcher({
+      projectDir: config.projectDir,
+      onActivity,
+      debounceMs: 3000,
+    });
+    await fileWatcher.start();
+  }
+
   // Write prompt to stdin
   claude.stdin.write(promptContent);
   claude.stdin.end();
+
+  // Track active subagents for better status display
+  const activeAgents = new Map<string, { agent: string; detail: string; startTime: Date }>();
 
   // Process stdout stream
   const processOutput = async () => {
@@ -118,6 +133,26 @@ export async function runClaudeWithPrompt(
           });
           break;
 
+        case 'subagent_start': {
+          // Track the active subagent
+          activeAgents.set(event.toolId, {
+            agent: event.agent,
+            detail: event.detail,
+            startTime: new Date(),
+          });
+
+          onActivity?.({
+            type: 'agent',
+            detail: event.detail,
+            timestamp: new Date(),
+          });
+
+          // Update stage based on agent type
+          const stage = agentToStageName(event.agent);
+          onStageChange?.(stage, event.detail);
+          break;
+        }
+
         case 'tool_use':
           onActivity?.({
             type: toolToActivityType(event.tool),
@@ -125,13 +160,9 @@ export async function runClaudeWithPrompt(
             timestamp: new Date(),
           });
 
-          // Check for agent stage changes
-          if (event.tool === 'Task') {
-            const agentMatch = event.detail.match(/^(\w+[-\w]*)/);
-            if (agentMatch) {
-              const stage = agentToStageName(agentMatch[1]);
-              onStageChange?.(stage, event.detail);
-            }
+          // Check for agent stage changes (for non-Task tools)
+          if (event.tool === 'Task' || event.tool === 'Agent') {
+            // Already handled by subagent_start
           }
           break;
 
@@ -141,6 +172,26 @@ export async function runClaudeWithPrompt(
             detail: event.summary,
             timestamp: new Date(),
           });
+          break;
+
+        case 'text':
+          // Tool results - a subagent may have completed
+          // Clear active agents on tool results (heuristic: the latest one finished)
+          if (event.content === 'Tool completed' && activeAgents.size > 0) {
+            const [lastId] = [...activeAgents.keys()].slice(-1);
+            const completed = activeAgents.get(lastId);
+            activeAgents.delete(lastId);
+            if (completed) {
+              const elapsed = Math.floor((Date.now() - completed.startTime.getTime()) / 1000);
+              const min = Math.floor(elapsed / 60);
+              const sec = elapsed % 60;
+              onActivity?.({
+                type: 'result',
+                detail: `${completed.detail} done (${min}:${sec.toString().padStart(2, '0')})`,
+                timestamp: new Date(),
+              });
+            }
+          }
           break;
 
         case 'result':
@@ -191,6 +242,9 @@ export async function runClaudeWithPrompt(
     }),
     processOutput(),
   ]);
+
+  // Stop file watcher
+  fileWatcher?.stop();
 
   // Close log stream
   logStream.end();

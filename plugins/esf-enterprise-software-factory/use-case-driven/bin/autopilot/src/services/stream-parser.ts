@@ -84,10 +84,23 @@ function* normalizeEvent(event: ClaudeStreamEvent): Generator<StreamEvent> {
           }
         } else if (content.type === 'tool_use') {
           const toolContent = content as ToolUseContent;
+          const detail = extractToolDetail(toolContent.name, toolContent.input);
+
+          // Emit special event for subagent spawns (Task/Agent tool)
+          if (toolContent.name === 'Task' || toolContent.name === 'Agent') {
+            const agentType = (toolContent.input.subagent_type as string) || 'unknown';
+            yield {
+              type: 'subagent_start',
+              agent: agentType,
+              detail,
+              toolId: toolContent.id,
+            };
+          }
+
           yield {
             type: 'tool_use',
             tool: toolContent.name as ToolName,
-            detail: extractToolDetail(toolContent.name, toolContent.input),
+            detail,
             toolId: toolContent.id,
           };
         }
@@ -151,8 +164,24 @@ function extractTextSummary(text: string, maxLen = 60): string | null {
   // Skip very short fragments
   if (cleaned.length < 10) return null;
 
-  // Skip tool call announcements (these are redundant)
-  if (/^(Let me|I'll|I will|Now I)/i.test(cleaned)) return null;
+  // Always keep important structural messages (UC markers, sub-sprint, wave info)
+  if (/^(UC\s*[>►]|━|Sub-Sprint|WAVE|Sprint\s+\d|EXECUTING|PLANNING|VERIFYING)/i.test(cleaned)) {
+    if (cleaned.length > maxLen) {
+      return cleaned.slice(0, maxLen - 3) + '...';
+    }
+    return cleaned;
+  }
+
+  // Always keep messages about spawning executors/agents
+  if (/spawn|executor|verifier|sub-sprint|wave\s+\d/i.test(cleaned)) {
+    if (cleaned.length > maxLen) {
+      return cleaned.slice(0, maxLen - 3) + '...';
+    }
+    return cleaned;
+  }
+
+  // Skip generic tool call announcements (these are redundant)
+  if (/^(Let me|I'll|I will|Now I|I need to|First,|Next,)/i.test(cleaned)) return null;
 
   // Truncate if needed
   if (cleaned.length > maxLen) {
@@ -205,13 +234,21 @@ function extractToolDetail(
       return '(command)';
     }
 
-    case 'Task': {
+    case 'Task':
+    case 'Agent': {
       const agentType = input.subagent_type as string | undefined;
       const desc = input.description as string | undefined;
+      const prompt = input.prompt as string | undefined;
       if (agentType) {
         const friendly = getAgentDisplayName(agentType);
-        if (desc) return `${friendly}: ${truncate(desc, 35)}`;
-        return friendly;
+        // Try to extract plan/sub-sprint info from description or prompt
+        const planMatch = (desc || prompt || '').match(/(?:plan|sub-sprint)\s*(\d{2}-\d{2})/i);
+        const waveMatch = (desc || prompt || '').match(/(?:wave|sub-sprint)\s*(\d+)/i);
+        let suffix = '';
+        if (planMatch) suffix = ` [${planMatch[1]}]`;
+        else if (waveMatch) suffix = ` [wave ${waveMatch[1]}]`;
+        if (desc) return `${friendly}${suffix}: ${truncate(desc, 30)}`;
+        return `${friendly}${suffix}`;
       }
       return '(spawning agent)';
     }
@@ -232,6 +269,18 @@ function extractToolDetail(
     case 'TaskUpdate':
     case 'TaskList':
       return 'Managing tasks...';
+
+    case 'ToolSearch': {
+      const query = input.query as string | undefined;
+      if (query) return `loading: ${truncate(query, 35)}`;
+      return 'loading tools';
+    }
+
+    case 'Skill': {
+      const skillName = input.skill_name as string | undefined;
+      if (skillName) return `skill: ${truncate(skillName, 35)}`;
+      return 'running skill';
+    }
 
     case 'WebFetch': {
       const url = input.url as string | undefined;
@@ -379,12 +428,16 @@ export function toolToActivityType(
     case 'Bash':
       return 'bash';
     case 'Task':
+    case 'Agent':
       return 'agent';
     case 'Grep':
     case 'Glob':
     case 'WebFetch':
     case 'WebSearch':
+    case 'ToolSearch':
       return 'search';
+    case 'Skill':
+      return 'info';
     default:
       return 'info';
   }

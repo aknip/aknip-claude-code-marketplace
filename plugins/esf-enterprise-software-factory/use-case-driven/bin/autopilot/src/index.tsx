@@ -98,6 +98,11 @@ function AutopilotRunner({ config }: { config: AutopilotConfig }) {
             setAgent(agentMatch[1]);
           }
         }
+
+        // Clear agent when subagent completes (result activity with "done" from subagent)
+        if (activity.type === 'result' && activity.detail.includes(' done (')) {
+          setAgent(null);
+        }
       },
 
       onStageChange: (stage: StageName, description: string) => {

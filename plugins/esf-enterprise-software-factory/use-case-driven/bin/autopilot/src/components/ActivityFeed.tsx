@@ -10,6 +10,7 @@ export interface ActivityFeedProps {
   showEmptyState?: boolean;
   staleThreshold?: number; // seconds
   lastActivityTime?: Date | null;
+  activeAgent?: string | null;
 }
 
 /**
@@ -21,6 +22,7 @@ export function ActivityFeed({
   showEmptyState = true,
   staleThreshold = 30,
   lastActivityTime,
+  activeAgent,
 }: ActivityFeedProps) {
   // Check for staleness
   const isStale =
@@ -31,15 +33,27 @@ export function ActivityFeed({
     ? Math.floor((Date.now() - lastActivityTime.getTime()) / 1000)
     : 0;
 
+  // Format stale duration as M:SS when > 60s
+  const staleDuration = staleSeconds >= 60
+    ? `${Math.floor(staleSeconds / 60)}:${(staleSeconds % 60).toString().padStart(2, '0')}`
+    : `${staleSeconds}s`;
+
+  // Build stale message based on context
+  let staleMessage = `waiting for response (${staleDuration})`;
+  if (activeAgent) {
+    const agentName = getAgentFriendlyName(activeAgent);
+    staleMessage = `${agentName} running (${staleDuration})`;
+  }
+
   return (
     <Box flexDirection="column">
       <Text>## Activity:</Text>
       <Text> </Text>
 
-      {/* Stale warning */}
+      {/* Stale indicator with agent context */}
       {isStale && (
-        <Text color="yellow">
-          {'⏳'} waiting for response ({staleSeconds}s)
+        <Text color={activeAgent ? 'cyan' : 'yellow'}>
+          {activeAgent ? '🤖' : '⏳'} {staleMessage}
         </Text>
       )}
 
@@ -61,6 +75,21 @@ export function ActivityFeed({
       )}
     </Box>
   );
+}
+
+/**
+ * Get a user-friendly name for an agent type
+ */
+function getAgentFriendlyName(agent: string): string {
+  const names: Record<string, string> = {
+    'uc-executor': 'Executor',
+    'uc-verifier': 'Verifier',
+    'uc-planner': 'Planner',
+    'uc-checker': 'Checker',
+    'uc-sprint-researcher': 'Researcher',
+    'Explore': 'Explorer',
+  };
+  return names[agent] || agent;
 }
 
 interface ActivityLineProps {

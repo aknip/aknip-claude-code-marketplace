@@ -127,12 +127,14 @@ NODE_AUTOPILOT="use-case-driven/bin/autopilot"
 NODE_AVAILABLE=false
 
 if [ -d "$NODE_AUTOPILOT" ]; then
-  if [ -f "$NODE_AUTOPILOT/dist/index.js" ]; then
-    NODE_AVAILABLE=true
-  elif [ -f "$NODE_AUTOPILOT/package.json" ]; then
-    # Not built yet - offer to build
-    echo "Node.js autopilot found but not built."
-    echo "Run: cd $NODE_AUTOPILOT && npm install && npm run build"
+  if [ -f "$NODE_AUTOPILOT/src/index.tsx" ]; then
+    if [ -d "$NODE_AUTOPILOT/node_modules" ]; then
+      NODE_AVAILABLE=true
+    else
+      # Dependencies not installed yet
+      echo "Node.js autopilot found but dependencies not installed."
+      echo "Run: cd $NODE_AUTOPILOT && npm install"
+    fi
   fi
 fi
 
@@ -210,22 +212,22 @@ uc-autopilot --sprints "{incomplete_phases}" --project-name "{project_name}"
 ```
 
 **If local only:**
+
+First install dependencies (one-time):
+```
+cd use-case-driven/bin/autopilot
+npm install
+```
+
+Then run:
 ```
 cd {project_dir}
-node use-case-driven/bin/autopilot/dist/index.js \
+npx tsx use-case-driven/bin/autopilot/src/index.tsx \
   --sprints "{incomplete_phases}" \
   --project-name "{project_name}" \
   --max-retries {max_retries} \
   --budget {budget_limit} \
   --checkpoint-mode {checkpoint_mode}
-```
-
-**First-time setup (if not built):**
-```
-cd use-case-driven/bin/autopilot
-npm install
-npm run build
-npm link  # optional: makes uc-autopilot available globally
 ```
 
 ───────────────────────────────────────────────────────────────

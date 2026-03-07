@@ -80,7 +80,7 @@ const initialState: AutopilotUIState = {
   stageStartTime: null,
   completedStages: [],
   activities: [],
-  maxActivities: 10,
+  maxActivities: 12,
   tokens: 0,
   cost: 0,
   startTime: null,
