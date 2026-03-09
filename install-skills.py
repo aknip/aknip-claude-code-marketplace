@@ -49,6 +49,18 @@ SKILLS = [
         "description": "RevealJS presentation skill",
         "source": "github.com/ryanbbrown/revealjs-skill",
     },
+    {
+        "id": "image-enhancer",
+        "name": "Image Enhancer",
+        "description": "Checks image resolution and sharpness, upscales, sharpens text and edges, and removes noise",
+        "source": "github.com/ComposioHQ/awesome-claude-skills",
+    },
+    {
+        "id": "pptx-tools",
+        "name": "aknip PPTX Tools",
+        "description": "PowerPoint tools with colorscale script",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
 ]
 
 
@@ -98,9 +110,33 @@ async def install_revealjs(project_dir: str, log: RichLog) -> None:
     shutil.rmtree(tmp_dir)
 
 
+async def install_image_enhancer(project_dir: str, log: RichLog) -> None:
+    skill_dir = os.path.join(project_dir, ".claude", "skills", "image-enhancer")
+    os.makedirs(skill_dir, exist_ok=True)
+    url = "https://raw.githubusercontent.com/ComposioHQ/awesome-claude-skills/master/image-enhancer/SKILL.md"
+    target = os.path.join(skill_dir, "SKILL.md")
+    log.write("  Downloading SKILL.md …")
+    await _run(["curl", "-sL", url, "-o", target])
+
+
+async def install_pptx_tools(project_dir: str, log: RichLog) -> None:
+    base_url = "https://raw.githubusercontent.com/aknip/aknip-claude-code-marketplace/main/plugins/pptx-tools/skills/pptx-tools"
+    skill_dir = os.path.join(project_dir, ".claude", "skills", "pptx-tools")
+    scripts_dir = os.path.join(skill_dir, "scripts")
+    os.makedirs(scripts_dir, exist_ok=True)
+
+    log.write("  Downloading SKILL.md …")
+    await _run(["curl", "-sL", f"{base_url}/SKILL.md", "-o", os.path.join(skill_dir, "SKILL.md")])
+
+    log.write("  Downloading scripts/colorscale.py …")
+    await _run(["curl", "-sL", f"{base_url}/scripts/colorscale.py", "-o", os.path.join(scripts_dir, "colorscale.py")])
+
+
 INSTALL_FUNCTIONS = {
     "brainstorming": install_brainstorming,
     "revealjs": install_revealjs,
+    "image-enhancer": install_image_enhancer,
+    "pptx-tools": install_pptx_tools,
 }
 
 
