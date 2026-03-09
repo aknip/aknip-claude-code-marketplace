@@ -30,6 +30,11 @@
       "version": "1.0.1"
     },
     {
+      "name": "pptx-tools",
+      "source": "./plugins/pptx-tools",
+      "version": "1.0.0"
+    },
+    {
       "name": "summarizer",
       "source": "./plugins/summarizer",
       "version": "1.0.0"
