@@ -24,14 +24,17 @@ from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import (
     Button,
+    Checkbox,
     DirectoryTree,
     Footer,
     Header,
     Input,
+    Label,
+    ListItem,
+    ListView,
     RichLog,
     Static,
 )
-from textual.widgets._selection_list import Selection, SelectionList
 
 # ---------------------------------------------------------------------------
 # Skill registry
@@ -92,6 +95,28 @@ SKILLS = [
         "source": "github.com/aknip/aknip-claude-code-marketplace",
     },
 ]
+
+
+# ---------------------------------------------------------------------------
+# Custom multi-line skill selection widget
+# ---------------------------------------------------------------------------
+class SkillItem(ListItem):
+    """A list item with checkbox, name, description, and source."""
+
+    def __init__(self, skill_id: str, name: str, description: str, source: str) -> None:
+        super().__init__()
+        self.skill_id = skill_id
+        self._name = name
+        self._description = description
+        self._source = source
+
+    def compose(self) -> ComposeResult:
+        with Horizontal(classes="skill-row"):
+            yield Checkbox("", id=f"cb-{self.skill_id}")
+            with Vertical(classes="skill-info"):
+                yield Label(self._name, classes="skill-name")
+                yield Label(self._description, classes="skill-desc")
+                yield Label(self._source, classes="skill-source")
 
 
 # ---------------------------------------------------------------------------
@@ -374,11 +399,45 @@ class SkillInstaller(App):
         text-style: bold;
     }
 
-    SelectionList {
+    #skills {
         height: auto;
-        max-height: 12;
+        max-height: 50%;
         border: solid $accent;
         margin-bottom: 1;
+    }
+
+    SkillItem {
+        height: auto;
+        padding: 0 1;
+    }
+
+    .skill-row {
+        height: auto;
+    }
+
+    .skill-info {
+        height: auto;
+        margin-left: 1;
+    }
+
+    .skill-name {
+        text-style: bold;
+    }
+
+    .skill-desc {
+        color: $text-muted;
+    }
+
+    .skill-source {
+        color: $text-muted;
+        text-style: italic;
+    }
+
+    SkillItem Checkbox {
+        height: auto;
+        min-height: 1;
+        padding: 0;
+        border: none;
     }
 
     #btn-row {
@@ -434,17 +493,11 @@ class SkillInstaller(App):
                 id="project-dir",
             )
             yield Button("Durchsuchen", id="browse-btn", variant="default")
-        yield Static("Skills auswählen:", id="skill-label")
-        yield SelectionList[str](
-            *[
-                Selection(
-                    f"{s['name']}  —  {s['description']}",
-                    s["id"],
-                )
-                for s in SKILLS
-            ],
-            id="skills",
-        )
+        yield Static("Skills auswählen (Leertaste = auswählen):", id="skill-label")
+        skills_list = ListView(id="skills")
+        with skills_list:
+            for s in SKILLS:
+                yield SkillItem(s["id"], s["name"], s["description"], s["source"])
         with Horizontal(id="btn-row"):
             yield Button(
                 "Installieren",
@@ -477,13 +530,27 @@ class SkillInstaller(App):
 
         self.push_screen(DirectoryPickerScreen(start), callback=on_dismiss)
 
-    @on(SelectionList.SelectedChanged)
-    def on_selection_changed(self, event: SelectionList.SelectedChanged) -> None:
-        selected = event.selection_list.selected
+    def _get_selected_skill_ids(self) -> list[str]:
+        """Return list of checked skill IDs."""
+        return [
+            item.skill_id
+            for item in self.query(SkillItem)
+            if item.query_one(Checkbox).value
+        ]
+
+    @on(Checkbox.Changed)
+    def on_checkbox_changed(self) -> None:
+        selected = self._get_selected_skill_ids()
         btn = self.query_one("#install-btn", Button)
         btn.disabled = len(selected) == 0
         count = len(selected)
         btn.label = f"Installieren ({count})" if count > 0 else "Installieren"
+
+    @on(ListView.Selected)
+    def on_list_item_selected(self, event: ListView.Selected) -> None:
+        """Toggle checkbox when pressing Enter on a list item."""
+        cb = event.item.query_one(Checkbox)
+        cb.toggle()
 
     @on(Button.Pressed, "#install-btn")
     def on_install_pressed(self) -> None:
@@ -493,7 +560,7 @@ class SkillInstaller(App):
     async def run_installation(self) -> None:
         btn = self.query_one("#install-btn", Button)
         btn.disabled = True
-        skills_list = self.query_one("#skills", SelectionList)
+        skills_list = self.query_one("#skills", ListView)
         skills_list.disabled = True
         dir_input = self.query_one("#project-dir", Input)
         dir_input.disabled = True
@@ -511,7 +578,7 @@ class SkillInstaller(App):
             dir_input.disabled = False
             return
 
-        selected = skills_list.selected
+        selected = self._get_selected_skill_ids()
         log.write(f"[bold]Zielverzeichnis:[/] {project_dir}")
         log.write(f"[bold]Skills:[/] {len(selected)} ausgewählt\n")
 
