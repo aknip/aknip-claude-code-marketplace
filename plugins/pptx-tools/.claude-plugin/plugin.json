@@ -1,0 +1,6 @@
+{
+  "name": "pptx-tools",
+  "description": "PPTX Tools — Werkzeuge zur Bearbeitung und Optimierung von PowerPoint-Dateien",
+  "author": { "name": "aknip" },
+  "keywords": ["pptx", "powerpoint", "tools", "colorscale", "slides"]
+}
