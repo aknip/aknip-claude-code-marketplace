@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import zipfile
 from pathlib import Path
 
 # Auto-install textual if missing
@@ -92,6 +93,12 @@ SKILLS = [
         "id": "product-manager",
         "name": "aknip Product Manager",
         "description": "Product manager skill for product strategy and planning",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
+    {
+        "id": "esf",
+        "name": "aknip ESF - Enterprise Software Fabric",
+        "description": "Usecase-driven software development with AI agents (full plugin with shadcn/ui app)",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
     },
 ]
@@ -227,6 +234,65 @@ async def install_product_manager(project_dir: str, log: RichLog) -> None:
     await _install_from_marketplace(project_dir, log, "ba-business-analysts/skills/product-manager", "product-manager")
 
 
+async def install_esf(project_dir: str, log: RichLog) -> None:
+    tmp_dir = os.path.join(project_dir, "tmp-for-skill-installation")
+    local_dir = os.path.join(project_dir, "_aknip-claude-code-marketplace-local")
+
+    # 1. Clone repo
+    log.write("  Cloning repository …")
+    await _run([
+        "git", "clone", "--depth", "1",
+        "https://github.com/aknip/aknip-claude-code-marketplace.git", tmp_dir,
+    ])
+
+    # 2. Copy entire repo to _aknip-claude-code-marketplace-local
+    log.write("  Copying marketplace to project …")
+    if os.path.exists(local_dir):
+        shutil.rmtree(local_dir)
+    shutil.copytree(tmp_dir, local_dir, ignore=shutil.ignore_patterns("__pycache__", ".DS_Store", ".git"))
+
+    # 3. Unzip shadcn-ui-app.zip into project root
+    zip_path = os.path.join(
+        tmp_dir, "plugins", "esf-enterprise-software-factory", "resources", "shadcn-ui-app.zip"
+    )
+    log.write("  Extracting shadcn-ui-app.zip …")
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        zf.extractall(project_dir)
+
+    # 4. Cleanup
+    shutil.rmtree(tmp_dir)
+    macosx_dir = os.path.join(project_dir, "__MACOSX")
+    if os.path.exists(macosx_dir):
+        shutil.rmtree(macosx_dir)
+    notes_dir = os.path.join(project_dir, "_NOTES")
+    if os.path.exists(notes_dir):
+        shutil.rmtree(notes_dir)
+
+    # 5. Create README_esf.md
+    readme_path = os.path.join(project_dir, "README_esf.md")
+    log.write("  Creating README_esf.md …")
+    with open(readme_path, "w") as f:
+        f.write("""\
+# esf: Enterprise Software Fabric: Usecase-driven Software Development with AI Agents
+
+**Installation:**
+
+1. npm install
+
+2. Open Claude Code in the project directory:
+
+`/plugin marketplace add ./_aknip-claude-code-marketplace-local`
+
+`/plugin install esf@aknip-claude-code-marketplace`
+
+- Select the option "Install for all collaborators on this repository (project scope)".
+
+- Restart Claude Code to load new plugins.
+
+For further information, see the documentation `_aknip-claude-code-marketplace-local/plugins/esf-enterprise-software-factory/README.md`.
+""")
+
+
 INSTALL_FUNCTIONS = {
     "brainstorming": install_brainstorming,
     "revealjs": install_revealjs,
@@ -237,6 +303,7 @@ INSTALL_FUNCTIONS = {
     "summarizer": install_summarizer,
     "business-analyst": install_business_analyst,
     "product-manager": install_product_manager,
+    "esf": install_esf,
 }
 
 
