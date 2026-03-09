@@ -9,7 +9,10 @@ import sys
 try:
     import questionary
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "questionary"])
+    print("questionary nicht gefunden – wird installiert …", flush=True)
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "questionary"],
+    )
     import questionary
 
 # ---------------------------------------------------------------------------
@@ -61,10 +64,10 @@ def _install_revealjs(project_dir: str) -> None:
         shutil.rmtree(skill_dest)
     shutil.copytree(src, skill_dest)
 
-    # npm install
+    # npm install (from repo root, where package.json lives)
     print("  Running npm install …")
     subprocess.check_call(
-        ["npm", "install", "--prefix", skill_dest],
+        ["npm", "install", "--prefix", tmp_dir],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
