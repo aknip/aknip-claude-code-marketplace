@@ -61,6 +61,36 @@ SKILLS = [
         "description": "PowerPoint tools with colorscale script",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
     },
+    {
+        "id": "pptx-with-templates",
+        "name": "aknip PPTX with Templates",
+        "description": "PowerPoint editing with templates, validation, and slide management",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
+    {
+        "id": "sales-pitch-assistant",
+        "name": "aknip Sales Pitch Assistant",
+        "description": "Sales pitch presentations with impress.js and sales methodology references",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
+    {
+        "id": "summarizer",
+        "name": "aknip Summarizer",
+        "description": "Document summarization with Mistral OCR",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
+    {
+        "id": "business-analyst",
+        "name": "aknip Business Analyst",
+        "description": "Business analyst skill for requirements and analysis",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
+    {
+        "id": "product-manager",
+        "name": "aknip Product Manager",
+        "description": "Product manager skill for product strategy and planning",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+    },
 ]
 
 
@@ -132,11 +162,56 @@ async def install_pptx_tools(project_dir: str, log: RichLog) -> None:
     await _run(["curl", "-sL", f"{base_url}/scripts/colorscale.py", "-o", os.path.join(scripts_dir, "colorscale.py")])
 
 
+async def _install_from_marketplace(project_dir: str, log: RichLog, plugin_path: str, skill_name: str) -> None:
+    """Clone the marketplace repo and copy a skill from plugins/<plugin_path> to .claude/skills/<skill_name>."""
+    tmp_dir = os.path.join(project_dir, "tmp-for-skill-installation")
+    skill_dest = os.path.join(project_dir, ".claude", "skills", skill_name)
+
+    log.write("  Cloning repository …")
+    await _run([
+        "git", "clone", "--depth", "1",
+        "https://github.com/aknip/aknip-claude-code-marketplace.git", tmp_dir,
+    ])
+
+    src = os.path.join(tmp_dir, "plugins", *plugin_path.split("/"))
+    os.makedirs(os.path.dirname(skill_dest), exist_ok=True)
+    if os.path.exists(skill_dest):
+        shutil.rmtree(skill_dest)
+    shutil.copytree(src, skill_dest, ignore=shutil.ignore_patterns("__pycache__", ".DS_Store"))
+
+    shutil.rmtree(tmp_dir)
+
+
+async def install_pptx_with_templates(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "pptx-with-templates/skills/pptx-with-templates", "pptx-with-templates")
+
+
+async def install_sales_pitch_assistant(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "sales-pitch-assistant/skills/sales-pitch-assistant", "sales-pitch-assistant")
+
+
+async def install_summarizer(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "summarizer/skills/summarizer", "summarizer")
+
+
+async def install_business_analyst(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "ba-business-analysts/skills/business-analyst", "business-analyst")
+
+
+async def install_product_manager(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "ba-business-analysts/skills/product-manager", "product-manager")
+
+
 INSTALL_FUNCTIONS = {
     "brainstorming": install_brainstorming,
     "revealjs": install_revealjs,
     "image-enhancer": install_image_enhancer,
     "pptx-tools": install_pptx_tools,
+    "pptx-with-templates": install_pptx_with_templates,
+    "sales-pitch-assistant": install_sales_pitch_assistant,
+    "summarizer": install_summarizer,
+    "business-analyst": install_business_analyst,
+    "product-manager": install_product_manager,
 }
 
 
