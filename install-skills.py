@@ -1,138 +1,454 @@
 #!/usr/bin/env python3
-"""Installer for Claude Code Skills/Agents/Tools."""
+"""Installer for Claude Code Skills/Agents/Tools – Textual TUI."""
 
+import asyncio
 import os
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
+# Auto-install textual if missing
 try:
-    import questionary
+    import textual
 except ImportError:
-    print("questionary nicht gefunden – wird installiert …", flush=True)
+    print("textual nicht gefunden – wird installiert …", flush=True)
     subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "questionary"],
+        [sys.executable, "-m", "pip", "install", "textual"],
+        stdout=subprocess.DEVNULL,
     )
-    import questionary
+
+from textual import on, work
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal, Vertical
+from textual.screen import ModalScreen
+from textual.widgets import (
+    Button,
+    DirectoryTree,
+    Footer,
+    Header,
+    Input,
+    RichLog,
+    Static,
+)
+from textual.widgets._selection_list import Selection, SelectionList
 
 # ---------------------------------------------------------------------------
-# Skill registry – each entry describes how to install one skill
+# Skill registry
 # ---------------------------------------------------------------------------
 SKILLS = [
     {
+        "id": "brainstorming",
         "name": "Superpowers-Brainstorming",
         "description": "Brainstorming skill from obra/superpowers",
-        "install": lambda dest: _install_brainstorming(dest),
+        "source": "github.com/obra/superpowers",
     },
     {
+        "id": "revealjs",
         "name": "RevealJS",
         "description": "RevealJS presentation skill",
-        "install": lambda dest: _install_revealjs(dest),
+        "source": "github.com/ryanbbrown/revealjs-skill",
     },
 ]
 
 
-def _install_brainstorming(project_dir: str) -> None:
+# ---------------------------------------------------------------------------
+# Install functions (async, for non-blocking UI)
+# ---------------------------------------------------------------------------
+async def _run(cmd: list[str], **kwargs) -> None:
+    proc = await asyncio.create_subprocess_exec(
+        *cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.STDOUT,
+        **kwargs,
+    )
+    stdout, _ = await proc.communicate()
+    if proc.returncode != 0:
+        output = stdout.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"Command failed (exit {proc.returncode}):\n{output}")
+
+
+async def install_brainstorming(project_dir: str, log: RichLog) -> None:
     skill_dir = os.path.join(project_dir, ".claude", "skills", "brainstorming")
     os.makedirs(skill_dir, exist_ok=True)
     url = "https://raw.githubusercontent.com/obra/superpowers/main/skills/brainstorming/SKILL.md"
     target = os.path.join(skill_dir, "SKILL.md")
-    print(f"  Downloading SKILL.md → {target}")
-    subprocess.check_call(["curl", "-sL", url, "-o", target])
-    print("  ✓ Superpowers-Brainstorming installiert")
+    log.write("  Downloading SKILL.md …")
+    await _run(["curl", "-sL", url, "-o", target])
 
 
-def _install_revealjs(project_dir: str) -> None:
+async def install_revealjs(project_dir: str, log: RichLog) -> None:
     tmp_dir = os.path.join(project_dir, "tmp-for-skill-installation")
     skill_dest = os.path.join(project_dir, ".claude", "skills", "revealjs")
 
-    # Clone
-    print("  Cloning revealjs-skill repo …")
-    subprocess.check_call(
-        ["git", "clone", "https://github.com/ryanbbrown/revealjs-skill.git", tmp_dir],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    log.write("  Cloning repository …")
+    await _run(["git", "clone", "https://github.com/ryanbbrown/revealjs-skill.git", tmp_dir])
 
-    # Copy skill folder
-    src = os.path.join(tmp_dir, "revealjs-skill", "skills", "revealjs")
+    src = os.path.join(tmp_dir, "skills", "revealjs")
     if not os.path.isdir(src):
-        # Repo root might already be the skill folder – try alternative layout
-        src = os.path.join(tmp_dir, "skills", "revealjs")
+        src = os.path.join(tmp_dir, "revealjs-skill", "skills", "revealjs")
     os.makedirs(os.path.dirname(skill_dest), exist_ok=True)
     if os.path.exists(skill_dest):
         shutil.rmtree(skill_dest)
     shutil.copytree(src, skill_dest)
 
-    # npm install (from repo root, where package.json lives)
-    print("  Running npm install …")
-    subprocess.check_call(
-        ["npm", "install", "--prefix", tmp_dir],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-    )
+    log.write("  Running npm install …")
+    await _run(["npm", "install", "--prefix", tmp_dir])
 
-    # Cleanup
     shutil.rmtree(tmp_dir)
-    print("  ✓ RevealJS installiert")
 
 
-def main() -> None:
-    print("╔══════════════════════════════════════════╗")
-    print("║  Claude Code Skill Installer             ║")
-    print("╚══════════════════════════════════════════╝")
-    print()
+INSTALL_FUNCTIONS = {
+    "brainstorming": install_brainstorming,
+    "revealjs": install_revealjs,
+}
 
-    # 1. Ask for project directory
-    default_dir = os.getcwd()
-    project_dir = questionary.path(
-        "Projektverzeichnis:",
-        default=default_dir,
-        only_directories=True,
-    ).ask()
 
-    if not project_dir:
-        print("Abgebrochen.")
-        return
+# ---------------------------------------------------------------------------
+# Directory picker modal
+# ---------------------------------------------------------------------------
+class DirectoryPickerScreen(ModalScreen[str | None]):
+    """Modal screen with a DirectoryTree to pick a folder."""
 
-    project_dir = os.path.abspath(os.path.expanduser(project_dir))
-    if not os.path.isdir(project_dir):
-        print(f"Verzeichnis existiert nicht: {project_dir}")
-        return
+    BINDINGS = [("escape", "cancel", "Abbrechen")]
 
-    print(f"\nZielverzeichnis: {project_dir}\n")
+    CSS = """
+    DirectoryPickerScreen {
+        align: center middle;
+    }
 
-    # 2. Multi-select skills
-    choices = [
-        questionary.Choice(
-            title=f"{s['name']}  –  {s['description']}",
-            value=s["name"],
-        )
-        for s in SKILLS
+    #picker-container {
+        width: 70;
+        height: 30;
+        border: thick $accent;
+        background: $surface;
+        padding: 1 2;
+    }
+
+    #picker-title {
+        text-style: bold;
+        text-align: center;
+        margin-bottom: 1;
+    }
+
+    #selected-path {
+        margin: 1 0;
+        padding: 0 1;
+        color: $accent;
+    }
+
+    DirectoryTree {
+        height: 1fr;
+        border: solid $secondary;
+    }
+
+    #picker-buttons {
+        height: auto;
+        align-horizontal: center;
+        margin-top: 1;
+    }
+
+    #picker-buttons Button {
+        margin: 0 1;
+    }
+
+    #nav-row {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    #up-btn {
+        min-width: 20;
+    }
+
+    #current-root {
+        padding: 0 1;
+        color: $text-muted;
+        content-align-horizontal: right;
+        width: 1fr;
+    }
+    """
+
+    def __init__(self, start_path: str) -> None:
+        super().__init__()
+        self._start_path = start_path
+        self._selected: str = start_path
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="picker-container"):
+            yield Static("Verzeichnis auswählen", id="picker-title")
+            with Horizontal(id="nav-row"):
+                yield Button(".. Eine Ebene höher", id="up-btn", variant="default")
+                yield Static(self._start_path, id="current-root")
+            yield DirectoryTree(self._start_path, id="dir-tree")
+            yield Static(f"Auswahl: {self._selected}", id="selected-path")
+            with Horizontal(id="picker-buttons"):
+                yield Button("Übernehmen", id="pick-ok", variant="primary")
+                yield Button("Abbrechen", id="pick-cancel", variant="error")
+
+    @on(Button.Pressed, "#up-btn")
+    def on_up_pressed(self) -> None:
+        tree = self.query_one("#dir-tree", DirectoryTree)
+        current_root = str(tree.path)
+        parent = str(Path(current_root).parent)
+        if parent != current_root:
+            self._selected = parent
+            tree.path = parent
+            self.query_one("#current-root", Static).update(parent)
+            self.query_one("#selected-path", Static).update(f"Auswahl: {parent}")
+
+    @on(DirectoryTree.DirectorySelected)
+    def on_dir_selected(self, event: DirectoryTree.DirectorySelected) -> None:
+        self._selected = str(event.path)
+        self.query_one("#selected-path", Static).update(f"Auswahl: {self._selected}")
+
+    @on(Button.Pressed, "#pick-ok")
+    def on_pick_ok(self) -> None:
+        self.dismiss(self._selected)
+
+    @on(Button.Pressed, "#pick-cancel")
+    def on_pick_cancel(self) -> None:
+        self.dismiss(None)
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+
+# ---------------------------------------------------------------------------
+# Main App
+# ---------------------------------------------------------------------------
+class SkillInstaller(App):
+    TITLE = "Claude Code Skill Installer"
+    BINDINGS = [
+        ("q", "quit", "Beenden"),
+        ("ctrl+c", "quit", "Beenden"),
     ]
 
-    selected = questionary.checkbox(
-        "Skills auswählen (Leertaste = auswählen, Enter = bestätigen):",
-        choices=choices,
-    ).ask()
+    CSS = """
+    Screen {
+        layout: vertical;
+        padding: 1 2;
+    }
 
-    if not selected:
-        print("Keine Skills ausgewählt. Abgebrochen.")
-        return
+    #title-bar {
+        text-align: center;
+        text-style: bold;
+        color: $text;
+        background: $accent;
+        padding: 1 2;
+        margin-bottom: 1;
+    }
 
-    # 3. Install selected skills
-    print()
-    for skill in SKILLS:
-        if skill["name"] in selected:
-            print(f"→ Installiere {skill['name']} …")
+    #main-area {
+        height: 1fr;
+    }
+
+    #left-panel {
+        width: 1fr;
+        margin-right: 1;
+    }
+
+    #right-panel {
+        width: 1fr;
+    }
+
+    #dir-label {
+        margin-top: 1;
+        padding: 0 1;
+        text-style: bold;
+    }
+
+    #dir-row {
+        height: auto;
+        margin: 0 0 1 0;
+    }
+
+    #project-dir {
+        width: 1fr;
+    }
+
+    #browse-btn {
+        min-width: 16;
+        margin-left: 1;
+    }
+
+    #skill-label {
+        padding: 0 1;
+        text-style: bold;
+    }
+
+    SelectionList {
+        height: auto;
+        max-height: 12;
+        border: solid $accent;
+        margin-bottom: 1;
+    }
+
+    #btn-row {
+        height: auto;
+        align-horizontal: center;
+        margin: 1 0;
+    }
+
+    #install-btn {
+        min-width: 30;
+    }
+
+    #log-container {
+        height: 1fr;
+        border: solid $secondary;
+    }
+
+    RichLog {
+        height: 1fr;
+    }
+
+    #summary {
+        text-align: center;
+        padding: 1;
+        margin-top: 1;
+        display: none;
+    }
+
+    #summary.success {
+        display: block;
+        background: $success;
+        color: $text;
+        text-style: bold;
+    }
+
+    #summary.partial {
+        display: block;
+        background: $warning;
+        color: $text;
+        text-style: bold;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        yield Header(show_clock=False)
+        yield Static("Claude Code Skill Installer", id="title-bar")
+
+        with Horizontal(id="main-area"):
+            with Vertical(id="left-panel"):
+                yield Static("Projektverzeichnis:", id="dir-label")
+                with Horizontal(id="dir-row"):
+                    yield Input(
+                        value=os.getcwd(),
+                        placeholder="Pfad zum Projektverzeichnis …",
+                        id="project-dir",
+                    )
+                    yield Button("Durchsuchen", id="browse-btn", variant="default")
+                yield Static("Skills auswählen:", id="skill-label")
+                yield SelectionList[str](
+                    *[
+                        Selection(
+                            f"{s['name']}  —  {s['description']}",
+                            s["id"],
+                        )
+                        for s in SKILLS
+                    ],
+                    id="skills",
+                )
+                with Horizontal(id="btn-row"):
+                    yield Button(
+                        "Installieren",
+                        id="install-btn",
+                        variant="primary",
+                        disabled=True,
+                    )
+
+            with Vertical(id="right-panel"):
+                log_container = Vertical(id="log-container")
+                log_container.border_title = "Installationslog"
+                with log_container:
+                    yield RichLog(
+                        highlight=True,
+                        markup=True,
+                        auto_scroll=True,
+                        id="log",
+                    )
+
+        yield Static("", id="summary")
+        yield Footer()
+
+    @on(Button.Pressed, "#browse-btn")
+    def on_browse_pressed(self) -> None:
+        current = self.query_one("#project-dir", Input).value.strip()
+        start = current if os.path.isdir(current) else str(Path.home())
+
+        def on_dismiss(result: str | None) -> None:
+            if result is not None:
+                self.query_one("#project-dir", Input).value = result
+
+        self.push_screen(DirectoryPickerScreen(start), callback=on_dismiss)
+
+    @on(SelectionList.SelectedChanged)
+    def on_selection_changed(self, event: SelectionList.SelectedChanged) -> None:
+        selected = event.selection_list.selected
+        btn = self.query_one("#install-btn", Button)
+        btn.disabled = len(selected) == 0
+        count = len(selected)
+        btn.label = f"Installieren ({count})" if count > 0 else "Installieren"
+
+    @on(Button.Pressed, "#install-btn")
+    def on_install_pressed(self) -> None:
+        self.run_installation()
+
+    @work(exclusive=True)
+    async def run_installation(self) -> None:
+        btn = self.query_one("#install-btn", Button)
+        btn.disabled = True
+        skills_list = self.query_one("#skills", SelectionList)
+        skills_list.disabled = True
+        dir_input = self.query_one("#project-dir", Input)
+        dir_input.disabled = True
+
+        log = self.query_one("#log", RichLog)
+        log.clear()
+
+        project_dir = dir_input.value.strip()
+        project_dir = os.path.abspath(os.path.expanduser(project_dir))
+
+        if not os.path.isdir(project_dir):
+            log.write(f"[bold red]Verzeichnis existiert nicht: {project_dir}[/]")
+            btn.disabled = False
+            skills_list.disabled = False
+            dir_input.disabled = False
+            return
+
+        selected = skills_list.selected
+        log.write(f"[bold]Zielverzeichnis:[/] {project_dir}")
+        log.write(f"[bold]Skills:[/] {len(selected)} ausgewählt\n")
+
+        success = 0
+        failed = 0
+
+        for skill_id in selected:
+            skill = next(s for s in SKILLS if s["id"] == skill_id)
+            log.write(f"[bold cyan]→ {skill['name']}[/]")
             try:
-                skill["install"](project_dir)
+                await INSTALL_FUNCTIONS[skill_id](project_dir, log)
+                log.write(f"  [bold green]✓ {skill['name']} installiert[/]\n")
+                success += 1
             except Exception as e:
-                print(f"  ✗ Fehler: {e}")
-            print()
+                log.write(f"  [bold red]✗ Fehler: {e}[/]\n")
+                failed += 1
 
-    print("Fertig!")
+        # Summary
+        summary = self.query_one("#summary", Static)
+        if failed == 0:
+            summary.update(f"✓ {success} Skill(s) erfolgreich installiert")
+            summary.set_classes("success")
+        else:
+            summary.update(f"✓ {success} erfolgreich, ✗ {failed} fehlgeschlagen")
+            summary.set_classes("partial")
+
+        # Re-enable UI
+        btn.disabled = False
+        skills_list.disabled = False
+        dir_input.disabled = False
 
 
 if __name__ == "__main__":
-    main()
+    SkillInstaller().run()
