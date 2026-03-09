@@ -350,21 +350,7 @@ class SkillInstaller(App):
         margin-bottom: 1;
     }
 
-    #main-area {
-        height: 1fr;
-    }
-
-    #left-panel {
-        width: 1fr;
-        margin-right: 1;
-    }
-
-    #right-panel {
-        width: 1fr;
-    }
-
     #dir-label {
-        margin-top: 1;
         padding: 0 1;
         text-style: bold;
     }
@@ -440,45 +426,42 @@ class SkillInstaller(App):
         yield Header(show_clock=False)
         yield Static("Claude Code Skill Installer", id="title-bar")
 
-        with Horizontal(id="main-area"):
-            with Vertical(id="left-panel"):
-                yield Static("Projektverzeichnis:", id="dir-label")
-                with Horizontal(id="dir-row"):
-                    yield Input(
-                        value=os.getcwd(),
-                        placeholder="Pfad zum Projektverzeichnis …",
-                        id="project-dir",
-                    )
-                    yield Button("Durchsuchen", id="browse-btn", variant="default")
-                yield Static("Skills auswählen:", id="skill-label")
-                yield SelectionList[str](
-                    *[
-                        Selection(
-                            f"{s['name']}  —  {s['description']}",
-                            s["id"],
-                        )
-                        for s in SKILLS
-                    ],
-                    id="skills",
+        yield Static("Projektverzeichnis:", id="dir-label")
+        with Horizontal(id="dir-row"):
+            yield Input(
+                value=os.getcwd(),
+                placeholder="Pfad zum Projektverzeichnis …",
+                id="project-dir",
+            )
+            yield Button("Durchsuchen", id="browse-btn", variant="default")
+        yield Static("Skills auswählen:", id="skill-label")
+        yield SelectionList[str](
+            *[
+                Selection(
+                    f"{s['name']}  —  {s['description']}",
+                    s["id"],
                 )
-                with Horizontal(id="btn-row"):
-                    yield Button(
-                        "Installieren",
-                        id="install-btn",
-                        variant="primary",
-                        disabled=True,
-                    )
+                for s in SKILLS
+            ],
+            id="skills",
+        )
+        with Horizontal(id="btn-row"):
+            yield Button(
+                "Installieren",
+                id="install-btn",
+                variant="primary",
+                disabled=True,
+            )
 
-            with Vertical(id="right-panel"):
-                log_container = Vertical(id="log-container")
-                log_container.border_title = "Installationslog"
-                with log_container:
-                    yield RichLog(
-                        highlight=True,
-                        markup=True,
-                        auto_scroll=True,
-                        id="log",
-                    )
+        log_container = Vertical(id="log-container")
+        log_container.border_title = "Installationslog"
+        with log_container:
+            yield RichLog(
+                highlight=True,
+                markup=True,
+                auto_scroll=True,
+                id="log",
+            )
 
         yield Static("", id="summary")
         yield Footer()
