@@ -101,6 +101,12 @@ SKILLS = [
         "description": "Usecase-driven software development with AI agents (full plugin with shadcn/ui app)",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
     },
+    {
+        "id": "excalidraw",
+        "name": "Excalidraw Diagramming",
+        "description": "Create Excalidraw diagrams with shapes, arrows, text, styling, and grouping",
+        "source": "github.com/tenzir/claude-plugins",
+    },
 ]
 
 
@@ -293,6 +299,25 @@ For further information, see the documentation `_aknip-claude-code-marketplace-l
 """)
 
 
+async def install_excalidraw(project_dir: str, log: RichLog) -> None:
+    tmp_dir = os.path.join(project_dir, "tmp-for-skill-installation")
+    skill_dest = os.path.join(project_dir, ".claude", "skills", "excalidraw-diagramming")
+
+    log.write("  Cloning repository …")
+    await _run([
+        "git", "clone", "--depth", "1",
+        "https://github.com/tenzir/claude-plugins.git", tmp_dir,
+    ])
+
+    src = os.path.join(tmp_dir, "plugins", "excalidraw", "skills", "diagramming")
+    os.makedirs(os.path.dirname(skill_dest), exist_ok=True)
+    if os.path.exists(skill_dest):
+        shutil.rmtree(skill_dest)
+    shutil.copytree(src, skill_dest, ignore=shutil.ignore_patterns("__pycache__", ".DS_Store"))
+
+    shutil.rmtree(tmp_dir)
+
+
 INSTALL_FUNCTIONS = {
     "brainstorming": install_brainstorming,
     "revealjs": install_revealjs,
@@ -304,6 +329,7 @@ INSTALL_FUNCTIONS = {
     "business-analyst": install_business_analyst,
     "product-manager": install_product_manager,
     "esf": install_esf,
+    "excalidraw": install_excalidraw,
 }
 
 
@@ -468,7 +494,7 @@ class SkillInstaller(App):
 
     #skills {
         height: auto;
-        max-height: 50%;
+        max-height: 75%;
         border: solid $accent;
         margin-bottom: 1;
     }
