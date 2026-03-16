@@ -35,77 +35,92 @@ from textual.widgets import (
     ListView,
     RichLog,
     Static,
+    TabbedContent,
+    TabPane,
 )
 
 # ---------------------------------------------------------------------------
 # Skill registry
 # ---------------------------------------------------------------------------
+CONTENT_SKILL_IDS = {"revealjs", "image-enhancer", "pptx-tools", "pptx-with-templates", "sales-pitch-assistant", "summarizer", "excalidraw"}
+
 SKILLS = [
     {
         "id": "brainstorming",
         "name": "Superpowers-Brainstorming",
         "description": "Brainstorming skill from obra/superpowers",
         "source": "github.com/obra/superpowers",
+        "tab": "dev",
     },
     {
         "id": "revealjs",
         "name": "RevealJS",
         "description": "RevealJS presentation skill",
         "source": "github.com/ryanbbrown/revealjs-skill",
+        "tab": "content",
     },
     {
         "id": "image-enhancer",
         "name": "Image Enhancer",
         "description": "Checks image resolution and sharpness, upscales, sharpens text and edges, and removes noise",
         "source": "github.com/ComposioHQ/awesome-claude-skills",
+        "tab": "content",
     },
     {
         "id": "pptx-tools",
         "name": "aknip PPTX Tools",
         "description": "PowerPoint tools with colorscale script",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "content",
     },
     {
         "id": "pptx-with-templates",
         "name": "aknip PPTX with Templates",
         "description": "PowerPoint editing with templates, validation, and slide management",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "content",
     },
     {
         "id": "sales-pitch-assistant",
         "name": "aknip Sales Pitch Assistant",
         "description": "Sales pitch presentations with impress.js and sales methodology references",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "content",
     },
     {
         "id": "summarizer",
         "name": "aknip Summarizer",
         "description": "Document summarization with Mistral OCR",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "content",
     },
     {
         "id": "business-analyst",
         "name": "aknip Business Analyst",
         "description": "Business analyst skill for requirements and analysis",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "dev",
     },
     {
         "id": "product-manager",
         "name": "aknip Product Manager",
         "description": "Product manager skill for product strategy and planning",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "dev",
     },
     {
         "id": "esf",
         "name": "aknip ESF - Enterprise Software Fabric",
         "description": "Usecase-driven software development with AI agents (full plugin with shadcn/ui app)",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "dev",
     },
     {
         "id": "excalidraw",
         "name": "Excalidraw Diagramming",
         "description": "Create Excalidraw diagrams with shapes, arrows, text, styling, and grouping",
         "source": "github.com/tenzir/claude-plugins",
+        "tab": "content",
     },
 ]
 
@@ -492,11 +507,16 @@ class SkillInstaller(App):
         text-style: bold;
     }
 
-    #skills {
+    #skill-tabs {
         height: auto;
         max-height: 75%;
-        border: solid $accent;
         margin-bottom: 1;
+    }
+
+    .skills-list {
+        height: auto;
+        max-height: 100%;
+        border: solid $accent;
     }
 
     SkillItem {
@@ -587,10 +607,19 @@ class SkillInstaller(App):
             )
             yield Button("Durchsuchen", id="browse-btn", variant="default")
         yield Static("Skills auswählen (Leertaste = auswählen):", id="skill-label")
-        skills_list = ListView(id="skills")
-        with skills_list:
-            for s in SKILLS:
-                yield SkillItem(s["id"], s["name"], s["description"], s["source"])
+        with TabbedContent(id="skill-tabs"):
+            with TabPane("Skills Dev", id="tab-dev"):
+                dev_list = ListView(id="skills-dev", classes="skills-list")
+                with dev_list:
+                    for s in SKILLS:
+                        if s["tab"] == "dev":
+                            yield SkillItem(s["id"], s["name"], s["description"], s["source"])
+            with TabPane("Skills Content", id="tab-content"):
+                content_list = ListView(id="skills-content", classes="skills-list")
+                with content_list:
+                    for s in SKILLS:
+                        if s["tab"] == "content":
+                            yield SkillItem(s["id"], s["name"], s["description"], s["source"])
         with Horizontal(id="btn-row"):
             yield Button(
                 "Installieren",
@@ -653,8 +682,8 @@ class SkillInstaller(App):
     async def run_installation(self) -> None:
         btn = self.query_one("#install-btn", Button)
         btn.disabled = True
-        skills_list = self.query_one("#skills", ListView)
-        skills_list.disabled = True
+        for lv in self.query(".skills-list"):
+            lv.disabled = True
         dir_input = self.query_one("#project-dir", Input)
         dir_input.disabled = True
 
@@ -700,7 +729,8 @@ class SkillInstaller(App):
 
         # Re-enable UI
         btn.disabled = False
-        skills_list.disabled = False
+        for lv in self.query(".skills-list"):
+            lv.disabled = False
         dir_input.disabled = False
 
 
