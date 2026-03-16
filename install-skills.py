@@ -122,6 +122,13 @@ SKILLS = [
         "source": "github.com/tenzir/claude-plugins",
         "tab": "content",
     },
+    {
+        "id": "docker-sandbox",
+        "name": "Docker Sandbox für Claude Code",
+        "description": "Docker-Container als sichere Sandbox-Umgebung für Claude Code",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "scripts",
+    },
 ]
 
 
@@ -333,6 +340,25 @@ async def install_excalidraw(project_dir: str, log: RichLog) -> None:
     shutil.rmtree(tmp_dir)
 
 
+async def install_docker_sandbox(project_dir: str, log: RichLog) -> None:
+    tmp_dir = os.path.join(project_dir, "tmp-for-skill-installation")
+
+    log.write("  Cloning repository …")
+    await _run([
+        "git", "clone", "--depth", "1",
+        "https://github.com/aknip/aknip-claude-code-marketplace.git", tmp_dir,
+    ])
+
+    src = os.path.join(tmp_dir, "scripts", "docker-sandbox-for-claude")
+    dest = os.path.join(project_dir, "docker-sandbox-for-claude")
+    log.write("  Kopiere docker-sandbox-for-claude …")
+    if os.path.exists(dest):
+        shutil.rmtree(dest)
+    shutil.copytree(src, dest, ignore=shutil.ignore_patterns("__pycache__", ".DS_Store"))
+
+    shutil.rmtree(tmp_dir)
+
+
 INSTALL_FUNCTIONS = {
     "brainstorming": install_brainstorming,
     "revealjs": install_revealjs,
@@ -345,6 +371,7 @@ INSTALL_FUNCTIONS = {
     "product-manager": install_product_manager,
     "esf": install_esf,
     "excalidraw": install_excalidraw,
+    "docker-sandbox": install_docker_sandbox,
 }
 
 
@@ -620,6 +647,12 @@ class SkillInstaller(App):
                     for s in SKILLS:
                         if s["tab"] == "content":
                             yield SkillItem(s["id"], s["name"], s["description"], s["source"])
+            with TabPane("Scripts", id="tab-scripts"):
+                scripts_list = ListView(id="skills-scripts", classes="skills-list")
+                with scripts_list:
+                    for s in SKILLS:
+                        if s["tab"] == "scripts":
+                            yield SkillItem(s["id"], s["name"], s["description"], s["source"])
         with Horizontal(id="btn-row"):
             yield Button(
                 "Installieren",
@@ -696,13 +729,14 @@ class SkillInstaller(App):
         if not os.path.isdir(project_dir):
             log.write(f"[bold red]Verzeichnis existiert nicht: {project_dir}[/]")
             btn.disabled = False
-            skills_list.disabled = False
+            for lv in self.query(".skills-list"):
+                lv.disabled = False
             dir_input.disabled = False
             return
 
         selected = self._get_selected_skill_ids()
         log.write(f"[bold]Zielverzeichnis:[/] {project_dir}")
-        log.write(f"[bold]Skills:[/] {len(selected)} ausgewählt\n")
+        log.write(f"[bold]Auswahl:[/] {len(selected)} Einträge\n")
 
         success = 0
         failed = 0
