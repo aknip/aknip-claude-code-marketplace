@@ -349,9 +349,9 @@ async def install_docker_sandbox(project_dir: str, log: RichLog) -> None:
         "https://github.com/aknip/aknip-claude-code-marketplace.git", tmp_dir,
     ])
 
-    src = os.path.join(tmp_dir, "scripts", "docker-sandbox-for-claude")
-    dest = os.path.join(project_dir, "docker-sandbox-for-claude")
-    log.write("  Kopiere docker-sandbox-for-claude …")
+    src = os.path.join(tmp_dir, "scripts", "docker-sandbox-for-claude", "_Docker")
+    dest = os.path.join(project_dir, "_Docker")
+    log.write("  Kopiere _Docker …")
     if os.path.exists(dest):
         shutil.rmtree(dest)
     shutil.copytree(src, dest, ignore=shutil.ignore_patterns("__pycache__", ".DS_Store"))
