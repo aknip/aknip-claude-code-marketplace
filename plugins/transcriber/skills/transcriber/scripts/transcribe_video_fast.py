@@ -24,18 +24,19 @@ from pathlib import Path
 def check_virtual_environment():
     """Prüft, ob das Skript in einer virtuellen Python-Umgebung ausgeführt wird."""
     if sys.prefix == sys.base_prefix:
+        script_dir = Path(__file__).resolve().parent
         print("❌ Dieses Skript muss in einer virtuellen Python-Umgebung ausgeführt werden.")
         print()
-        print("Bitte richte eine virtuelle Umgebung ein und aktiviere sie:")
+        print("Bitte richte eine virtuelle Umgebung im Script-Verzeichnis ein und aktiviere sie:")
         print()
-        print("  python3 -m venv .venv")
-        print("  source .venv/bin/activate")
+        print(f"  python3 -m venv \"{script_dir}/.venv\"")
+        print(f"  source \"{script_dir}/.venv/bin/activate\"")
         print("  pip install pywhispercpp")
         print()
         print("Oder mit uv:")
         print()
-        print("  uv venv")
-        print("  source .venv/bin/activate")
+        print(f"  uv venv \"{script_dir}/.venv\"")
+        print(f"  source \"{script_dir}/.venv/bin/activate\"")
         print("  uv pip install pywhispercpp")
         sys.exit(1)
 

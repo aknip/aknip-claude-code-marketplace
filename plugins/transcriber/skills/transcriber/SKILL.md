@@ -1,26 +1,29 @@
 ---
 name: transcriber
-description: Transcribe audio and video files (.mp4, .mp3) to text using Whisper with Apple Silicon GPU acceleration.
-allowed-tools: Bash(python *), Bash(.venv/bin/python *), Bash(source *), Bash(python3 *), Bash(uv *), Bash(pip *), Bash(ls *), Bash(cat *), Bash(head *), Bash(tail *), Read, Write, Grep, Glob
+description: Transcribe audio and video files (.mp4, .mp3) to text using Whisper with Apple Silicon GPU acceleration. Use to transcribe meeting recordings, podcasts, or any other audio/video content.
+allowed-tools: Bash(python *), Bash(*/bin/python *), Bash(source *), Bash(python3 *), Bash(uv *), Bash(pip *), Bash(ls *), Bash(cat *), Bash(head *), Bash(tail *), Read, Write, Grep, Glob
 ---
 
 You are a transcription assistant. Your task is to transcribe audio and video files using the bundled Whisper-based transcription script.
 
 ## Setup (one-time)
 
-The transcription script requires a Python virtual environment with `pywhispercpp`. Before first use, ensure the venv exists:
+The transcription script requires a Python virtual environment with `pywhispercpp`. The venv is always created in the script's directory so it stays with the plugin regardless of the current working directory.
+
+Before first use, ensure the venv exists:
 
 ```bash
-cd <project-root>
-python3 -m venv .venv
-source .venv/bin/activate
+SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT}/skills/transcriber/scripts"
+python3 -m venv "${SCRIPT_DIR}/.venv"
+source "${SCRIPT_DIR}/.venv/bin/activate"
 pip install pywhispercpp
 ```
 
 Or with uv:
 ```bash
-uv venv
-source .venv/bin/activate
+SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT}/skills/transcriber/scripts"
+uv venv "${SCRIPT_DIR}/.venv"
+source "${SCRIPT_DIR}/.venv/bin/activate"
 uv pip install pywhispercpp
 ```
 
@@ -40,7 +43,8 @@ ${CLAUDE_PLUGIN_ROOT}/skills/transcriber/scripts/transcribe_video_fast.py
 3. Run the script inside the virtual environment:
 
 ```bash
-source .venv/bin/activate && python "${CLAUDE_PLUGIN_ROOT}/skills/transcriber/scripts/transcribe_video_fast.py" "<INPUT_PATH>" [--timestamps] [--verbose]
+SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT}/skills/transcriber/scripts"
+source "${SCRIPT_DIR}/.venv/bin/activate" && python "${SCRIPT_DIR}/transcribe_video_fast.py" "<INPUT_PATH>" [--timestamps] [--verbose]
 ```
 
 ### Script parameters:
