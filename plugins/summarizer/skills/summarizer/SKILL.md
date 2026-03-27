@@ -191,3 +191,11 @@ Examples:
     Total coverage: ~25-30% distributed across entire document
     No gaps larger than 30 pages
     Every section represented
+
+## Important: iCloud paths
+
+When users provide iCloud Drive paths, the shell representation uses tildes instead of dots:
+- User provides: `comappleCloudDocs`
+- Correct shell path: `com~apple~CloudDocs`
+
+Always replace `comappleCloudDocs` with `com~apple~CloudDocs` in file paths.
