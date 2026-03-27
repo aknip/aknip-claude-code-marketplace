@@ -37,3 +37,6 @@ Personal marketplace for Claude Code plugins and a TUI-based skill installer.
 
 - Code comments and UI strings are mixed German/English
 - README and docs are in English
+
+## More Details
+see README.md
