@@ -42,7 +42,7 @@ from textual.widgets import (
 # ---------------------------------------------------------------------------
 # Skill registry
 # ---------------------------------------------------------------------------
-CONTENT_SKILL_IDS = {"revealjs", "image-enhancer", "pptx-tools", "pptx-with-templates", "sales-pitch-assistant", "summarizer", "excalidraw", "transcriber"}
+CONTENT_SKILL_IDS = {"revealjs", "image-enhancer", "pptx-tools", "pptx-with-templates", "sales-pitch-assistant", "summarizer", "ocr-with-mistral", "excalidraw", "transcriber"}
 
 SKILLS = [
     {
@@ -90,7 +90,14 @@ SKILLS = [
     {
         "id": "summarizer",
         "name": "aknip Summarizer",
-        "description": "Document summarization with Mistral OCR",
+        "description": "Document summarization (text input)",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
+        "tab": "content",
+    },
+    {
+        "id": "ocr-with-mistral",
+        "name": "aknip OCR with Mistral",
+        "description": "Extract markdown-formatted text from scanned PDFs using Mistral OCR",
         "source": "github.com/aknip/aknip-claude-code-marketplace",
         "tab": "content",
     },
@@ -261,6 +268,10 @@ async def install_summarizer(project_dir: str, log: RichLog) -> None:
     await _install_from_marketplace(project_dir, log, "summarizer/skills/summarizer", "summarizer")
 
 
+async def install_ocr_with_mistral(project_dir: str, log: RichLog) -> None:
+    await _install_from_marketplace(project_dir, log, "ocr-with-mistral/skills/ocr-with-mistral", "ocr-with-mistral")
+
+
 async def install_business_analyst(project_dir: str, log: RichLog) -> None:
     await _install_from_marketplace(project_dir, log, "ba-business-analysts/skills/business-analyst", "business-analyst")
 
@@ -374,6 +385,7 @@ INSTALL_FUNCTIONS = {
     "pptx-with-templates": install_pptx_with_templates,
     "sales-pitch-assistant": install_sales_pitch_assistant,
     "summarizer": install_summarizer,
+    "ocr-with-mistral": install_ocr_with_mistral,
     "business-analyst": install_business_analyst,
     "product-manager": install_product_manager,
     "esf": install_esf,

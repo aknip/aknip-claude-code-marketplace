@@ -11,7 +11,8 @@ Personal marketplace for Claude Code plugins and a TUI-based skill installer.
   - `pptx-tools/` — PowerPoint tools with colorscale script
   - `pptx-with-templates/` — PowerPoint editing with templates and validation
   - `sales-pitch-assistant/` — Sales pitch presentations with impress.js
-  - `summarizer/` — Document summarization with Mistral OCR
+  - `summarizer/` — Document summarization (text input)
+  - `ocr-with-mistral/` — Extract markdown-formatted text from scanned PDFs using Mistral OCR
 - `scripts/docker-sandbox-for-claude/` — Docker sandbox scripts for Claude Code
 - `install-skills.py` — Textual TUI installer for skills/plugins from various sources
 - `_NOTES/` — Planning docs and analysis notes (not shipped)

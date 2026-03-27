@@ -1,0 +1,8 @@
+{
+  "name": "ocr-with-mistral",
+  "description": "OCR with Mistral — Extract markdown-formatted text from scanned PDFs using Mistral OCR",
+  "author": {
+    "name": "aknip"
+  },
+  "keywords": ["ocr", "mistral", "pdf", "text-extraction"]
+}

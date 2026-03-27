@@ -47,3 +47,32 @@ Commit and push only when the plugin is stable.
 - `/plugin validate .` — Validate plugin structure before testing
 - `--plugin-dir` takes precedence over installed marketplace plugins of the same name
 
+## Disable Global Plugins per Repo
+
+Globally installed plugins can be disabled for a specific project via `.claude/settings.json` (git-committed, team-wide) or `.claude/settings.local.json` (local only, not committed):
+
+```json
+{
+  "enabledPlugins": {
+    "plugin-name@marketplace-name": false
+  }
+}
+```
+
+- `false` — disables the plugin in this project
+- `true` — explicitly enables the plugin
+- Omitted plugins keep their default state
+
+**Scope hierarchy** (highest precedence first):
+
+1. **Local** — `.claude/settings.local.json` (machine-specific)
+2. **Project** — `.claude/settings.json` (committed to git)
+3. **User** — `~/.claude/settings.json` (global, all projects)
+4. **Managed** — Enterprise admin settings
+
+Alternatively, use the CLI to uninstall a plugin only for the current project:
+
+```
+/plugin uninstall plugin-name@marketplace --scope project
+```
+

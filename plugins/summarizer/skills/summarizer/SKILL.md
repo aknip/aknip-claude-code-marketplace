@@ -1,23 +1,26 @@
 ---
 name: summarizer
-description: You are analyzing a file to determine its content.
-allowed-tools: Bash(python *), Bash(head *), Bash(tail *), Bash(strings *), Bash(grep *), Bash(sed *), Bash(awk *), Bash(wc *), Read, Grep
+description: You are analyzing a text file to determine its content and create a summary.
 ---
 
-You are analyzing a file to determine its content.
+You are analyzing a text file to determine its content.
 
 Create a summary of the file's content, following the strict rules outlined in the document.
 
-At start: Inform the user, that an `.env` file is needed in the root of the current project folder if OCR skills are needed. It should contain `MISTRAL_API_KEY=xyz` to use the Mistral API for OCR.
+Input is always text (plain text, markdown, or a PDF with embedded/extractable text).
+
+## PDF Text Extraction (for PDFs with embedded text)
+Extract text directly via PyMuPDF:
+```bash
+python3 -c "import fitz; doc=fitz.open('<PDF_PATH>'); [print(doc[i].get_text()) for i in range(<PAGE_RANGE>)]" 2>&1 | head -n <LIMIT>
+```
 
 ## Output file naming convention
 Derive output filenames from the input filename (without extension):
-- OCR output: `<input_filename_without_ext> - OCR.md`
 - Summary output: `<input_filename_without_ext> - Summary.md`
 
-Example: If the input file is `Electronic Sound - Issue 134 2026.pdf`, then:
-- OCR output → `Electronic Sound - Issue 134 2026 - OCR.md`
-- Summary output → `Electronic Sound - Issue 134 2026 - Summary.md`
+Example: If the input file is `sample.pdf`, then:
+- Summary output → `sample - Summary.md`
 
 # Template for summary
 ```
@@ -63,15 +66,6 @@ Max 100 words per analysis check
 {Words_Total} words total for entire task
 ONLY use Bash with CLI utilities (head, tail, strings, grep, sed, awk, wc, etc.)
 
-## PDF Text Extraction Strategy (mandatory for PDFs)
-Before using OCR, ALWAYS check if the PDF contains extractable text:
-1. Run: `python3 -c "import fitz; doc=fitz.open('<PDF_PATH>'); text=doc[0].get_text(); print(f'Chars on page 1: {len(text)}'); print(text[:500])" 2>&1 | head -20`
-2. If page 1 yields substantial text (>100 chars of meaningful content), the PDF has embedded text.
-   → Extract text directly via PyMuPDF: `python3 -c "import fitz; doc=fitz.open('<PDF_PATH>'); [print(doc[i].get_text()) for i in range(<PAGE_RANGE>)]" 2>&1 | head -n <LIMIT>`
-   → No OCR needed. No OCR output file created.
-3. If page 1 yields little/no text (<100 chars or only whitespace/garbage), the PDF is image-based/scanned.
-   → Use OCR script: `${CLAUDE_PLUGIN_ROOT}/skills/summarizer/scripts/mistral_ocr.py` to extract text. Do not split the PDF before using the script.
-   → OCR output file is created per naming convention.
 These tools MUST have built-in output limits or you MUST add limits (e.g., head -n 20, strings | head -100)
 Mandatory Pre-Tool Checklist:
 Before EVERY tool call, ask yourself:

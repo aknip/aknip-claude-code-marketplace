@@ -37,6 +37,11 @@
     {
       "name": "summarizer",
       "source": "./plugins/summarizer",
+      "version": "1.1.0"
+    },
+    {
+      "name": "ocr-with-mistral",
+      "source": "./plugins/ocr-with-mistral",
       "version": "1.0.0"
     },
     {

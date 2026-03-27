@@ -1,11 +1,33 @@
 import argparse
 import base64
 import os
-from mistralai import Mistral
-from dotenv import load_dotenv
+import sys
+from pathlib import Path
 
 
-load_dotenv()
+def check_virtual_environment():
+    """Prüft, ob das Skript in einer virtuellen Python-Umgebung ausgeführt wird."""
+    if sys.prefix == sys.base_prefix:
+        script_dir = Path(__file__).resolve().parent
+        print("❌ Dieses Skript muss in einer virtuellen Python-Umgebung ausgeführt werden.")
+        print()
+        print("Bitte richte eine virtuelle Umgebung im Script-Verzeichnis ein und aktiviere sie:")
+        print()
+        print(f"  python3 -m venv \"{script_dir}/.venv\"")
+        print(f"  source \"{script_dir}/.venv/bin/activate\"")
+        print("  pip install mistralai")
+        print()
+        print("Oder mit uv:")
+        print()
+        print(f"  uv venv \"{script_dir}/.venv\"")
+        print(f"  source \"{script_dir}/.venv/bin/activate\"")
+        print("  uv pip install mistralai")
+        sys.exit(1)
+
+
+check_virtual_environment()
+
+from mistralai.client.sdk import Mistral
 
 
 def encode_pdf(pdf_path):
@@ -21,7 +43,7 @@ def main():
 
     api_key = os.getenv('MISTRAL_API_KEY')
     if not api_key:
-        print("Error: MISTRAL_API_KEY not found in environment. Check your .env file.")
+        print("Error: MISTRAL_API_KEY not found in environment. Set it via: export MISTRAL_API_KEY=<your-key>")
         exit(1)
 
     client = Mistral(api_key=api_key)
