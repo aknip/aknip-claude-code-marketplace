@@ -38,6 +38,11 @@
       "name": "summarizer",
       "source": "./plugins/summarizer",
       "version": "1.0.0"
+    },
+    {
+      "name": "transcriber",
+      "source": "./plugins/transcriber",
+      "version": "1.0.0"
     }
   ]
 }

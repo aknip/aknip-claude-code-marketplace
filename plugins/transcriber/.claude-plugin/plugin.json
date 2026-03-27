@@ -1,0 +1,8 @@
+{
+  "name": "transcriber",
+  "description": "Transcriber — Transcribe audio and video files to text using Whisper (Apple Silicon optimized)",
+  "author": {
+    "name": "aknip"
+  },
+  "keywords": ["transcriber", "whisper", "audio", "video", "transcription", "speech-to-text"]
+}

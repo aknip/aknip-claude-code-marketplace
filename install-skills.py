@@ -42,7 +42,7 @@ from textual.widgets import (
 # ---------------------------------------------------------------------------
 # Skill registry
 # ---------------------------------------------------------------------------
-CONTENT_SKILL_IDS = {"revealjs", "image-enhancer", "pptx-tools", "pptx-with-templates", "sales-pitch-assistant", "summarizer", "excalidraw"}
+CONTENT_SKILL_IDS = {"revealjs", "image-enhancer", "pptx-tools", "pptx-with-templates", "sales-pitch-assistant", "summarizer", "excalidraw", "transcriber"}
 
 SKILLS = [
     {
@@ -120,6 +120,13 @@ SKILLS = [
         "name": "Excalidraw Diagramming",
         "description": "Create Excalidraw diagrams with shapes, arrows, text, styling, and grouping",
         "source": "github.com/tenzir/claude-plugins",
+        "tab": "content",
+    },
+    {
+        "id": "transcriber",
+        "name": "aknip Transcriber",
+        "description": "Transcribe audio/video files (.mp4, .mp3) to text using Whisper (Apple Silicon GPU)",
+        "source": "github.com/aknip/aknip-claude-code-marketplace",
         "tab": "content",
     },
     {
