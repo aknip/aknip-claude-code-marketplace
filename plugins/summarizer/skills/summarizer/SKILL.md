@@ -1,50 +1,51 @@
 ---
 name: summarizer
-description: You are analyzing a text file to determine its content and create a summary.
+description: Du analysierst eine Textdatei, um ihren Inhalt zu bestimmen und eine Zusammenfassung zu erstellen.
 allowed-tools: Bash(python *), Bash(*/bin/python *), Bash(source *), Bash(python3 *), Bash(uv *), Bash(pip *), Bash(ls *), Bash(cat *), Bash(head *), Bash(tail *), Read, Write, Grep, Glob
 ---
 
-You are analyzing a text file to determine its content.
+Du analysierst eine Textdatei, um ihren Inhalt zu bestimmen.
 
-Create a summary of the file's content, using the appropriate summary strategy.
+Erstelle eine Zusammenfassung des Dateiinhalts unter Verwendung der passenden Zusammenfassungsstrategie.
 
-Input is always text (plain text, markdown, or a PDF with embedded/extractable text).
+Eingabe ist immer Text (Klartext, Markdown oder ein PDF mit eingebettetem/extrahierbarem Text).
 
-## Summary strategies
+## Zusammenfassungsstrategien
 
-Strategies are defined in the `summarizer-strategies/` subdirectory (relative to this skill file). Each strategy file contains the output template, rules, and instructions for a specific type of summary.
+Strategien sind im Unterverzeichnis `summarizer-zusammenfassungs-arten/` definiert (relativ zu dieser Skill-Datei). Jede Strategiedatei enthält die Ausgabevorlage, Regeln und Anweisungen für einen bestimmten Zusammenfassungstyp.
 
-Available strategies:
-- **long-content-papers-summary** — For books, long blog posts, academic papers, research documents, reports. Default strategy.
-- **structured-paper** — For transcripts, meeting notes, lectures, interviews. Transforms unstructured source material into a well-readable, structured factual paper (~10 pages). Retains all details, minimal shortening.
+Verfügbare Strategien:
+- **zusammenfassung-als-detaillierte-tiefe-analyse** — Für Bücher, lange Blogbeiträge, wissenschaftliche Arbeiten, Forschungsdokumente, Berichte. Standardstrategie.
+- **zusammenfassung-als-paper** — Für Transkripte, Besprechungsnotizen, Vorlesungen, Interviews. Wandelt unstrukturiertes Quellmaterial in ein gut lesbares, strukturiertes Sachpapier um (~10 Seiten). Behält alle Details bei, minimale Kürzung.
+- **zusammenfassung-als-kurze-bulletpoints** — Für alle Dokumenttypen, wenn eine möglichst knappe Übersicht als hierarchische Bulletpoint-Liste gewünscht ist.
 
-### How to select a strategy
+### Strategieauswahl
 
-1. If the user requests all summaries/strategies (e.g. "alle Zusammenfassungen", "alle Strategien", "alle Summaries", "all strategies"), apply **every** available strategy and produce one output file per strategy.
-2. If the user specifies a strategy by name (or a similar name), use that strategy.
-3. Otherwise, select the best-fitting strategy based on the input document type.
-4. If unsure, use **structured-paper** as the default.
+1. Wenn der Benutzer alle Zusammenfassungen/Strategien anfordert (z.B. "alle Zusammenfassungen", "alle Strategien", "alle Summaries", "all strategies"), wende **jede** verfügbare Strategie an und erstelle eine Ausgabedatei pro Strategie.
+2. Wenn der Benutzer eine Strategie namentlich (oder mit ähnlichem Namen) angibt, verwende diese Strategie.
+3. Andernfalls wähle die am besten passende Strategie basierend auf dem Eingabedokumenttyp.
+4. Im Zweifelsfall verwende **zusammenfassung-als-paper** als Standard.
 
-After selecting a strategy, inform the user about the selected strategy/strategies.
+Nach der Strategieauswahl informiere den Benutzer über die gewählte(n) Strategie(n).
 
-### How to apply a strategy
+### Strategieanwendung
 
-Read the selected strategy file from `summarizer-strategies/` and follow its template, rules, and instructions exactly.
+Lies die gewählte Strategiedatei aus `summarizer-zusammenfassungs-arten/` und befolge deren Vorlage, Regeln und Anweisungen genau.
 
-## Output language
+## Ausgabesprache
 
-Default output language is German, unless the user explicitly requests a different language.
+Standardmäßig ist die Ausgabesprache Deutsch, es sei denn, der Benutzer fordert ausdrücklich eine andere Sprache an.
 
-## PDF Text Extraction (for PDFs with embedded text)
-Extract text directly via PyMuPDF:
+## PDF-Textextraktion (für PDFs mit eingebettetem Text)
+Text direkt über PyMuPDF extrahieren:
 ```bash
-python3 -c "import fitz; doc=fitz.open('<PDF_PATH>'); [print(doc[i].get_text()) for i in range(<PAGE_RANGE>)]" 2>&1 | head -n <LIMIT>
+python3 -c "import fitz; doc=fitz.open('<PDF_PFAD>'); [print(doc[i].get_text()) for i in range(<SEITENBEREICH>)]" 2>&1 | head -n <LIMIT>
 ```
 
-## Important: iCloud paths
+## Wichtig: iCloud-Pfade
 
-When users provide iCloud Drive paths, the shell representation uses tildes instead of dots:
-- User provides: `comappleCloudDocs`
-- Correct shell path: `com~apple~CloudDocs`
+Wenn Benutzer iCloud-Drive-Pfade angeben, verwendet die Shell Tilden statt Punkte:
+- Benutzer gibt an: `comappleCloudDocs`
+- Korrekter Shell-Pfad: `com~apple~CloudDocs`
 
-Always replace `comappleCloudDocs` with `com~apple~CloudDocs` in file paths.
+Ersetze immer `comappleCloudDocs` durch `com~apple~CloudDocs` in Dateipfaden.
